@@ -2,7 +2,7 @@
  * debug.h
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #ifndef DEBUG_H_
@@ -32,18 +32,18 @@ public:
 
 	static const int debugLevel = 1;
 
-	static void Dbg::prn(string s)  {
+	static void prn(string s)  {
 		cout<<s<<flush;
 		return;
 	}
 
-	static void Dbg::prn(int s)  {
+	static void prn(int s)  {
 		stringstream ss;
 		ss<<s;
 		prn(ss.str());
 	}
 
-	static void Dbg::prn(char s)  {
+	static void prn(char s)  {
 			stringstream ss;
 			ss<<s;
 			prn(ss.str());
