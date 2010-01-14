@@ -22,6 +22,12 @@
 #include "sip_message.h"
 #include "sip_authentication.h"
 
+struct SIP_Info {
+	unsigned int cseq;
+	std::string callid;
+	SIP_Authentication authentication;
+};
+
 class SIP_Agent {
 
 	friend void * SIP_AgentThread( void * );
@@ -29,28 +35,39 @@ class SIP_Agent {
 
 	private:
 
+		// Threading
 		pthread_t thread;
 		Semaphore mutex;
 
+		// Socket
 		int sock;
+
+		// Adres lokalny
 		sockaddr_in address;
 
+		// Ustawione na true zabija
 		bool killThread;
 
-		std::string proxy, user, pass, tag, callid;
+		// Podstawowe informacje
+		std::string proxy, user, pass, tag, branch;
 		std::string fromtoline;
-		SIP_Authentication authentication;
 
-		unsigned int cseq;
+		// Sesja rejestrujaca
+		SIP_Info registration;
+
+		// Sesja nawiazujaca
+		SIP_Info invite;
 
 		std::string addressString();
 
 		std::string generateBranch();
-		void generateCallID();
+		std::string generateCallID();
 		void generateFromTag();
 
 		void sendMessage(SIP_Message &m, std::string address, std::string port);
 		void receiveMessage();
+
+		void replyToOptions(SIP_Message &m);
 
 		void Register();
 
@@ -60,6 +77,7 @@ class SIP_Agent {
 		~SIP_Agent();
 
 		void Register(std::string user, std::string pass, std::string proxy);
+		void Call(std::string id);
 
 };
 #endif
