@@ -1,12 +1,13 @@
 
-#include <iostream>
-#include "debug/debug.h"
+#include "Main/Main.h"
 
 using namespace std;
 
-int main(int argc, char **argv) {
-	PRN1("in main");
 
-	PRN1("end main");
+int main(int argc, char **argv) {
+	/* Jedyne co robimy to przekazujemy argumenty do metody
+	 * startProgram w klasie Main i dzia³amy ju¿ tylko na obiektach.
+	 */
+	return Main::startProgram(argc, argv);
 }
 
