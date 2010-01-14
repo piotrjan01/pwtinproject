@@ -35,4 +35,5 @@ int Main::startProgram(int argc, char **argv) {
 	PRN("TODO: zapisuje loga do pliku...");
 
 	PRN1("ends startProgram");
+	return 0;
 }
