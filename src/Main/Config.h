@@ -50,6 +50,12 @@ public:
 	 */
 	string audioFilePath;
 
+	/**
+	 * Port używany do dzwonienia
+	 * TODO: upewnic sie ze tak ma byc
+	 */
+	int callPort;
+
 };
 
 #endif /* CONFIG_H_ */

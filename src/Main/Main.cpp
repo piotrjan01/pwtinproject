@@ -7,6 +7,7 @@
 
 #include "Main.h"
 #include "../debug/debug.h"
+#include "../VoIPModule/VoIPModule.h"
 
 Main* Main::main = 0;
 
@@ -42,7 +43,9 @@ int Main::startProgram(int argc, char **argv) {
 
 	cnf = new Config(configFile);
 
-	PRN("TODO: wczytuje dane audio");
+	VoIPModule* voip = new VoIPModule(cnf);
+
+//	voip->connect();
 
 
 
