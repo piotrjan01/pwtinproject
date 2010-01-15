@@ -37,6 +37,7 @@ Config::Config(string configFile) {
 
 	else Main::getMain()->handleError("Unable to open configuration file: "+configFile);
 
+	callPort = 3333;
 
 }
 
