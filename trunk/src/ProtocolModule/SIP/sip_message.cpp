@@ -73,6 +73,9 @@ SIP_Message::SIP_Message( char *buf, int len ) {
 
 		packet = packet.substr( packet.find("\015\012") + 2 );
 	}
+
+	if (packet.length() > 0) 
+		body = packet;
 }
 
 SIP_Authentication SIP_Message::getAuthentication() {
@@ -134,7 +137,37 @@ string SIP_Message::toStream() {
 	for (vector<string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
 		result += *iter + "\015\012";
 
-return result + "\015\012";
+	result += "\015\012";
+
+	if (body.length() > 0) result += body;
+
+	return result;
+}
+
+std::string SIP_Message::getSdpAddress() {
+
+	vector<string> l = split(body, '\n');
+
+	for (vector<string>::const_iterator iter = l.begin(); iter != l.end(); ++iter) {
+		string s = trim(*iter, '\015');
+		if (getKey(s, '=') == "o") 
+			return split(s, ' ').back();
+	}
+
+	return "0.0.0.0";
+
+}
+
+std::string SIP_Message::getSdpPort() {
+
+	vector<string> l = split(body, '\n');
+
+	for (vector<string>::const_iterator iter = l.begin(); iter != l.end(); ++iter)
+		if (getKey(*iter, '=') == "m") 
+			return split(*iter, ' ').at(1);
+
+	return "0";
+
 }
 
 std::ostream & operator<<(std::ostream & out, const SIP_Message & m) {
@@ -146,6 +179,8 @@ std::ostream & operator<<(std::ostream & out, const SIP_Message & m) {
 
 	for (vector<string>::const_iterator iter = m.lines.begin(); iter != m.lines.end(); ++iter)
 		out << *iter << endl;
+
+	if (m.body.length() > 0) out << m.body << endl;
 
 	return out;
 }

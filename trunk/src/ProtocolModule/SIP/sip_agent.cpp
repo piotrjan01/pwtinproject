@@ -151,11 +151,11 @@ void SIP_Agent::replyToOptions(SIP_Message &m) {
 
 }
 
-void SIP_Agent::replyAck(SIP_Message &m) {
+void SIP_Agent::replyAck(SIP_Message &m, std::string information) {
 	
 	SIP_Message reply;
 
-	reply.rline = "ACK SIP/2.0";
+	reply.rline = "ACK " + information + " SIP/2.0";
 	reply.via.push_back(m.via[0]);
 
 	reply.lines.push_back("Max-Forwards: 70");
@@ -165,7 +165,7 @@ void SIP_Agent::replyAck(SIP_Message &m) {
 	reply.lines.push_back("From: " +  m.getField("From"));
 	reply.lines.push_back("To: " + m.getField("To"));
 
-	reply.lines.push_back("Call-ID: " + generateCallID());
+	reply.lines.push_back("Call-ID: " + m.getCallID());
 	reply.lines.push_back("CSeq: 1 ACK");	
 
 	reply.lines.push_back("Content-Length: 0");
@@ -204,13 +204,32 @@ void SIP_Agent::receiveMessage() {
 			else if (code < 200) 
 				cout << "that's OK, let's wait for next messages." << endl << "Waiting for more." << endl;
 			else if (code == 200) {
-				cout << "that's great, we're registered!" << endl << "No action." << endl;
-			
-				if (waitingfor == REGISTER) {
-					waitingfor = NONE;
-					wait.V();
+				
+				if (m.getCallID() == invite.callid) {
+					cout << "that's great, connection established!" << endl ;	
+
+					cout << "Remote address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
+
+					remoteRtpPort = atoi( m.getSdpPort().c_str() );
+					remoteRtpAddress = m.getSdpAddress();
+
+					replyAck(m);
+
+					if (waitingfor == CALL) {
+						waitingfor = NONE;
+						wait.V();
+					}
+
+
+				} else if (m.getCallID() == registration.callid) {
+					cout << "that's great, we're registered!" << endl;					
+
+					if (waitingfor == REGISTER) {
+						waitingfor = NONE;
+						wait.V();
+					}
 				}
-			
+
 			} else if (code < 300) {
 			
 			} else if (code < 400) {
@@ -268,6 +287,15 @@ void SIP_Agent::receiveMessage() {
 					auth.uri = "sip:" + partnerID + "@" + proxy;
 					registration.authentication = auth;
 					Call();
+				}
+
+			} else if (code == 480) {
+				
+				cout << "temporary unavailable, busy? rejected?" << endl;
+				if (waitingfor == CALL) {
+					cout << "Can't connect, user not found." << endl;
+					waitingfor = NONE;
+					wait.V();
 				}
 
 			}
@@ -346,21 +374,19 @@ void SIP_Agent::Call() {
 
 	m.lines.push_back("Content-Type: application/sdp");
 
-	string sdp = "v=0\n";
-	sdp += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-	sdp += "s=CounterPath X-Lite 3.0\n";
-	sdp += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-	sdp += string("t=0 0\n");
-	sdp += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
-	sdp += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
-	sdp += "a=fmtp:101 0-15\n";
-	sdp += "a=rtpmap:107 BV32/16000\n";
-	sdp += "a=rtpmap:101 telephone-event/8000\n";
-	sdp += "a=sendrecv";
+	m.body = "v=0\n";
+	m.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	m.body += "s=CounterPath X-Lite 3.0\n";
+	m.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	m.body += string("t=0 0\n");
+	m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
+	m.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
+	m.body += "a=fmtp:101 0-15\n";
+	m.body += "a=rtpmap:107 BV32/16000\n";
+	m.body += "a=rtpmap:101 telephone-event/8000\n";
+	m.body += "a=sendrecv\n";
 
-	m.lines.push_back("Content-Length: " + sdp.length());
-	m.lines.push_back("");
-	m.lines.push_back(sdp);
+	m.lines.push_back("Content-Length: " + toString(m.body.length()));
 
 	sendMessage(m, proxy, "8060");
 

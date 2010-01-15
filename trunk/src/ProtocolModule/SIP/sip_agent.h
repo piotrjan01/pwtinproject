@@ -67,8 +67,9 @@ class SIP_Agent {
 		// porty RTP
 		unsigned short localRtpPort, remoteRtpPort;
 		
-		// 
-		std::string partnerID;
+		// identyfikator oraz ip rozmówcy
+		std::string partnerID, remoteRtpAddress ;
+
 
 		std::string addressString();
 
@@ -79,7 +80,7 @@ class SIP_Agent {
 		void sendMessage(SIP_Message &m, std::string address, std::string port);
 		void receiveMessage();
 
-		void replyAck(SIP_Message &m);
+		void replyAck(SIP_Message &m, std::string information = "");
 		void replyToOptions(SIP_Message &m);
 
 		void Register();
