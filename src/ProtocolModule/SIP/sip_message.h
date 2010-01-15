@@ -19,6 +19,7 @@ struct SIP_Message {
 	std::string				 rline;
 	std::vector<std::string> via;
 	std::vector<std::string> lines;
+	std::string              body;
 
 	SIP_Message() {}
 	SIP_Message( char *buf, int len );
@@ -35,6 +36,11 @@ struct SIP_Message {
 	SIP_Authentication getAuthentication();
 	SIP_Authentication getProxyAuthentication();
 	std::string toStream();
+
+	std::string getSdpAddress();
+	std::string getSdpPort();
+
+	std::string getCallID() { return getField("Call-ID"); }
 
 };
 

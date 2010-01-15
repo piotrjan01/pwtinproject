@@ -16,9 +16,9 @@ int main(int argc, char *argv[]) {
 
 	cout << " --------------- MAIN -------------- " << endl;
 
-	agent.Call("stud6", 3333);
+	agent.Call("stud5", 3333);
 
-	sleep(10.0);
+	sleep(30.0);
 	return 0;
 
 }
