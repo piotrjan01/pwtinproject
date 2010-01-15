@@ -26,7 +26,7 @@ using namespace std;
 
 void * SIP_AgentThread( void * sip_agent );
 
-SIP_Agent::SIP_Agent(char * localaddr) : mutex(0) {
+SIP_Agent::SIP_Agent(string localaddr) : mutex(0) {
 
 	cout << "Creating socket...";
 	sock = socket( AF_INET, SOCK_DGRAM, 0);
@@ -38,7 +38,7 @@ SIP_Agent::SIP_Agent(char * localaddr) : mutex(0) {
 
 	cout << "Binding to address...";
 	address.sin_family = AF_INET;
-	address.sin_addr.s_addr = inet_addr(localaddr); //INADDR_ANY;
+	address.sin_addr.s_addr = inet_addr(localaddr.c_str());  // INADDR_ANY;
 	address.sin_port = 0;
 	
 	if (bind(sock, (sockaddr *) &address, sizeof(address)) == -1)

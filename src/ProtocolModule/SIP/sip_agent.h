@@ -73,7 +73,7 @@ class SIP_Agent {
 
 	public:
 
-		SIP_Agent(char * localaddr);
+		SIP_Agent(std::string localaddr);
 		~SIP_Agent();
 
 		void Register(std::string user, std::string pass, std::string proxy);
