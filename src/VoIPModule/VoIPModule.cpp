@@ -7,8 +7,8 @@
 
 #include "VoIPModule.h"
 
-VoIPModule::VoIPModule(Config* config) {
-	this.config = *config;
+VoIPModule::VoIPModule(Config* _config) : config(*_config) {
+	agent = new SIP_Agent(config.localIP);
 }
 
 VoIPModule::~VoIPModule() {
@@ -19,7 +19,6 @@ VoIPModule::~VoIPModule() {
  * Wysy�amy dane z pliku audio do wskazanego hosta zestawiaj�c najpierw po��czenia VoIP.
  */
 void VoIPModule::doSending() {
-
 }
 
 /**

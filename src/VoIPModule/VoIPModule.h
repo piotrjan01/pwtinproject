@@ -10,7 +10,8 @@
 
 #include <string>
 #include "debug/debug.h"
-#include "Config.h"
+#include "../Main/Config.h"
+#include "../ProtocolModule/SIP/sip_agent.h"
 
 using namespace std;
 
@@ -27,6 +28,8 @@ private:
 	void doReceiving();
 
 	Config& config;
+
+	SIP_Agent* agent;
 };
 
 #endif /* VOIPMODULE_H_ */
