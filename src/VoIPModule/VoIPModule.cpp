@@ -2,7 +2,7 @@
  * VoIPModule.cpp
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda�a
+ *      Author: Piotr Gwizdała
  */
 
 #include "VoIPModule.h"
@@ -25,7 +25,7 @@ VoIPModule::~VoIPModule() {
 }
 
 /**
- * Wysy�amy dane z pliku audio do wskazanego hosta zestawiaj�c najpierw po��czenia VoIP.
+ * Wysy�amy dane z pliku audio do wskazanego hosta zestawiając najpierw połączenia VoIP.
  */
 void VoIPModule::doSending() {
 	initializeConnection();
@@ -34,7 +34,7 @@ void VoIPModule::doSending() {
 }
 
 /**
- * Czekamy na po��czenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
+ * Czekamy na połączenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
  */
 void VoIPModule::doReceiving() {
 	initializeConnection();
