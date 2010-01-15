@@ -26,6 +26,10 @@ Main* Main::getMain() {
 	return main;
 }
 
+void Main::printUsage() {
+	cout<<endl<<"Usage: ProjectLack.exe <config-file-path>"<<endl;
+}
+
 
 void Main::handleError(string message) {
 	cout<<"====> ERROR: "+message<<endl;
@@ -39,7 +43,8 @@ int Main::startProgram(int argc, char **argv) {
 	//pierwszy argument to nazwa/sciezka do pliku z config.
 
 	if (argc != 2) {
-		Main::handleError("Too little arguments!");
+		Main::handleError("Too little program arguments!");
+		printUsage();
 		return 1;
 	}
 	configFile = argv[1];

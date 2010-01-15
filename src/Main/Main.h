@@ -36,6 +36,8 @@ public:
 	 */
 	int startProgram(int argc, char **argv);
 
+	void printUsage();
+
 };
 
 #endif /* MAIN_H_ */
