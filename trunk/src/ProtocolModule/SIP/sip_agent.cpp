@@ -72,13 +72,13 @@ SIP_Agent::~SIP_Agent() {
 	cout << "OK" << endl;	
 }
 
-void SIP_Agent::generateCallID() {
-	callid = "";
+string SIP_Agent::generateCallID() {
+	string callid = "";
 
 	for (int i = 0; i < 10; ++i) 
-		callid += toString( rand() % 10 );
+		registration.callid += toString( rand() % 10 );
 
-	callid += "@" + proxy;
+	return callid + "@" + proxy;
 }
 
 void SIP_Agent::generateFromTag() {
@@ -119,6 +119,36 @@ void SIP_Agent::sendMessage(SIP_Message &m, string address, string port) {
 	cout << "-----   SIP Message sent   -----" << endl;
 	cout << m;
 	cout << "--------------------------------" << endl;
+}
+
+void SIP_Agent::replyToOptions(SIP_Message &m) {
+	
+	SIP_Message reply;
+
+	reply.rline = "SIP/2.0 200 OK";
+	reply.via.push_back(m.via[0]);
+
+	reply.lines.push_back("Max-Forwards: 70");
+	
+	reply.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	reply.lines.push_back("From: " +  m.getField("From"));
+	reply.lines.push_back("To: " + m.getField("To"));
+
+	reply.lines.push_back("Call-ID: " + m.getField("Call-ID"));
+	reply.lines.push_back("CSeq: " + m.getField("CSeq"));
+	
+	reply.lines.push_back("Accept: application/sdp");
+	reply.lines.push_back("Accept-Language: en");
+
+//	m.lines.push_back("Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, NOTIFY, MESSAGE, SUBSCRIBE, INFO");
+
+	reply.lines.push_back("Allow: INVITE, ACK, OPTIONS, BYE");
+
+	reply.lines.push_back("Content-Length: 0");
+
+	sendMessage(reply, proxy, "8060");
+
 }
 
 void SIP_Agent::receiveMessage() { 
@@ -168,7 +198,7 @@ void SIP_Agent::receiveMessage() {
 					auth.pass = pass;
 					auth.method = "REGISTER";
 					auth.uri = "sip:" + proxy;
-					authentication = auth;
+					registration.authentication = auth;
 					Register();
 				}
 				
@@ -181,6 +211,8 @@ void SIP_Agent::receiveMessage() {
 	} else {
 		cout << "It's a request - ";
 		cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << endl;
+		if (m.method() == "OPTIONS") 
+			replyToOptions(m);
 	}
 
 	cout << "--------------------------------" << endl;
@@ -191,7 +223,7 @@ void SIP_Agent::receiveMessage() {
 void SIP_Agent::Register() {
 	SIP_Message m;
 	m.rline = "REGISTER sip:" + proxy + " SIP/2.0";
-	m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + generateBranch());
+	m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + branch);
 
 	m.lines.push_back("Max-Forwards: 70");
 	
@@ -202,20 +234,48 @@ void SIP_Agent::Register() {
 	m.lines.push_back("From: " + fromtoline);
 	m.lines.push_back("To: \"" + user + "\"<sip:" + user + "@" + proxy + ">");
 
-	m.lines.push_back("Call-ID: " + callid);
-	m.lines.push_back("CSeq: " + toString(++cseq) + " REGISTER");
+	m.lines.push_back("Call-ID: " + registration.callid);
+	m.lines.push_back("CSeq: " + toString(++registration.cseq) + " REGISTER");
 	m.lines.push_back("Expires: 3600");
 
-	if (authentication.algorithm == "MD5") {
-		m.lines.push_back("Authorization: Digest username=\"" + authentication.user +
-				"\",realm=\"" + authentication.realm + "\",nonce=\"" + authentication.nonce +
-				"\",uri=\"" + authentication.uri + "\",response=\"" + authentication.getMD5() +
+	if (registration.authentication.algorithm == "MD5") {
+		m.lines.push_back("Authorization: Digest username=\"" + registration.authentication.user +
+				"\",realm=\"" + registration.authentication.realm + "\",nonce=\"" + registration.authentication.nonce +
+				"\",uri=\"" + registration.authentication.uri + "\",response=\"" + registration.authentication.getMD5() +
 				"\",algorithm=MD5");
 	}
 
 	m.lines.push_back("Content-Length: 0");
 
 	sendMessage(m, proxy, "8060");
+}
+
+void SIP_Agent::Call(string id) {
+	
+	SIP_Message	m;
+
+	invite.cseq = 1;
+	invite.callid = generateCallID();
+
+	m.rline = "INVITE sip:" + id + "@" + proxy + " SIP/2.0";
+	m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + branch);
+
+	m.lines.push_back("Max-Forwards: 70");
+	
+	m.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	m.lines.push_back("From: " + fromtoline);
+	m.lines.push_back("To: \"" + id + "\"<sip:" + id + "@" + proxy + ">");
+
+	m.lines.push_back("Call-ID: " + invite.callid);
+	m.lines.push_back("CSeq: " + toString(invite.cseq) + " INVITE");
+
+	m.lines.push_back("Allow: INVITE, ACK, OPTIONS, BYE");
+
+	m.lines.push_back("Content-Type: application/sdp");
+	m.lines.push_back("Content-Length: ");
+
+
 }
 
 void SIP_Agent::Register(string user, string pass, string proxy) {
@@ -226,9 +286,12 @@ void SIP_Agent::Register(string user, string pass, string proxy) {
 	this->pass  = pass;
 	this->proxy = proxy;
 
-	generateCallID();
 	generateFromTag();
-	cseq   = 0; 
+	
+	registration.authentication.algorithm = "";
+	registration.cseq = 0;
+	registration.callid = generateCallID();
+	branch = generateBranch();
 
 	Register();
 
