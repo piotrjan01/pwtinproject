@@ -2,7 +2,7 @@
  * NoSteg.cpp
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #include "NoSteg.h"
@@ -14,4 +14,12 @@ NoSteg::NoSteg() {
 
 NoSteg::~NoSteg() {
 	// TODO Auto-generated destructor stub
+}
+
+void NoSteg::getPacketToSend(char** retBuffer, int packetSize) {
+	// TODO
+}
+
+void NoSteg::putReceivedPacket(char** packet, int packetSize) {
+	// TODO
 }
