@@ -28,8 +28,8 @@ Main* Main::getMain() {
 
 
 void Main::handleError(string message) {
-	PRN("Error: ");
-	PRN(message);
+	cout<<"====> ERROR: "+message<<endl;
+	exit(EXIT_SUCCESS);
 }
 
 int Main::startProgram(int argc, char **argv) {
@@ -38,18 +38,23 @@ int Main::startProgram(int argc, char **argv) {
 	string configFile;
 	//pierwszy argument to nazwa/sciezka do pliku z config.
 
-	if (argc != 2) Main::handleError("Too little arguments!");
+	if (argc != 2) {
+		Main::handleError("Too little arguments!");
+		return 1;
+	}
 	configFile = argv[1];
 
 	cnf = new Config(configFile);
 
+
+	PRN("TODO: wywo�uje odpowiednie metody w VoIPModule..");
 	VoIPModule* voip = new VoIPModule(cnf);
 
 //	voip->connect();
 
 
 
-	PRN("TODO: wywo�uje odpowiednie metody w VoIPModule..");
+
 
 	PRN("TODO: zapisuje loga do pliku...");
 

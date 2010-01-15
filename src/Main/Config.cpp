@@ -12,12 +12,14 @@
 #include <fstream>
 
 Config::Config(string configFile) {
+
 	ifstream cf;
 	string callIndicator;
+	cf.open(configFile.c_str());
 	if (cf.is_open()) {
 		getline(cf, callIndicator);
 		VAR2(callIndicator);
-		if (callIndicator == "calling") {
+		if (callIndicator == "calling\n") {
 			PRN2("we are calling");
 			weAreCalling = true; VAR2(weAreCalling);
 			getline(cf, myUser); VAR2(myUser);
@@ -27,7 +29,7 @@ Config::Config(string configFile) {
 			getline(cf, calleeID); VAR2(calleeID);
 			getline(cf, audioFilePath); VAR2(audioFilePath);
 		}
-		else if (callIndicator == "answering") {
+		else if (callIndicator == "answering\n") {
 			PRN2("we are answering");
 		}
 		else Main::getMain()->handleError("Configuration file has incorrect format.");
@@ -38,6 +40,8 @@ Config::Config(string configFile) {
 	else Main::getMain()->handleError("Unable to open configuration file: "+configFile);
 
 	callPort = 3333;
+	//TODO: usunac i wczytac z pliku
+	doSteg = false;
 
 }
 
