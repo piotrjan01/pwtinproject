@@ -2,7 +2,7 @@
  * ProtocolModule.h
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #ifndef PROTOCOLMODULE_H_
@@ -13,19 +13,9 @@ public:
 	ProtocolModule();
 	virtual ~ProtocolModule();
 
-	/**
-	 * TODO:
-	 *
-	 * connect
-	 *
-	 * send
-	 *
-	 * getPackageSize
-	 *
-	 * disconnect
-	 *
-	 *
-	 */
+
+
+
 
 };
 
