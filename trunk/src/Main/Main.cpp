@@ -53,7 +53,7 @@ int Main::startProgram(int argc, char **argv) {
 
 
 	//TODO:
-	PRN1("TODO: wywoluje odpowiednie metody w VoIPModule..");
+	PRN1("tworzymy VoIPModule..");
 	VoIPModule* voip = new VoIPModule(cnf);
 
 //	voip->connect();

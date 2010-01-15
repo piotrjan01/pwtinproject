@@ -51,6 +51,13 @@ public:
 	string audioFilePath;
 
 	/**
+	 * ścieżka do pliku w którym zapisujemy dane audio przychodzące.
+	 * tylko w przypadku odbierania połączenia
+	 * TODO: czy w przyadku dzwonienia tez zapisywac dane?
+	 */
+	string outputAudioFilePath;
+
+	/**
 	 * Port używany do dzwonienia
 	 * TODO: upewnic sie ze tak ma byc
 	 */
