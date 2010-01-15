@@ -2,7 +2,7 @@
  * StegLACK.cpp
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #include "StegLACK.h"
@@ -14,4 +14,12 @@ StegLACK::StegLACK() {
 
 StegLACK::~StegLACK() {
 	// TODO Auto-generated destructor stub
+}
+
+void StegLACK::getPacketToSend(char** retBuffer, int packetSize) {
+	// TODO
+}
+
+void StegLACK::putReceivedPacket(char** packet, int packetSize) {
+	// TODO
 }

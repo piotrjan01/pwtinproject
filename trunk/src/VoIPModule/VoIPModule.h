@@ -12,6 +12,7 @@
 #include "debug/debug.h"
 #include "../Main/Config.h"
 #include "../ProtocolModule/SIP/sip_agent.h"
+#include "../VoIPPacketsManager/VoIPPacketsManager.h"
 
 using namespace std;
 
@@ -27,9 +28,13 @@ private:
 
 	void doReceiving();
 
+	void initializeConnection();
+
 	Config& config;
 
-	SIP_Agent* agent;
+	SIP_Agent* sipAgent;
+	VoIPPacketsManager* packetsManager;
+
 };
 
 #endif /* VOIPMODULE_H_ */
