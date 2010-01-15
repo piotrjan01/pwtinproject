@@ -18,9 +18,14 @@ int main(int argc, char *argv[]) {
 
 	// agent.Call("stud5", 3333);
 	//
-	agent.Answer(3333);
+	agent.Call("stud5", 3333);
 
-	sleep(30.0);
+	sleep(5.0);
+
+	agent.Disconnect();
+
+	sleep(5.0);
+
 	return 0;
 
 }

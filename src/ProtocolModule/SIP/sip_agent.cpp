@@ -28,6 +28,8 @@ void * SIP_AgentThread( void * sip_agent );
 
 SIP_Agent::SIP_Agent(string localaddr) : mutex(0), wait(0) {
 
+	connectionEstablished = false;
+
 	cout << "Creating socket...";
 	sock = socket( AF_INET, SOCK_DGRAM, 0);
 	
@@ -209,6 +211,10 @@ void SIP_Agent::answerCall(SIP_Message &m) {
 
 	invite.callid = m.getCallID();
 	invite.cseq = atoi( m.getField("CSeq").c_str() );
+	partnerID = m.getField("From");
+	int pb = partnerID.find("sip:") + 4;
+	int pe = partnerID.find("@", pb);
+	partnerID = partnerID.substr(pb, pe - pb);
 
 	reply.lines.push_back("Call-ID: " + m.getCallID());
 	reply.lines.push_back("CSeq: " + m.getField("CSeq"));
@@ -269,16 +275,22 @@ void SIP_Agent::receiveMessage() {
 			else if (code == 200) {
 				
 				if (m.getCallID() == invite.callid) {
-					cout << "that's great, connection established!" << endl ;	
-
-					cout << "Remote address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
-
-					remoteRtpPort = atoi( m.getSdpPort().c_str() );
-					remoteRtpAddress = m.getSdpAddress();
-
-					replyAck(m);
-
 					if (waitingfor == CALL) {
+
+						cout << "that's great, connection established!" << endl ;	
+
+						cout << "Remote address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
+
+						remoteRtpPort = atoi( m.getSdpPort().c_str() );
+						remoteRtpAddress = m.getSdpAddress();
+						connectionEstablished = true;
+
+						partnerTag = m.getField("To");
+						partnerTag = partnerTag.substr(partnerTag.find("tag=") + 4 );
+						
+
+						replyAck(m);
+
 						waitingfor = NONE;
 						wait.V();
 					}
@@ -383,11 +395,21 @@ void SIP_Agent::receiveMessage() {
 				remoteRtpAddress = m.getSdpAddress();
 				answerCall(m);
 			}
+		} else if (m.method() == "BYE") {
+			
+			if (connectionEstablished && (invite.callid == m.getCallID())) {
+				cout << "Disconnecting." << endl;
+				connectionEstablished = false;
+			}
+
 		} else if (m.method() == "ACK") {
 		
 			if (waitingfor == ANSWER) {
 				if (invite.callid == m.getCallID()) {
 					cout << "Connection established" << endl;
+					partnerTag = m.getField("From");
+					partnerTag = partnerTag.substr(partnerTag.find("tag=") + 4 );
+					connectionEstablished = true;
 					waitingfor = NONE;
 					wait.V();
 				}
@@ -478,7 +500,10 @@ void SIP_Agent::Call() {
 }
 
 CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
-	
+
+	CallInfo result;
+
+	if (!connected()) {
 	mutex.P();
 
 	remoteRtpAddress = "0.0.0.0";
@@ -498,10 +523,8 @@ CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
 	mutex.V();
 
 	wait.P();
-
+}
 	mutex.P();
-
-	CallInfo result;
 
 	result.remoteIP   = remoteRtpAddress;
 	result.remotePort = remoteRtpPort;
@@ -514,6 +537,10 @@ CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
 
 CallInfo SIP_Agent::Answer(unsigned short port) {
 	
+	CallInfo result;
+
+	if (!connected()) {
+
 	mutex.P();
 
 	remoteRtpAddress = "0.0.0.0";
@@ -526,24 +553,52 @@ CallInfo SIP_Agent::Answer(unsigned short port) {
 	mutex.V();
 
 	wait.P();
+	}
 
 	mutex.P();
 
-	CallInfo result;
-
 	result.remoteIP   = remoteRtpAddress;
 	result.remotePort = remoteRtpPort;
-	result.callID     = "incognito";
+	result.callID     = partnerID;
 
 	mutex.V();
 
 	return result;
 }
 
+void SIP_Agent::Disconnect() {
+	
+	if (!connected()) 
+		return;
+	
+	mutex.P();
+
+	SIP_Message	m;
+
+	m.rline = "BYE sip:" + user + "@" + addressString() + " SIP/2.0";
+	m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + branch);
+
+	m.lines.push_back("Max-Forwards: 70");
+	
+	m.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	m.lines.push_back("From: " + fromtoline);
+	m.lines.push_back("To: \"" + partnerID + "\"<sip:" + partnerID + "@" + proxy + ">;tag=" + partnerTag);
+
+	m.lines.push_back("Call-ID: " + invite.callid);
+	m.lines.push_back("CSeq: " + toString(++invite.cseq) + " BYE");
+
+	m.lines.push_back("Content-Length: 0");
+	sendMessage(m, proxy, "8060");
+
+	mutex.V();
+}
+
 void SIP_Agent::Register(string user, string pass, string proxy) {
 
 	mutex.P();
 
+	connectionEstablished = false;
 	this->user  = user;
 	this->pass  = pass;
 	this->proxy = proxy;
@@ -562,6 +617,19 @@ void SIP_Agent::Register(string user, string pass, string proxy) {
 	mutex.V();
 
 	wait.P();
+}
+
+bool SIP_Agent::connected() {
+
+	bool result;
+
+	mutex.P();
+
+	result = connectionEstablished;
+
+	mutex.V();
+
+	return result;
 }
 
 void * SIP_AgentThread( void * sip_agent ) {
