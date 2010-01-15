@@ -42,6 +42,9 @@ void VoIPModule::doReceiving() {
 	//agent->Answer(...);
 }
 
+/**
+ * W zaleznosci od config-a rozpoczyna dzwonienie lub nasluchiwanie
+ */
 void VoIPModule::connect() {
 	if (config.weAreCalling) {
 		doSending();
