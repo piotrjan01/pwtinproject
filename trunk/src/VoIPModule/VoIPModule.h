@@ -2,7 +2,7 @@
  * VoIPModule.h
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #ifndef VOIPMODULE_H_
@@ -10,18 +10,23 @@
 
 #include <string>
 #include "debug/debug.h"
+#include "Config.h"
 
 using namespace std;
 
 class VoIPModule {
 public:
-	VoIPModule();
+	VoIPModule(Config* config);
 	virtual ~VoIPModule();
 
-	void doSending(string audioFile, int destIP);
+	void connect();
 
-	void doReceiving(string audioFile);
+private:
+	void doSending();
 
+	void doReceiving();
+
+	Config& config;
 };
 
 #endif /* VOIPMODULE_H_ */

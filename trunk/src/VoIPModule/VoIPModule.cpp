@@ -2,14 +2,13 @@
  * VoIPModule.cpp
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #include "VoIPModule.h"
 
-VoIPModule::VoIPModule() {
-	// TODO Auto-generated constructor stub
-
+VoIPModule::VoIPModule(Config* config) {
+	this.config = *config;
 }
 
 VoIPModule::~VoIPModule() {
@@ -17,17 +16,24 @@ VoIPModule::~VoIPModule() {
 }
 
 /**
- * Wysy³amy dane z pliku audio do wskazanego hosta zestawiaj¹c najpierw po³¹czenia VoIP.
- * TODO: jakie argumenty potrzebne?
+ * Wysyï¿½amy dane z pliku audio do wskazanego hosta zestawiajï¿½c najpierw poï¿½ï¿½czenia VoIP.
  */
-void VoIPModule::doSending(string audioFile, int destIP) {
+void VoIPModule::doSending() {
 
 }
 
 /**
- * Czekamy na po³¹czenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
- * TODO: jakie argumenty?
+ * Czekamy na poï¿½ï¿½czenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
  */
-void VoIPModule::doReceiving(string audioFile) {
+void VoIPModule::doReceiving() {
 
 }
+
+void VoIPModule::connect() {
+	if(config.weAreCalling) {
+		doSending();
+	} else {
+		doReceiving();
+	}
+}
+
