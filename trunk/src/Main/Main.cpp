@@ -47,7 +47,8 @@ int Main::startProgram(int argc, char **argv) {
 	cnf = new Config(configFile);
 
 
-	PRN("TODO: wywo�uje odpowiednie metody w VoIPModule..");
+	//TODO:
+	PRN1("TODO: wywoluje odpowiednie metody w VoIPModule..");
 	VoIPModule* voip = new VoIPModule(cnf);
 
 //	voip->connect();
