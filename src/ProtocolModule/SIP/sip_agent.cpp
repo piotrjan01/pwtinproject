@@ -76,7 +76,7 @@ string SIP_Agent::generateCallID() {
 	string callid = "";
 
 	for (int i = 0; i < 10; ++i) 
-		registration.callid += toString( rand() % 10 );
+		callid += toString( rand() % 10 );
 
 	return callid + "@" + proxy;
 }
@@ -151,6 +151,29 @@ void SIP_Agent::replyToOptions(SIP_Message &m) {
 
 }
 
+void SIP_Agent::replyAck(SIP_Message &m) {
+	
+	SIP_Message reply;
+
+	reply.rline = "ACK SIP/2.0";
+	reply.via.push_back(m.via[0]);
+
+	reply.lines.push_back("Max-Forwards: 70");
+	
+	reply.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	reply.lines.push_back("From: " +  m.getField("From"));
+	reply.lines.push_back("To: " + m.getField("To"));
+
+	reply.lines.push_back("Call-ID: " + generateCallID());
+	reply.lines.push_back("CSeq: 1 ACK");	
+
+	reply.lines.push_back("Content-Length: 0");
+
+	sendMessage(reply, proxy, "8060");
+
+}
+
 void SIP_Agent::receiveMessage() { 
 
 	sockaddr_in sender;
@@ -198,6 +221,8 @@ void SIP_Agent::receiveMessage() {
 				if (auth.algorithm != "MD5") {
 					cout << "Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
 					cout << "No action" << endl;
+					waitingfor = NONE;
+					wait.V();
 				} else {
 					cout << "Register again using authentication." << endl;
 					auth.user = user;
@@ -215,6 +240,36 @@ void SIP_Agent::receiveMessage() {
 					waitingfor = NONE;
 					wait.V();
 				}
+
+			} else if (code == 404) {
+				
+				if (waitingfor == CALL) {
+					cout << "Can't connect, user not found." << endl;
+					waitingfor = NONE;
+					wait.V();
+				}
+
+			} else if (code == 407) {
+				
+				cout << "proxy authentication is required" << endl;
+				replyAck(m);
+
+				SIP_Authentication auth = m.getProxyAuthentication();
+				if (auth.algorithm != "MD5") {
+					cout << "Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
+					cout << "No action" << endl;
+					waitingfor = NONE;
+					wait.V();
+				} else {
+					cout << "Invite again using authentication." << endl;
+					auth.user = user;
+					auth.pass = pass;
+					auth.method = "INVITE";
+					auth.uri = "sip:" + partnerID + "@" + proxy;
+					registration.authentication = auth;
+					Call();
+				}
+
 			}
 		} else {
 			cout << m.getField("From") << "." << endl;
@@ -252,7 +307,7 @@ void SIP_Agent::Register() {
 	m.lines.push_back("Expires: 3600");
 
 	if (registration.authentication.algorithm == "MD5") {
-		m.lines.push_back("Authorization: Digest username=\"" + registration.authentication.user +
+		m.lines.push_back("Proxy-Authorization: Digest username=\"" + registration.authentication.user +
 				"\",realm=\"" + registration.authentication.realm + "\",nonce=\"" + registration.authentication.nonce +
 				"\",uri=\"" + registration.authentication.uri + "\",response=\"" + registration.authentication.getMD5() +
 				"\",algorithm=MD5");
@@ -263,14 +318,11 @@ void SIP_Agent::Register() {
 	sendMessage(m, proxy, "8060");
 }
 
-void SIP_Agent::Call(string id) {
+void SIP_Agent::Call() {
 	
 	SIP_Message	m;
 
-	invite.cseq = 1;
-	invite.callid = generateCallID();
-
-	m.rline = "INVITE sip:" + id + "@" + proxy + " SIP/2.0";
+	m.rline = "INVITE sip:" + partnerID + "@" + proxy + " SIP/2.0";
 	m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + branch);
 
 	m.lines.push_back("Max-Forwards: 70");
@@ -278,18 +330,58 @@ void SIP_Agent::Call(string id) {
 	m.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
 
 	m.lines.push_back("From: " + fromtoline);
-	m.lines.push_back("To: \"" + id + "\"<sip:" + id + "@" + proxy + ">");
+	m.lines.push_back("To: \"" + partnerID + "\"<sip:" + partnerID + "@" + proxy + ">");
 
 	m.lines.push_back("Call-ID: " + invite.callid);
 	m.lines.push_back("CSeq: " + toString(invite.cseq) + " INVITE");
 
 	m.lines.push_back("Allow: INVITE, ACK, OPTIONS, BYE");
 
-	m.lines.push_back("Content-Type: application/sdp");
-	m.lines.push_back("Content-Length: ");
+	if (registration.authentication.algorithm == "MD5") {
+		m.lines.push_back("Authorization: Digest username=\"" + registration.authentication.user +
+				"\",realm=\"" + registration.authentication.realm + "\",nonce=\"" + registration.authentication.nonce +
+				"\",uri=\"" + registration.authentication.uri + "\",response=\"" + registration.authentication.getMD5() +
+				"\",algorithm=MD5");
+	}
 
+	m.lines.push_back("Content-Type: application/sdp");
+
+	string sdp = "v=0\n";
+	sdp += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	sdp += "s=CounterPath X-Lite 3.0\n";
+	sdp += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	sdp += string("t=0 0\n");
+	sdp += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
+	sdp += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
+	sdp += "a=fmtp:101 0-15\n";
+	sdp += "a=rtpmap:107 BV32/16000\n";
+	sdp += "a=rtpmap:101 telephone-event/8000\n";
+	sdp += "a=sendrecv";
+
+	m.lines.push_back("Content-Length: " + sdp.length());
+	m.lines.push_back("");
+	m.lines.push_back(sdp);
+
+	sendMessage(m, proxy, "8060");
 
 }
+
+void SIP_Agent::Call(std::string id, unsigned short port) {
+	
+	partnerID = id;
+	localRtpPort = port;
+
+	invite.cseq = 1;
+	invite.callid = generateCallID();
+	invite.authentication.algorithm = "";
+	
+	waitingfor = CALL;
+
+	Call();
+
+	wait.P();
+}
+
 
 void SIP_Agent::Register(string user, string pass, string proxy) {
 

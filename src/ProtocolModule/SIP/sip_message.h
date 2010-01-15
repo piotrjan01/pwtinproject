@@ -33,6 +33,7 @@ struct SIP_Message {
 	std::string method();
 
 	SIP_Authentication getAuthentication();
+	SIP_Authentication getProxyAuthentication();
 	std::string toStream();
 
 };
