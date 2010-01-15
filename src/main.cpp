@@ -6,8 +6,8 @@ using namespace std;
 
 int main(int argc, char **argv) {
 	/* Jedyne co robimy to przekazujemy argumenty do metody
-	 * startProgram w klasie Main i dzia³amy ju¿ tylko na obiektach.
+	 * startProgram w klasie Main i dziaï¿½amy juï¿½ tylko na obiektach.
 	 */
-	return Main::startProgram(argc, argv);
+	return Main::getMain()->startProgram(argc, argv);
 }
 
