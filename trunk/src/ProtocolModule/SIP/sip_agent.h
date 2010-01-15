@@ -28,6 +28,8 @@ struct SIP_Info {
 	SIP_Authentication authentication;
 };
 
+enum Waitfor { NONE, REGISTER, CALL };
+
 class SIP_Agent {
 
 	friend void * SIP_AgentThread( void * );
@@ -39,6 +41,10 @@ class SIP_Agent {
 		pthread_t thread;
 		Semaphore mutex;
 
+		// Semafor pozwalajacy na blokowanie metod
+		Semaphore wait;
+		Waitfor waitingfor;
+
 		// Socket
 		int sock;
 
@@ -48,7 +54,7 @@ class SIP_Agent {
 		// Ustawione na true zabija
 		bool killThread;
 
-		// Podstawowe informacje
+		// Podstawowe informacje o uzytkowniku
 		std::string proxy, user, pass, tag, branch;
 		std::string fromtoline;
 
@@ -70,6 +76,8 @@ class SIP_Agent {
 		void replyToOptions(SIP_Message &m);
 
 		void Register();
+
+		
 
 	public:
 

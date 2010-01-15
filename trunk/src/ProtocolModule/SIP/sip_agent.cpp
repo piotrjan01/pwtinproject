@@ -26,7 +26,7 @@ using namespace std;
 
 void * SIP_AgentThread( void * sip_agent );
 
-SIP_Agent::SIP_Agent(string localaddr) : mutex(0) {
+SIP_Agent::SIP_Agent(string localaddr) : mutex(0), wait(0) {
 
 	cout << "Creating socket...";
 	sock = socket( AF_INET, SOCK_DGRAM, 0);
@@ -180,9 +180,15 @@ void SIP_Agent::receiveMessage() {
 				cout << "that's an error." << endl << "No action." << endl;
 			else if (code < 200) 
 				cout << "that's OK, let's wait for next messages." << endl << "Waiting for more." << endl;
-			else if (code == 200) 
+			else if (code == 200) {
 				cout << "that's great, we're registered!" << endl << "No action." << endl;
-			else if (code < 300) {
+			
+				if (waitingfor == REGISTER) {
+					waitingfor = NONE;
+					wait.V();
+				}
+			
+			} else if (code < 300) {
 			
 			} else if (code < 400) {
 			
@@ -202,6 +208,13 @@ void SIP_Agent::receiveMessage() {
 					Register();
 				}
 				
+			} else if (code == 403) {
+				
+				if (waitingfor == REGISTER) {
+					cout << "Can't register, wrong password?" << endl;
+					waitingfor = NONE;
+					wait.V();
+				}
 			}
 		} else {
 			cout << m.getField("From") << "." << endl;
@@ -295,8 +308,11 @@ void SIP_Agent::Register(string user, string pass, string proxy) {
 
 	Register();
 
+	waitingfor = REGISTER;
+
 	mutex.V();
 
+	wait.P();
 }
 
 void * SIP_AgentThread( void * sip_agent ) {
