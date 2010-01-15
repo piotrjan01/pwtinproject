@@ -22,13 +22,21 @@
 #include "sip_message.h"
 #include "sip_authentication.h"
 
+struct CallInfo {
+	std::string callID;
+	std::string remoteIP;
+	unsigned short remotePort;
+};
+
+
+
 struct SIP_Info {
 	unsigned int cseq;
 	std::string callid;
 	SIP_Authentication authentication;
 };
 
-enum Waitfor { NONE, REGISTER, CALL };
+enum Waitfor { NONE, REGISTER, CALL, ANSWER };
 
 class SIP_Agent {
 
@@ -68,8 +76,10 @@ class SIP_Agent {
 		unsigned short localRtpPort, remoteRtpPort;
 		
 		// identyfikator oraz ip rozmówcy
-		std::string partnerID, remoteRtpAddress ;
+		std::string partnerID, remoteRtpAddress;
 
+		// czy czekamy na telefon?
+		bool waitingForCall;
 
 		std::string addressString();
 
@@ -82,6 +92,9 @@ class SIP_Agent {
 
 		void replyAck(SIP_Message &m, std::string information = "");
 		void replyToOptions(SIP_Message &m);
+		void replyRinging(SIP_Message &m);
+
+		void answerCall(SIP_Message &m);
 
 		void Register();
 		void Call();
@@ -94,7 +107,8 @@ class SIP_Agent {
 
 		void Register(std::string user, std::string pass, std::string proxy);
 
-		void Call(std::string id, unsigned short port);
+		CallInfo Answer(unsigned short port);
+		CallInfo Call(std::string id, unsigned short port);
 
 };
 #endif
