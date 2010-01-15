@@ -5,7 +5,7 @@
 
 using namespace std;
 
-/*
+
 int main(int argc, char *argv[]) {
 
 	srand(time(NULL));
@@ -16,11 +16,13 @@ int main(int argc, char *argv[]) {
 
 	cout << " --------------- MAIN -------------- " << endl;
 
-	agent.Call("stud5", 3333);
+	// agent.Call("stud5", 3333);
+	//
+	agent.Answer(3333);
 
 	sleep(30.0);
 	return 0;
 
 }
-*/
+
 

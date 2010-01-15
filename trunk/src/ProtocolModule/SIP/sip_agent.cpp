@@ -174,6 +174,69 @@ void SIP_Agent::replyAck(SIP_Message &m, std::string information) {
 
 }
 
+void SIP_Agent::replyRinging(SIP_Message &m) {
+	
+	SIP_Message reply;
+
+	reply.rline = "SIP/2.0 180 Ringing";
+	reply.via = m.via;
+	
+	reply.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	reply.lines.push_back("From: " +  m.getField("From"));
+	reply.lines.push_back("To: " + m.getField("To") + ";tag=" + tag);
+
+	reply.lines.push_back("Call-ID: " + m.getCallID());
+	reply.lines.push_back("CSeq: " + m.getField("CSeq"));	
+
+	reply.lines.push_back("Content-Length: 0");
+
+	sendMessage(reply, proxy, "8060");
+
+}
+
+void SIP_Agent::answerCall(SIP_Message &m) {
+	
+	SIP_Message reply;
+
+	reply.rline = "SIP/2.0 200 OK";
+	reply.via = m.via;
+	
+	reply.lines.push_back("Contact: <sip:" + user + "@" + addressString() + ">");
+
+	reply.lines.push_back("From: " +  m.getField("From"));
+	reply.lines.push_back("To: " + m.getField("To") + ";tag=" + tag);
+
+	invite.callid = m.getCallID();
+	invite.cseq = atoi( m.getField("CSeq").c_str() );
+
+	reply.lines.push_back("Call-ID: " + m.getCallID());
+	reply.lines.push_back("CSeq: " + m.getField("CSeq"));
+
+	reply.lines.push_back("Record-Route: " + m.getField("Record-Route"));
+	
+	reply.lines.push_back("Allow: INVITE, ACK, OPTIONS, BYE");
+
+	reply.lines.push_back("Content-Type: application/sdp");
+
+	reply.body = "v=0\n";
+	reply.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	reply.body += "s=CounterPath X-Lite 3.0\n";
+	reply.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+	reply.body += string("t=0 0\n");
+	reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
+	reply.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
+	reply.body += "a=fmtp:101 0-15\n";
+	reply.body += "a=rtpmap:107 BV32/16000\n";
+	reply.body += "a=rtpmap:101 telephone-event/8000\n";
+	reply.body += "a=sendrecv\n";
+
+	reply.lines.push_back("Content-Length: " + toString(reply.body.length()));
+
+	sendMessage(reply, proxy, "8060");
+
+}
+
 void SIP_Agent::receiveMessage() { 
 
 	sockaddr_in sender;
@@ -307,8 +370,30 @@ void SIP_Agent::receiveMessage() {
 	} else {
 		cout << "It's a request - ";
 		cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << endl;
+
 		if (m.method() == "OPTIONS") 
 			replyToOptions(m);
+		else if (m.method() == "INVITE") {
+			
+			cout << "It's an incoming call. " << endl;
+			replyRinging(m);
+
+			if (waitingfor == ANSWER) {
+				remoteRtpPort = atoi( m.getSdpPort().c_str() );
+				remoteRtpAddress = m.getSdpAddress();
+				answerCall(m);
+			}
+		} else if (m.method() == "ACK") {
+		
+			if (waitingfor == ANSWER) {
+				if (invite.callid == m.getCallID()) {
+					cout << "Connection established" << endl;
+					waitingfor = NONE;
+					wait.V();
+				}
+			}
+
+		}
 	}
 
 	cout << "--------------------------------" << endl;
@@ -392,8 +477,13 @@ void SIP_Agent::Call() {
 
 }
 
-void SIP_Agent::Call(std::string id, unsigned short port) {
+CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
 	
+	mutex.P();
+
+	remoteRtpAddress = "0.0.0.0";
+	remoteRtpPort = 0;
+
 	partnerID = id;
 	localRtpPort = port;
 
@@ -405,9 +495,50 @@ void SIP_Agent::Call(std::string id, unsigned short port) {
 
 	Call();
 
+	mutex.V();
+
 	wait.P();
+
+	mutex.P();
+
+	CallInfo result;
+
+	result.remoteIP   = remoteRtpAddress;
+	result.remotePort = remoteRtpPort;
+	result.callID     = id;
+
+	mutex.V();
+
+	return result;
 }
 
+CallInfo SIP_Agent::Answer(unsigned short port) {
+	
+	mutex.P();
+
+	remoteRtpAddress = "0.0.0.0";
+	remoteRtpPort = 0;
+
+	localRtpPort = port;
+	
+	waitingfor = ANSWER;
+
+	mutex.V();
+
+	wait.P();
+
+	mutex.P();
+
+	CallInfo result;
+
+	result.remoteIP   = remoteRtpAddress;
+	result.remotePort = remoteRtpPort;
+	result.callID     = "incognito";
+
+	mutex.V();
+
+	return result;
+}
 
 void SIP_Agent::Register(string user, string pass, string proxy) {
 
