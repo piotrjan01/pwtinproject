@@ -59,6 +59,9 @@ class SIP_Agent {
 		SIP_Agent(char * localaddr);
 		~SIP_Agent();
 
+		/**
+		 * Rejestrujemy sie w proxy
+		 */
 		void Register(std::string user, std::string pass, std::string proxy);
 
 };
