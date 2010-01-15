@@ -2,7 +2,7 @@
  * Main.cpp
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #include "Main.h"
@@ -29,9 +29,14 @@ int Main::startProgram(int argc, char **argv) {
 	//print arguments
 	for (int i=0; i<argc; i++) cout<<"arg nr "<<i<<" = "<<argv[i]<<endl;
 
+
 	PRN("TODO: wczytanie konfiguracji");
 	PRN("TODO: wczytuje dane audio");
-	PRN("TODO: wywo³uje odpowiednie metody w VoIPModule..");
+
+
+
+	PRN("TODO: wywoï¿½uje odpowiednie metody w VoIPModule..");
+
 	PRN("TODO: zapisuje loga do pliku...");
 
 	PRN1("ends startProgram");

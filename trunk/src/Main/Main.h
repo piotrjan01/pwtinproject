@@ -2,13 +2,14 @@
  * Main.h
  *
  *  Created on: 2010-01-14
- *      Author: Piotr Gwizda³a
+ *      Author: Piotr Gwizdaï¿½a
  */
 
 #ifndef MAIN_H_
 #define MAIN_H_
 
 #include <string>
+#include "Config.h"
 
 using namespace std;
 
@@ -17,13 +18,15 @@ public:
 	Main();
 	virtual ~Main();
 
+	Config* cnf;
+
 	/**
-	 * Tak na prawdê jedyne co mo¿emy zrbiæ ze string to wyœwietliæ, zalogowaæ lub nic.
+	 * Tak na prawdï¿½ jedyne co moï¿½emy zrbiï¿½ ze string to wyï¿½wietliï¿½, zalogowaï¿½ lub nic.
 	 */
 	static void handleError(string message);
 
 	/**
-	 * Tu przekazujemy argumenty wywo³ania programu.
+	 * Tu przekazujemy argumenty wywoï¿½ania programu.
 	 */
 	static int startProgram(int argc, char **argv);
 
