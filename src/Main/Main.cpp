@@ -32,7 +32,7 @@ void Main::printUsage() {
 
 
 void Main::handleError(string message) {
-	cout<<"====> ERROR: "+message<<endl;
+	cerr<<"====> ERROR: "+message<<endl;
 	exit(EXIT_SUCCESS);
 }
 
