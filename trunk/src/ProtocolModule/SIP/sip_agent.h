@@ -76,7 +76,8 @@ class SIP_Agent {
 		unsigned short localRtpPort, remoteRtpPort;
 		
 		// identyfikator oraz ip rozmówcy
-		std::string partnerID, remoteRtpAddress;
+		std::string partnerID, remoteRtpAddress, partnerTag;
+		bool connectionEstablished;
 
 		// czy czekamy na telefon?
 		bool waitingForCall;
@@ -109,6 +110,10 @@ class SIP_Agent {
 
 		CallInfo Answer(unsigned short port);
 		CallInfo Call(std::string id, unsigned short port);
+
+		void Disconnect();
+
+		bool connected();
 
 };
 #endif
