@@ -100,6 +100,31 @@ SIP_Authentication SIP_Message::getAuthentication() {
 		return result;
 }
 
+SIP_Authentication SIP_Message::getProxyAuthentication() {
+		
+		SIP_Authentication result;
+		string s = getField("Proxy-Authenticate");
+		vector<string> v = split(s, ' ');
+		
+		if (v.size() != 2)
+			return result;
+
+		vector<string> u = split(v[1], ',');
+
+		for (unsigned int i = 0; i < u.size(); ++i) {
+			string k = getKey(u[i]);
+			string v = trim(getValue(u[i]), '\"');
+			if (k == "realm") 
+				result.realm = v;
+			else if (k == "algorithm") 
+				result.algorithm = v;
+			else if (k == "nonce")
+				result.nonce = v;
+		}
+
+		return result;
+}
+
 string SIP_Message::toStream() {
 	string result = rline + "\015\012";
 	

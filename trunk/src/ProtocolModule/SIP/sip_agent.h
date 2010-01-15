@@ -64,6 +64,12 @@ class SIP_Agent {
 		// Sesja nawiazujaca
 		SIP_Info invite;
 
+		// porty RTP
+		unsigned short localRtpPort, remoteRtpPort;
+		
+		// 
+		std::string partnerID;
+
 		std::string addressString();
 
 		std::string generateBranch();
@@ -73,10 +79,11 @@ class SIP_Agent {
 		void sendMessage(SIP_Message &m, std::string address, std::string port);
 		void receiveMessage();
 
+		void replyAck(SIP_Message &m);
 		void replyToOptions(SIP_Message &m);
 
 		void Register();
-
+		void Call();
 		
 
 	public:
@@ -85,7 +92,8 @@ class SIP_Agent {
 		~SIP_Agent();
 
 		void Register(std::string user, std::string pass, std::string proxy);
-		void Call(std::string id);
+
+		void Call(std::string id, unsigned short port);
 
 };
 #endif
