@@ -8,13 +8,21 @@
 #include "Main.h"
 #include "../debug/debug.h"
 
-Main::Main() {
-	// TODO Auto-generated constructor stub
+Main* Main::main = 0;
 
+Main::Main() {
+	if (Main::main != NULL) return;
+	main = this;
 }
 
 Main::~Main() {
-	// TODO Auto-generated destructor stub
+	main = NULL;
+}
+
+Main* Main::getMain() {
+	if (main != NULL) return main;
+	main = new Main();
+	return main;
 }
 
 
@@ -26,11 +34,14 @@ void Main::handleError(string message) {
 int Main::startProgram(int argc, char **argv) {
 	PRN1("in startProgram");
 
-	//print arguments
-	for (int i=0; i<argc; i++) cout<<"arg nr "<<i<<" = "<<argv[i]<<endl;
+	string configFile;
+	//pierwszy argument to nazwa/sciezka do pliku z config.
 
+	if (argc != 2) Main::handleError("Too little arguments!");
+	configFile = argv[1];
 
-	PRN("TODO: wczytanie konfiguracji");
+	cnf = new Config(configFile);
+
 	PRN("TODO: wczytuje dane audio");
 
 

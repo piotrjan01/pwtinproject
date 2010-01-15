@@ -30,12 +30,12 @@ Config::Config(string configFile) {
 		else if (callIndicator == "answering") {
 			PRN2("we are answering");
 		}
-		else Main::handleError("Configuration file has incorrect format.");
+		else Main::getMain()->handleError("Configuration file has incorrect format.");
 		//cout << line << endl;
 		cf.close();
 	}
 
-	else Main::handleError("Unable to open configuration file: "+configFile);
+	else Main::getMain()->handleError("Unable to open configuration file: "+configFile);
 
 
 }

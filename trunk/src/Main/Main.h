@@ -18,17 +18,21 @@ public:
 	Main();
 	virtual ~Main();
 
+	static Main* getMain();
+
+	static Main* main;
+
 	Config* cnf;
 
 	/**
 	 * Tak na prawd� jedyne co mo�emy zrbi� ze string to wy�wietli�, zalogowa� lub nic.
 	 */
-	static void handleError(string message);
+	void handleError(string message);
 
 	/**
 	 * Tu przekazujemy argumenty wywo�ania programu.
 	 */
-	static int startProgram(int argc, char **argv);
+	int startProgram(int argc, char **argv);
 
 };
 
