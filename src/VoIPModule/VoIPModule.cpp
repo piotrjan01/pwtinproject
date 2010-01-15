@@ -9,7 +9,8 @@
 #include "../VoIPPacketsManager/NoSteg.h"
 #include "../VoIPPacketsManager/StegLACK.h"
 
-VoIPModule::VoIPModule(Config* _config) : config(*_config) {
+VoIPModule::VoIPModule(Config* _config) :
+	config(*_config) {
 	sipAgent = new SIP_Agent(config.localIP);
 	if (config.doSteg) {
 		packetsManager = new StegLACK();
@@ -29,8 +30,21 @@ VoIPModule::~VoIPModule() {
  */
 void VoIPModule::doSending() {
 	initializeConnection();
-	sipAgent->Call(config.calleeID, config.callPort);
+	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
+	*callInfo = sipAgent->Call(config.calleeID, config.callPort);
 
+	//	rtpAgent = new RTPAgent(senderPort, receiverIP, receiverPort);
+
+	// TODO pseudokod poniżej
+	//	while(sipAgent.isConnected()) {
+	//	while (true) {
+	//		delay = packetsManager->getDelay();
+	//		packetsManager->getPacketToSend(rtpPacket);
+	//		sleep(delay);
+	//		rtpAgent->sendPacket(rtpPacket);
+	//		// TODO
+	//		// packets = rtpAgent->getPackets();
+	//	}
 }
 
 /**
@@ -38,8 +52,11 @@ void VoIPModule::doSending() {
  */
 void VoIPModule::doReceiving() {
 	initializeConnection();
+
+	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
+	*callInfo = sipAgent->Answer(config.callPort);
+
 	// TODO
-	//agent->Answer(...);
 }
 
 /**

@@ -34,6 +34,7 @@ private:
 
 	SIP_Agent* sipAgent;
 	VoIPPacketsManager* packetsManager;
+	CallInfo* callInfo;
 
 };
 
