@@ -56,6 +56,11 @@ public:
 	 */
 	int callPort;
 
+	/**
+	 * Mówi czy bedziemy przesylac dane steganograficzne czy nie
+	 */
+	bool doSteg;
+
 };
 
 #endif /* CONFIG_H_ */
