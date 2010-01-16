@@ -67,6 +67,20 @@ public:
 	 */
 	bool doSteg;
 
+	/*
+	 *maximum interval between steg sequence
+	 */
+	int maxStegInterval;
+
+	/**
+	 *minimum interval between steg sequence
+	 */
+	int minStegInterval;
+
+	/**
+	 * Steganography sequence from config file
+	 */
+	string stegSequence;
 };
 
 #endif /* CONFIG_H_ */
