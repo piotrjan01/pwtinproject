@@ -11,6 +11,8 @@
 #include <iostream>
 #include <fstream>
 
+#define DEFAULT_SIP_PROXY_PORT 8060;
+
 Config::Config(string configFile) {
 	VAR_(2, configFile);
 	ifstream cf;
@@ -44,6 +46,8 @@ Config::Config(string configFile) {
 
 	//TODO: usunac i wczytac z pliku
 	doSteg = false;
+	proxyPort = DEFAULT_SIP_PROXY_PORT;
+
 	PRN_(2, "end config constr");
 }
 

@@ -42,6 +42,11 @@ public:
 	 */
 	string SIPProxyIP;
 
+	/**
+	 * The port through which we connect with proxy
+	 */
+	int proxyPort;
+
 	//ID usera do ktorego dzwonimy
 	string calleeID;
 
