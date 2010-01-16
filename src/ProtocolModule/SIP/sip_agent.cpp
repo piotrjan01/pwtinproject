@@ -298,7 +298,10 @@ void SIP_Agent::receiveMessage() {
 
 
                 } else if (m.getCallID() == registration.callid) {
-                    cout << "SIP: Registered." << endl;
+					if (unregistering)
+						cout << "SIP: Unregistered." << endl;
+					else
+						cout << "SIP: Registered." << endl;
 
                     if (waitingfor == REGISTER) {
                         registered = true;
@@ -442,7 +445,11 @@ void SIP_Agent::Register() {
 
     m.lines.push_back("Call-ID: " + registration.callid);
     m.lines.push_back("CSeq: " + toString(++registration.cseq) + " REGISTER");
-    m.lines.push_back("Expires: 3600");
+
+	if (unregistering)
+		m.lines.push_back("Expires: 0");
+	else 
+		m.lines.push_back("Expires: 3600");
 
     if (registration.authentication.algorithm == "MD5") {
         m.lines.push_back("Proxy-Authorization: Digest username=\"" + registration.authentication.user +
@@ -605,6 +612,28 @@ void SIP_Agent::Disconnect() {
     mutex.V();
 }
 
+void SIP_Agent::Unregister() {
+
+	mutex.P();
+	
+	if (!registered) {
+		mutex.V();
+		return;
+	}
+
+	unregistering = true;
+	registered = false;
+	waitingfor = REGISTER;
+	waitTime = 0;
+
+	Register();
+
+	mutex.V();
+
+	wait.P();
+
+}
+
 bool SIP_Agent::Register(string user, string pass, string proxy, unsigned short proxyPort) {
 
     bool result;
@@ -615,6 +644,8 @@ bool SIP_Agent::Register(string user, string pass, string proxy, unsigned short 
         mutex.V();
         return true;
     }
+
+	unregistering = false;
 
     cout << "SIP: Registering." << endl;
 
