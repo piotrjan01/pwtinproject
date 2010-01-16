@@ -1,4 +1,4 @@
-/* 
+/*
  * sip_message.h
  * Reprezentacja wiadomosci SIP.
  */
@@ -13,34 +13,36 @@
 #include "sip_authentication.h"
 
 struct SIP_Message {
-	
-	friend std::ostream & operator<<(std::ostream & out, const SIP_Message & m);
 
-	std::string				 rline;
-	std::vector<std::string> via;
-	std::vector<std::string> lines;
-	std::string              body;
+    friend std::ostream & operator<<(std::ostream & out, const SIP_Message & m);
 
-	SIP_Message() {}
-	SIP_Message( char *buf, int len );
+    std::string				 rline;
+    std::vector<std::string> via;
+    std::vector<std::string> lines;
+    std::string              body;
 
-	std::string getField(std::string name);
-	void setField(std::string name, std::string value);
+    SIP_Message() {}
+    SIP_Message( char *buf, int len );
 
-	bool isReply();
-	bool isRequest();
+    std::string getField(std::string name);
+    void setField(std::string name, std::string value);
 
-	int replyCode();
-	std::string method();
+    bool isReply();
+    bool isRequest();
 
-	SIP_Authentication getAuthentication();
-	SIP_Authentication getProxyAuthentication();
-	std::string toStream();
+    int replyCode();
+    std::string method();
 
-	std::string getSdpAddress();
-	std::string getSdpPort();
+    SIP_Authentication getAuthentication();
+    SIP_Authentication getProxyAuthentication();
+    std::string toStream();
 
-	std::string getCallID() { return getField("Call-ID"); }
+    std::string getSdpAddress();
+    std::string getSdpPort();
+
+    std::string getCallID() {
+        return getField("Call-ID");
+    }
 
 };
 

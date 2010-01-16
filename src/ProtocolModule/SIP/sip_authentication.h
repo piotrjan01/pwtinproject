@@ -1,4 +1,4 @@
-/* 
+/*
  * sip_authentication.h
  * Uwierzytelnienie w sesjach SIP.
  */
@@ -10,11 +10,11 @@
 
 struct SIP_Authentication {
 
-	std::string realm, nonce, algorithm;
-	std::string uri, method;
-	std::string user, pass;
+    std::string realm, nonce, algorithm;
+    std::string uri, method;
+    std::string user, pass;
 
-	std::string getMD5();
+    std::string getMD5();
 
 };
 

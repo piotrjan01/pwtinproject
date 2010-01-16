@@ -1,5 +1,5 @@
 /*
- * parsing.h 
+ * parsing.h
  * Funkcje ulatwiajace parsowanie tekstu i wiadomosici SIP/SDP.
  */
 
@@ -22,9 +22,9 @@ std::string getKey(std::string s, char c = '=');
 // Przeksztalca dowolny typ T z operatorem << (std::ostream &, const &T) na string.
 template <typename T>
 std::string toString(T i) {
-	std::stringstream out;
-	out << i;
-	return out.str();
+    std::stringstream out;
+    out << i;
+    return out.str();
 }
 
 #endif
