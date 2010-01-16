@@ -28,6 +28,7 @@ void * SIP_AgentThread( void * sip_agent );
 
 SIP_Agent::SIP_Agent(string localaddr) : mutex(0), wait(0) {
 
+	registered = false;
 	connectionEstablished = false;
 	sleepTime = 1.0;
 
@@ -297,9 +298,10 @@ void SIP_Agent::receiveMessage() {
 
 
 				} else if (m.getCallID() == registration.callid) {
-					//cout << "that's great, we're registered!" << endl;					
+					cout << "SIP: Registered." << endl;					
 
 					if (waitingfor == REGISTER) {
+						registered = true;
 						waitingfor = NONE;
 						wait.V();
 					}
@@ -315,6 +317,7 @@ void SIP_Agent::receiveMessage() {
 				if (auth.algorithm != "MD5") {
 					cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
 					// cout << "No action" << endl;
+					registered = false;
 					waitingfor = NONE;
 					wait.V();
 				} else {
@@ -331,6 +334,7 @@ void SIP_Agent::receiveMessage() {
 				
 				if (waitingfor == REGISTER) {
 					cout << "SIP: Can't register, wrong password?" << endl;
+					registered = false;
 					waitingfor = NONE;
 					wait.V();
 				}
@@ -595,9 +599,16 @@ void SIP_Agent::Disconnect() {
 	mutex.V();
 }
 
-void SIP_Agent::Register(string user, string pass, string proxy, unsigned short proxyPort) {
+bool SIP_Agent::Register(string user, string pass, string proxy, unsigned short proxyPort) {
+
+	bool result;
 
 	mutex.P();
+
+	if (registered) {
+		mutex.V();
+		return true;
+	}
 
 	this->proxyPort = proxyPort;
 
@@ -621,6 +632,12 @@ void SIP_Agent::Register(string user, string pass, string proxy, unsigned short 
 	mutex.V();
 
 	wait.P();
+
+	mutex.P();
+	result = registered;
+	mutex.V();
+
+	return result;
 }
 
 bool SIP_Agent::connected() {

@@ -28,8 +28,6 @@ struct CallInfo {
 	unsigned short remotePort;
 };
 
-
-
 struct SIP_Info {
 	unsigned int cseq;
 	std::string callid;
@@ -65,6 +63,7 @@ class SIP_Agent {
 
 		// Ustawione na true zabija
 		bool killThread;
+		bool registered;
 
 		// Podstawowe informacje o uzytkowniku
 		std::string proxy, user, pass, tag, branch;
@@ -111,7 +110,7 @@ class SIP_Agent {
 		SIP_Agent(std::string localaddr);
 		~SIP_Agent();
 
-		void Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
+		bool Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
 
 		CallInfo Answer(unsigned short port);
 		CallInfo Call(std::string id, unsigned short port);
