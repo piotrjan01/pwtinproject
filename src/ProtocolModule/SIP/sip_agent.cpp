@@ -29,6 +29,7 @@ void * SIP_AgentThread( void * sip_agent );
 SIP_Agent::SIP_Agent(string localaddr) : mutex(0), wait(0) {
 
 	connectionEstablished = false;
+	sleepTime = 1.0;
 
 	cout << "Creating socket...";
 	sock = socket( AF_INET, SOCK_DGRAM, 0);
@@ -118,9 +119,10 @@ void SIP_Agent::sendMessage(SIP_Message &m, string address, unsigned short port)
 
 	sendto(sock, s.c_str(), s.length(), 0, (sockaddr *) &r, sizeof( r ));
 
-	cout << "-----   SIP Message sent   -----" << endl;
+/*	cout << "-----   SIP Message sent   -----" << endl;
 	cout << m;
-	cout << "--------------------------------" << endl;
+	cout << "--------------------------------" << endl;*/
+	cout << "SIP: >> " << m.rline << endl;
 }
 
 void SIP_Agent::replyToOptions(SIP_Message &m) {
@@ -255,29 +257,30 @@ void SIP_Agent::receiveMessage() {
 
 	SIP_Message m( buf, buflength );
 
-	cout << "----- SIP Message received -----" << endl;
+/*	cout << "----- SIP Message received -----" << endl;
 	cout << m;
-	cout << "------------ Action ------------" << endl;
+	cout << "------------ Action ------------" << endl;*/
 	
+	cout << "SIP: << " << m.rline << endl;
+
 	if (m.isReply()) {
-		cout << "It's a reply to request " + m.getField("CSeq") + " sent by ";
+		//cout << "It's a reply to request " + m.getField("CSeq") + " sent by ";
 		
 		if (m.getField("From") == fromtoline) {
-			cout << "this agent." << endl;
+			//cout << "this agent." << endl;
 			int code = m.replyCode();
-			cout << "Result code is " << code << ", ";
+			//cout << "Result code is " << code << ", ";
 			if (code < 100) 
-				cout << "that's an error." << endl << "No action." << endl;
-			else if (code < 200) 
-				cout << "that's OK, let's wait for next messages." << endl << "Waiting for more." << endl;
+				cout << "SIP: Error" << endl;
 			else if (code == 200) {
 				
 				if (m.getCallID() == invite.callid) {
 					if (waitingfor == CALL) {
 
-						cout << "that's great, connection established!" << endl ;	
+						//cout << "that's great, connection established!" << endl ;	
 
-						cout << "Remote address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
+						cout << "SIP: Connection established." << endl;
+						cout << "SIP: Remote RTP address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
 
 						remoteRtpPort = atoi( m.getSdpPort().c_str() );
 						remoteRtpAddress = m.getSdpAddress();
@@ -286,7 +289,6 @@ void SIP_Agent::receiveMessage() {
 						partnerTag = m.getField("To");
 						partnerTag = partnerTag.substr(partnerTag.find("tag=") + 4 );
 						
-
 						replyAck(m);
 
 						waitingfor = NONE;
@@ -295,7 +297,7 @@ void SIP_Agent::receiveMessage() {
 
 
 				} else if (m.getCallID() == registration.callid) {
-					cout << "that's great, we're registered!" << endl;					
+					//cout << "that's great, we're registered!" << endl;					
 
 					if (waitingfor == REGISTER) {
 						waitingfor = NONE;
@@ -308,15 +310,15 @@ void SIP_Agent::receiveMessage() {
 			} else if (code < 400) {
 			
 			} else if (code == 401) {
-				cout << "the server wants authentication." << endl;
+				// cout << "the server wants authentication." << endl;
 				SIP_Authentication auth = m.getAuthentication();
 				if (auth.algorithm != "MD5") {
-					cout << "Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
-					cout << "No action" << endl;
+					cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
+					// cout << "No action" << endl;
 					waitingfor = NONE;
 					wait.V();
 				} else {
-					cout << "Register again using authentication." << endl;
+					cout << "SIP: Register again using authentication." << endl;
 					auth.user = user;
 					auth.pass = pass;
 					auth.method = "REGISTER";
@@ -328,7 +330,7 @@ void SIP_Agent::receiveMessage() {
 			} else if (code == 403) {
 				
 				if (waitingfor == REGISTER) {
-					cout << "Can't register, wrong password?" << endl;
+					cout << "SIP: Can't register, wrong password?" << endl;
 					waitingfor = NONE;
 					wait.V();
 				}
@@ -336,24 +338,23 @@ void SIP_Agent::receiveMessage() {
 			} else if (code == 404) {
 				
 				if (waitingfor == CALL) {
-					cout << "Can't connect, user not found." << endl;
+					cout << "SIP: Can't connect, user not found." << endl;
 					waitingfor = NONE;
 					wait.V();
 				}
 
 			} else if (code == 407) {
 				
-				cout << "proxy authentication is required" << endl;
+				//cout << "SIP: Proxy authentication is required." << endl;
 				replyAck(m);
 
 				SIP_Authentication auth = m.getProxyAuthentication();
 				if (auth.algorithm != "MD5") {
-					cout << "Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
-					cout << "No action" << endl;
+					cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
 					waitingfor = NONE;
 					wait.V();
 				} else {
-					cout << "Invite again using authentication." << endl;
+					cout << "SIP: Invite again using authentication." << endl;
 					auth.user = user;
 					auth.pass = pass;
 					auth.method = "INVITE";
@@ -364,28 +365,28 @@ void SIP_Agent::receiveMessage() {
 
 			} else if (code == 480) {
 				
-				cout << "temporary unavailable, busy? rejected?" << endl;
+				//cout << "SIP: Temporary unavailable, busy? rejected?" << endl;
 				if (waitingfor == CALL) {
-					cout << "Can't connect, user not found." << endl;
+					cout << "SIP: Temporary unavailable, busy? rejected?" << endl;
 					waitingfor = NONE;
 					wait.V();
 				}
 
 			}
 		} else {
-			cout << m.getField("From") << "." << endl;
-			cout << "No action." << endl;
+		//	cout << m.getField("From") << "." << endl;
+			//cout << "No action." << endl;
 		}
 
 	} else {
-		cout << "It's a request - ";
-		cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << endl;
+		//cout << "It's a request - ";
+		//cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << endl;
 
 		if (m.method() == "OPTIONS") 
 			replyToOptions(m);
 		else if (m.method() == "INVITE") {
 			
-			cout << "It's an incoming call. " << endl;
+			cout << "SIP: Incoming call. " << endl;
 			replyRinging(m);
 
 			if (waitingfor == ANSWER) {
@@ -396,7 +397,7 @@ void SIP_Agent::receiveMessage() {
 		} else if (m.method() == "BYE") {
 			
 			if (connectionEstablished && (invite.callid == m.getCallID())) {
-				cout << "Disconnecting." << endl;
+				cout << "SIP: Disconnecting." << endl;
 				connectionEstablished = false;
 			}
 
@@ -404,7 +405,7 @@ void SIP_Agent::receiveMessage() {
 		
 			if (waitingfor == ANSWER) {
 				if (invite.callid == m.getCallID()) {
-					cout << "Connection established" << endl;
+					cout << "SIP: Connection established" << endl;
 					partnerTag = m.getField("From");
 					partnerTag = partnerTag.substr(partnerTag.find("tag=") + 4 );
 					connectionEstablished = true;
@@ -416,7 +417,7 @@ void SIP_Agent::receiveMessage() {
 		}
 	}
 
-	cout << "--------------------------------" << endl;
+	//cout << "--------------------------------" << endl;
 
 }
 
@@ -502,26 +503,28 @@ CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
 	CallInfo result;
 
 	if (!connected()) {
-	mutex.P();
+		mutex.P();
 
-	remoteRtpAddress = "0.0.0.0";
-	remoteRtpPort = 0;
+		remoteRtpAddress = "0.0.0.0";
+		remoteRtpPort = 0;
 
-	partnerID = id;
-	localRtpPort = port;
+		partnerID = id;
+		localRtpPort = port;
 
-	invite.cseq = 1;
-	invite.callid = generateCallID();
-	invite.authentication.algorithm = "";
-	
-	waitingfor = CALL;
+		invite.cseq = 1;
+		invite.callid = generateCallID();
+		invite.authentication.algorithm = "";
+		
+		waitTime = 0;
+		waitingfor = CALL;
 
-	Call();
+		Call();
 
-	mutex.V();
+		mutex.V();
 
-	wait.P();
-}
+		wait.P();
+	}
+
 	mutex.P();
 
 	result.remoteIP   = remoteRtpAddress;
@@ -538,19 +541,19 @@ CallInfo SIP_Agent::Answer(unsigned short port) {
 	CallInfo result;
 
 	if (!connected()) {
+		mutex.P();
 
-	mutex.P();
+		remoteRtpAddress = "0.0.0.0";
+		remoteRtpPort = 0;
 
-	remoteRtpAddress = "0.0.0.0";
-	remoteRtpPort = 0;
+		localRtpPort = port;
+		
+		waitTime = 0;
+		waitingfor = ANSWER;
 
-	localRtpPort = port;
-	
-	waitingfor = ANSWER;
+		mutex.V();
 
-	mutex.V();
-
-	wait.P();
+		wait.P();
 	}
 
 	mutex.P();
@@ -610,9 +613,10 @@ void SIP_Agent::Register(string user, string pass, string proxy, unsigned short 
 	registration.callid = generateCallID();
 	branch = generateBranch();
 
-	Register();
-
+	waitTime = 0;
 	waitingfor = REGISTER;
+
+	Register();
 
 	mutex.V();
 
@@ -638,15 +642,49 @@ void * SIP_AgentThread( void * sip_agent ) {
 
 	cout << "SIP AGENT thread started." << endl;
 
+	agent->mutex.P();
+
+	double sleepTime = agent->sleepTime;
+
+	agent->mutex.V();
+
 	while (1) {
 
-		sleep(0.1);
+		sleep(sleepTime);
 		agent->mutex.P();
 		
 		agent->receiveMessage();
 
 		if (agent->killThread)
 			break;
+
+		if (agent->waitingfor != NONE) {
+			++agent->waitTime;
+			//cout << agent->waitTime << endl;
+			double waitSeconds = ((double) agent->waitTime) * sleepTime;
+			bool timeout;
+
+			switch (agent->waitingfor) {
+				case CALL:
+					timeout = (waitSeconds >= 30.0);
+					break;
+				case ANSWER:
+					timeout = (waitSeconds >= 120.0);
+					break;
+				case REGISTER:
+					timeout = (waitSeconds >= 10.0);
+					break;
+				default:
+					timeout = false;
+			}
+
+			if (timeout) {
+				cout << "--------------------------------------------------------------------TIMEOUT" << endl;
+				agent->waitingfor = NONE;
+				agent->wait.V();
+			}
+
+		}
 
 		agent->mutex.V();
 	}

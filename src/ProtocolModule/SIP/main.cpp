@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
 
 	agent.Call("stud5", 3333);
 
+//	cout << "MAIN \n";
+
 	sleep(5.0);
 
 	agent.Disconnect();
