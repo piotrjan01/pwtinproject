@@ -91,6 +91,8 @@ public:
 	 * the size of RTP packet payload in bytes
 	 */
 	int RTPPayloadSize;
+
+	int noStegRTPDelay;
 };
 
 #endif /* CONFIG_H_ */

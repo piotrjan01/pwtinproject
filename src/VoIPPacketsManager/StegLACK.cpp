@@ -109,11 +109,6 @@ StegSeqElem::StegSeqElem(string stegSeq) {
 		intervMax = atoi(timing.substr(dashpos+1).c_str());
 
 	}
-	PRN_(3, "\n\nStegSeq element:");
-	VAR_(3, stegSeq);
-	VAR_(3, isStegPacket);
-	VAR_(3, intervMin);
-	VAR_(3, intervMax);
 }
 
 

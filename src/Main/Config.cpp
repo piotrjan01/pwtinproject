@@ -18,9 +18,12 @@
 //Rozmiar danych w pakiecie RTP w bajtach
 #define DEFAULT_RTP_PAYLOAD_SIZE 160
 
+//gdy nie wysyłamy steganografii, pakiety sa wysylane w odstepach 20ms
+#define DEFAULT_NOSTEG_RTP_DELAY 20
+
 Config::Config(string configFile) {
-	VAR_(3, "in config constr");
-	VAR_(3, configFile);
+	PRN_(4, "in config constr");
+	VAR_(4, configFile);
 
 	map<string, string> settings;
 	ifstream cf;
@@ -38,7 +41,7 @@ Config::Config(string configFile) {
 		string argname = ln.substr(0, eqpos);
 		string argval = ln.substr(eqpos+1);
 		settings[argname] = argval;
-		VAR_(3, argname+" = "+argval);
+		VAR_(4, argname+" = "+argval);
 	}
 
 	if (settings["calling"] == "1") weAreCalling = true;
@@ -48,6 +51,7 @@ Config::Config(string configFile) {
 	//wartosci domyslne parametrow tutaj:
 	proxyPort = DEFAULT_SIP_PROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
+	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
 
 	if (weAreCalling) {
 		calleeID = settings["callee-username"];
@@ -70,7 +74,7 @@ Config::Config(string configFile) {
 	SIPProxyIP = settings["proxy-ip"];
 	audioFilePath = settings["audio-data-file"];
 
-	PRN_(3, "end config constr");
+	PRN_(4, "end config constr");
 }
 
 Config::~Config() {

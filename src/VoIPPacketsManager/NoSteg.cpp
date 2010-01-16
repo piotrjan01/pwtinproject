@@ -15,7 +15,13 @@ NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
 	templatePacket.header->ssrc = RTPHeader::generateSSRC();
 	VAR_(2, (int) templatePacket.header->ssrc);
 	PRNBITS_(2, templatePacket.header->toString());
-	// TODO inicjalizacja danych -- wczytanie
+	templatePacket.delay = config->noStegRTPDelay;
+
+	// TODO inicjalizacja danych na char* ?
+	vector<char> data = getAudioDataToSend();
+	templatePacket.data = new char[data.size()];
+	for (int i=0; i<data.size(); i++) templatePacket.data[i]=data[i];
+
 }
 
 NoSteg::~NoSteg() {
