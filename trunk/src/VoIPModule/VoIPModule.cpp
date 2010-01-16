@@ -73,7 +73,7 @@ void VoIPModule::processIncomingPackets() {
  * W zaleznosci od configa rozpoczyna dzwonienie lub nasluchiwanie
  */
 void VoIPModule::connect() {
-	sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP);
+	sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP, config.proxyPort);
 
 	rtpAgent = new RTPAgent();
 
