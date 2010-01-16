@@ -63,20 +63,24 @@ RTPAgent::~RTPAgent() {
 void RTPAgent::setRemoteIP(string ip) {
 	remoteIP = ip;
 	addr_in.sin_addr.s_addr = inet_addr(remoteIP.c_str());
+	VAR_(1, remoteIP);
 }
 
 void RTPAgent::setRemotePort(int port) {
 	remotePort = port;
 	addr_in.sin_port = htons(remotePort);
+	VAR_(1, remotePort);
 }
 
 void RTPAgent::sendPacket(RTPPacket& rtpPacket) {
-	string s = rtpPacket.toStream();
-	sendto(socketfd, s.c_str(), s.length(), 0, (sockaddr *) &addr_in,
-			sizeof(addr_in));
+	PRN_(2, "RTP: sendPacket");
+	ostringstream oss;
+	rtpPacket.toStream(oss);
+	sendto(socketfd, oss.str().data(), oss.str().length(), 0,
+			(sockaddr *) &addr_in, sizeof(addr_in));
 
 	PRN_(2, "-----   RTPPacket sent   -----");
-	PRN_(2, s);
+	PRNBITS_(2, oss.str());
 	PRN_(2, "--------------------------------");
 }
 

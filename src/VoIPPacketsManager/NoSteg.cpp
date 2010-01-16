@@ -7,10 +7,15 @@
 
 #include "NoSteg.h"
 
-//TODO: dodac to do config?
-#define NO_STEG_DELAY 10
-
 NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
+	templatePacket.header->sequenceNumber = RTPHeader::generateSequenceNumber();
+	VAR_(2, templatePacket.header->sequenceNumber);
+	templatePacket.header->timestamp = RTPHeader::generateTimestamp();
+	VAR_(2, (int) templatePacket.header->timestamp);
+	templatePacket.header->ssrc = RTPHeader::generateSSRC();
+	VAR_(2, (int) templatePacket.header->ssrc);
+	PRNBITS_(2, templatePacket.header->toString());
+	// TODO inicjalizacja danych -- wczytanie
 }
 
 NoSteg::~NoSteg() {
@@ -18,21 +23,18 @@ NoSteg::~NoSteg() {
 }
 
 RTPPacket NoSteg::getNextPacket() {
+	PRNBITS_(2, templatePacket.header->toString());
+	templatePacket.header->nextRTPHeader(NARROW_BAND); // changes sequenceNumber and timestamp
+	PRNBITS_(2, templatePacket.header->toString());
 
-	//TODO: albo przechodzimy na vector<char> wszedzie, albo zostaje to:
-	//(vector<char> da nam pewnosc ze sie gdzies nie walnelismy ze wskaznikami i destruktorami)
-	vector<char> data = getAudioDataToSend();
-	char* chardata = new char[data.size()];
-	for (int i=0; i<(int)data.size(); i++) chardata[i] = data[i];
-
-	//TODO: skad mam wziac header'a ??
-	RTPHeader head;
-	RTPPacket ret(head, chardata, data.size());
-	ret.delay = NO_STEG_DELAY;
-	return ret;
+	// TODO
+	RTPPacket packet(templatePacket);
+	packet.delay = DEFAULT_PACKET_DELAY;
+	packet.data = NULL;
+	packet.dataSize = 0;
+	return packet;
 }
 
 void NoSteg::putReceivedPacketData(char* data, int dataSize) {
-	// TODO ??
+	// TODO
 }
-

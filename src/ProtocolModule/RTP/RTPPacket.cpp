@@ -7,9 +7,18 @@
 
 #include "RTPPacket.h"
 
-RTPPacket::RTPPacket() {
+RTPPacket::RTPPacket() :
+	delay(DEFAULT_DELAY) {
 	header = new RTPHeader();
 	data = NULL;
+	dataSize = 0;
+}
+
+RTPPacket::RTPPacket(const RTPPacket& another) {
+	delay = another.delay;
+	header = new RTPHeader(*another.header);
+	dataSize = another.dataSize;
+	memcpy(data, another.data, another.dataSize);
 }
 
 RTPPacket::RTPPacket(char* packet, int _dataSize) {
@@ -21,19 +30,36 @@ RTPPacket::RTPPacket(char* packet, int _dataSize) {
 	memcpy(data, packet + RTPHeader::SIZE_IN_BYTES, dataSize);
 }
 
-RTPPacket::RTPPacket(RTPHeader& hdr, char* packetData, int _dataSize) {
-	*header = hdr;
+RTPPacket& RTPPacket::operator=(const RTPPacket& another) {
+	if (this == &another) {
+		return *this;
+	}
+	delay = another.delay;
+	*header = *another.header;
+	dataSize = another.dataSize;
+	memcpy(data, another.data, another.dataSize);
+	return *this;
+}
+
+RTPPacket::RTPPacket(const RTPHeader& hdr, char* packetData, int _dataSize) {
+	header = new RTPHeader(hdr);
 	dataSize = _dataSize;
 	memcpy(data, packetData, dataSize);
 }
 
 RTPPacket::~RTPPacket() {
-	// TODO Auto-generated destructor stub
+	delete header;
 }
 
-string RTPPacket::toStream() {
-	string result = header->toStream();
-	result += data;
-	return result;
+ostream& RTPPacket::toStream(ostream& os) {
+	header->toStream(os);
+	os.write(data, dataSize);
+	return os;
+}
+
+string RTPPacket::toString() {
+	ostringstream oss;
+	toStream(oss);
+	return oss.str();
 }
 

@@ -38,11 +38,18 @@ void VoIPModule::doSending() {
 
 	RTPPacket rtpPacket;
 	while (sipAgent->connected()) {
+		PRN_(3, "VoIP: getNextPacket...");
 		rtpPacket = packetsManager->getNextPacket();
+		PRN_(3, "VoIP: OK have packet");
+		PRNBITS_(2, rtpPacket.header->toString());
+
 		// TODO właściwie to ma być <delay> milisekund różnicy pomiędzy kolejnymi wysłaniami pakietów
 		// a poniżej jest <delay> milisekund przerwy + obliczenia (pobranie pakietu itp., przygotowanie danych)
+		VAR_(2, (int) rtpPacket.delay);
 		usleep(USECONDS_IN_A_MILISECOND * rtpPacket.delay);
+		PRN_(3, "VoIP: sendPacket");
 		rtpAgent->sendPacket(rtpPacket);
+		PRN_(3, "VoIP: processIncomingPackets...");
 		processIncomingPackets(); // można wyrzucić przed pętlę -- musi to być wtedy wątek przetwarzający pakiety, gdy kolejka nie jest pusta
 	}
 	sipAgent->Disconnect();
@@ -75,7 +82,12 @@ void VoIPModule::processIncomingPackets() {
  * W zaleznosci od configa rozpoczyna dzwonienie lub nasluchiwanie
  */
 void VoIPModule::connect() {
-	sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP, config.proxyPort);
+	if(sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP, config.proxyPort)) {
+		PRN("SIP Register successfully done")
+	} else {
+		PRN("SIP Register failed")
+		return; // TODO throw exception
+	}
 
 	rtpAgent = new RTPAgent();
 
