@@ -14,8 +14,9 @@ class NoSteg: public VoIPPacketsManager {
 public:
 	NoSteg();
 	virtual ~NoSteg();
-	virtual void getPacketToSend(char** retBuffer, int packetSize);
-	virtual void putReceivedPacket(char** packet, int packetSize);
+
+	virtual RTPPacket getNextPacket();
+	virtual void putReceivedPacketData(char* data, int dataSize);
 };
 
 #endif /* NOSTEG_H_ */

@@ -8,6 +8,8 @@
 #ifndef VOIPPACKETSMANAGER_H_
 #define VOIPPACKETSMANAGER_H_
 
+#include "../ProtocolModule/RTP/RTPPacket.h"
+
 #include "debug/debug.h"
 
 class VoIPPacketsManager {
@@ -16,21 +18,19 @@ public:
 	virtual ~VoIPPacketsManager();
 
 	/**
-	 * Zwraca przez retBuffer pakiet kt�ry jest gotowy do wys�ania.
+	 * Zwraca pakiet który jest gotowy do wysłania.
 	 * Zadanie to polega na odczytaniu porcji informacji z pliku audio
-	 * lub z pliku z danymi steganograficznymi, opakowaniu jej i zwr�ceniu
-	 * przez retBuffer.
+	 * lub z pliku z danymi steganograficznymi, opakowaniu jej i zwróceniu.
 	 */
-	virtual void getPacketToSend(char** retBuffer, int packetSize) = 0;
+	virtual RTPPacket getNextPacket() = 0;
 
 	/**
-	 * Odbiera pakiet odebrany przez po��czenie VoIP. Zadanie polega
+	 * Odbiera pakiet odebrany przez połączenie VoIP. Zadanie polega
 	 * na 'odpakowaniu' pakietu (jesli to konieczne) i zapisaniu
-	 * odebranych danych w pami�ci. P�niej dane te b�d� mog�y by�
-	 * zapisane w plikach wyj�ciowych.
+	 * odebranych danych w pamięci. Póniej dane te będą mogły być
+	 * zapisane w plikach wyjściowych.
 	 */
-	virtual void putReceivedPacket(char** packet, int packetSize) = 0;
-
+	virtual void putReceivedPacketData(char* data, int dataSize) = 0;
 };
 
 #endif /* VOIPPACKETSMANAGER_H_ */

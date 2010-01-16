@@ -6,8 +6,6 @@
  */
 
 #include "VoIPModule.h"
-#include "../VoIPPacketsManager/NoSteg.h"
-#include "../VoIPPacketsManager/StegLACK.h"
 
 VoIPModule::VoIPModule(Config* _config) :
 	config(*_config) {
@@ -20,56 +18,68 @@ VoIPModule::VoIPModule(Config* _config) :
 }
 
 VoIPModule::~VoIPModule() {
-	// TODO Auto-generated destructor stub
 	delete &sipAgent;
 	delete &packetsManager;
 }
 
+static const long USECONDS_IN_A_MILISECOND = 1000;
 /**
- * Wysy�amy dane z pliku audio do wskazanego hosta zestawiając najpierw połączenia VoIP.
+ * Wysyłamy dane z pliku audio do wskazanego hosta zestawiając najpierw połączenia VoIP.
  */
 void VoIPModule::doSending() {
-	initializeConnection();
 	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
-	*callInfo = sipAgent->Call(config.calleeID, config.callPort);
+	callInfo = sipAgent->Call(config.calleeID, rtpAgent->localPort);
+	if (callInfo.remotePort == 0) {
+		throw runtime_error("Call failed");
+	}
 
-	//	rtpAgent = new RTPAgent(senderPort, receiverIP, receiverPort);
+	rtpAgent->setRemoteIP(callInfo.remoteIP);
+	rtpAgent->setRemotePort(callInfo.remotePort);
 
-	// TODO pseudokod poniżej
-	//	while(sipAgent.isConnected()) {
-	//	while (true) {
-	//		delay = packetsManager->getDelay();
-	//		packetsManager->getPacketToSend(rtpPacket);
-	//		sleep(delay);
-	//		rtpAgent->sendPacket(rtpPacket);
-	//		// TODO
-	//		// packets = rtpAgent->getPackets();
-	//	}
+	RTPPacket rtpPacket;
+	while (sipAgent->connected()) {
+		rtpPacket = packetsManager->getNextPacket();
+		// TODO właściwie to ma być <delay> milisekund różnicy pomiędzy kolejnymi wysłaniami pakietów
+		// a poniżej jest <delay> milisekund przerwy + obliczenia (pobranie pakietu itp., przygotowanie danych)
+		usleep(USECONDS_IN_A_MILISECOND * rtpPacket.delay);
+		rtpAgent->sendPacket(rtpPacket);
+		processIncomingPackets(); // można wyrzucić przed pętlę -- musi to być wtedy wątek przetwarzający pakiety, gdy kolejka nie jest pusta
+	}
+	sipAgent->Disconnect();
 }
 
 /**
  * Czekamy na połączenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
  */
 void VoIPModule::doReceiving() {
-	initializeConnection();
-
 	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
-	*callInfo = sipAgent->Answer(config.callPort);
+	//	CallInfo callInfo = sipAgent->Answer(rtpAgent->port);
 
 	// TODO
 }
 
 /**
- * W zaleznosci od config-a rozpoczyna dzwonienie lub nasluchiwanie
+ * TODO
+ *
+ *	Osobny wątek przetwarza pakiety przychodzące
+ */
+void VoIPModule::processIncomingPackets() {
+	//	while(rtpAgent->hasNextPacket()) {
+	//		 processPacket(rtpAgent->getReceivedPacket());
+	//	}
+}
+
+/**
+ * W zaleznosci od configa rozpoczyna dzwonienie lub nasluchiwanie
  */
 void VoIPModule::connect() {
+	sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP);
+
+	rtpAgent = new RTPAgent();
+
 	if (config.weAreCalling) {
 		doSending();
 	} else {
 		doReceiving();
 	}
-}
-
-void VoIPModule::initializeConnection() {
-	sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP);
 }
