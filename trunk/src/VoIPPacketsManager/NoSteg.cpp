@@ -16,10 +16,12 @@ NoSteg::~NoSteg() {
 	// TODO Auto-generated destructor stub
 }
 
-void NoSteg::getPacketToSend(char** retBuffer, int packetSize) {
+RTPPacket NoSteg::getNextPacket() {
+	// TODO
+	return RTPPacket();
+}
+
+void NoSteg::putReceivedPacketData(char* data, int dataSize) {
 	// TODO
 }
 
-void NoSteg::putReceivedPacket(char** packet, int packetSize) {
-	// TODO
-}

@@ -37,7 +37,7 @@ void Main::handleError(string message) {
 }
 
 int Main::startProgram(int argc, char **argv) {
-	PRN1("in startProgram");
+	PRN_(1, "in startProgram");
 
 	string configFile;
 	//pierwszy argument to nazwa/sciezka do pliku z config.
@@ -53,7 +53,7 @@ int Main::startProgram(int argc, char **argv) {
 
 
 	//TODO:
-	PRN1("tworzymy VoIPModule..");
+	PRN_(1, "tworzymy VoIPModule..");
 	VoIPModule* voip = new VoIPModule(cnf);
 
 //	voip->connect();
@@ -64,6 +64,6 @@ int Main::startProgram(int argc, char **argv) {
 
 	PRN("TODO: zapisuje loga do pliku...");
 
-	PRN1("ends startProgram");
+	PRN_(1, "ends startProgram");
 	return 0;
 }

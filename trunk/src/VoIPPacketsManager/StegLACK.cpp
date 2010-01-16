@@ -16,10 +16,11 @@ StegLACK::~StegLACK() {
 	// TODO Auto-generated destructor stub
 }
 
-void StegLACK::getPacketToSend(char** retBuffer, int packetSize) {
+RTPPacket StegLACK::getNextPacket() {
 	// TODO
+	return RTPPacket();
 }
 
-void StegLACK::putReceivedPacket(char** packet, int packetSize) {
+void StegLACK::putReceivedPacketData(char* data, int dataSize) {
 	// TODO
 }

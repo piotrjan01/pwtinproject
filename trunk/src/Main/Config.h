@@ -58,12 +58,6 @@ public:
 	string outputAudioFilePath;
 
 	/**
-	 * Port używany do dzwonienia
-	 * TODO: upewnic sie ze tak ma byc
-	 */
-	int callPort;
-
-	/**
 	 * Mówi czy bedziemy przesylac dane steganograficzne czy nie
 	 */
 	bool doSteg;

@@ -8,7 +8,7 @@
 #include "VoIPPacketsManager.h"
 
 /**
- * TODO: jakie� dane potrzebne przy konstrukcji!
+ * TODO: jakieś dane potrzebne przy konstrukcji!
  */
 VoIPPacketsManager::VoIPPacketsManager() {
 	// TODO Auto-generated constructor stub
