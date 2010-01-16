@@ -18,6 +18,7 @@ NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
 	templatePacket.delay = config->noStegRTPDelay;
 
 	// TODO inicjalizacja danych na char* ?
+	//FIXME: segmentation fault dostaje
 	vector<char> data = getAudioDataToSend();
 	templatePacket.data = new char[data.size()];
 	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
