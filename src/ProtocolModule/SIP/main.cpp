@@ -5,19 +5,15 @@
 
 using namespace std;
 
-/*
+
 int main(int argc, char *argv[]) {
 
 	srand(time(NULL));
 
 	SIP_Agent agent("192.168.0.212");
 
-	agent.Register("stud6", "stud6", "194.29.169.4");
+	agent.Register("stud6", "stud6", "194.29.169.4", 8060);
 
-	cout << " --------------- MAIN -------------- " << endl;
-
-	// agent.Call("stud5", 3333);
-	//
 	agent.Call("stud5", 3333);
 
 	sleep(5.0);
@@ -29,5 +25,5 @@ int main(int argc, char *argv[]) {
 	return 0;
 
 }
-*/
+
 

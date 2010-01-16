@@ -22,13 +22,13 @@
 #include "sip_message.h"
 #include "sip_authentication.h"
 
-#include "../../debug/debug.h"
-
 struct CallInfo {
 	std::string callID;
 	std::string remoteIP;
 	unsigned short remotePort;
 };
+
+
 
 struct SIP_Info {
 	unsigned int cseq;
@@ -36,85 +36,87 @@ struct SIP_Info {
 	SIP_Authentication authentication;
 };
 
-enum Waitfor {
-	NONE, REGISTER, CALL, ANSWER
-};
+enum Waitfor { NONE, REGISTER, CALL, ANSWER };
 
 class SIP_Agent {
 
-	friend void * SIP_AgentThread(void *);
+	friend void * SIP_AgentThread( void * );
 	friend class SIP_Message;
 
-private:
+	private:
 
-	// Threading
-	pthread_t thread;
-	Semaphore mutex;
+		// Threading
+		pthread_t thread;
+		Semaphore mutex;
 
-	// Semafor pozwalajacy na blokowanie metod
-	Semaphore wait;
-	Waitfor waitingfor;
+		// Semafor pozwalajacy na blokowanie metod
+		Semaphore wait;
+		Waitfor waitingfor;
 
-	// Socket
-	int sock;
+		// Socket
+		int sock;
 
-	// Adres lokalny
-	sockaddr_in address;
+		// Adres lokalny
+		sockaddr_in address;
 
-	// Ustawione na true zabija
-	bool killThread;
+		// Ustawione na true zabija
+		bool killThread;
 
-	// Podstawowe informacje o uzytkowniku
-	std::string proxy, user, pass, tag, branch;
-	std::string fromtoline;
+		// Podstawowe informacje o uzytkowniku
+		std::string proxy, user, pass, tag, branch;
+		std::string fromtoline;
 
-	// Sesja rejestrujaca
-	SIP_Info registration;
+		// Sesja rejestrujaca
+		SIP_Info registration;
 
-	// Sesja nawiazujaca
-	SIP_Info invite;
+		// Sesja nawiazujaca polaczenia
+		SIP_Info invite;
 
-	// porty RTP
-	unsigned short localRtpPort, remoteRtpPort;
+		// port proxy
+		unsigned short proxyPort;
 
-	// identyfikator oraz ip rozmï¿½wcy
-	std::string partnerID, remoteRtpAddress, partnerTag;
-	bool connectionEstablished;
+		// porty RTP
+		unsigned short localRtpPort, remoteRtpPort;
+		
+		// identyfikator oraz ip rozmówcy
+		std::string partnerID, remoteRtpAddress, partnerTag;
+		bool connectionEstablished;
 
-	// czy czekamy na telefon?
-	bool waitingForCall;
+		// czy czekamy na telefon?
+		bool waitingForCall;
 
-	std::string addressString();
+		std::string addressString();
 
-	std::string generateBranch();
-	std::string generateCallID();
-	void generateFromTag();
+		std::string generateBranch();
+		std::string generateCallID();
+		void generateFromTag();
 
-	void sendMessage(SIP_Message &m, std::string address, std::string port);
-	void receiveMessage();
+		void sendMessage(SIP_Message &m, std::string address, unsigned short port);
+		void receiveMessage();
 
-	void replyAck(SIP_Message &m, std::string information = "");
-	void replyToOptions(SIP_Message &m);
-	void replyRinging(SIP_Message &m);
+		void replyAck(SIP_Message &m, std::string information = "");
+		void replyToOptions(SIP_Message &m);
+		void replyRinging(SIP_Message &m);
 
-	void answerCall(SIP_Message &m);
+		void answerCall(SIP_Message &m);
 
-	void Register();
-	void Call();
+		void Register();
+		void Call();
+		
 
-public:
+	public:
 
-	SIP_Agent(std::string localaddr);
-	~SIP_Agent();
+		SIP_Agent(std::string localaddr);
+		~SIP_Agent();
 
-	void Register(std::string user, std::string pass, std::string proxy);
+		void Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
 
-	CallInfo Answer(unsigned short port);
-	CallInfo Call(std::string id, unsigned short port);
+		CallInfo Answer(unsigned short port);
+		CallInfo Call(std::string id, unsigned short port);
 
-	void Disconnect();
+		void Disconnect();
 
-	bool connected();
+		bool connected();
 
 };
 #endif
