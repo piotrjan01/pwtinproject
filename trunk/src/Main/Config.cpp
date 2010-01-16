@@ -10,43 +10,58 @@
 #include "Main.h"
 #include <iostream>
 #include <fstream>
+#include <map>
 
-#define DEFAULT_SIP_PROXY_PORT 8060;
+#define DEFAULT_SIP_PROXY_PORT 5060;
 
 Config::Config(string configFile) {
 	VAR_(2, configFile);
+
+	map<string, string> settings;
 	ifstream cf;
-	string callIndicator;
+
 	cf.open(configFile.c_str());
-	if (cf.is_open()) {
-		getline(cf, callIndicator);
-		if (callIndicator == "calling") {
-			weAreCalling = true; VAR_(2, weAreCalling);
-			getline(cf, myUser); VAR_(2, myUser);
-			getline(cf, myPass); VAR_(2, myPass);
-			getline(cf, localIP); VAR_(2, localIP);
-			getline(cf, SIPProxyIP); VAR_(2, SIPProxyIP);
-			getline(cf, calleeID); VAR_(2, calleeID);
-			getline(cf, audioFilePath); VAR_(2, audioFilePath);
-		}
-		else if (callIndicator == "answering") {
-			weAreCalling = false; VAR_(2, weAreCalling);
-			getline(cf, myUser); VAR_(2, myUser);
-			getline(cf, myPass); VAR_(2, myPass);
-			getline(cf, localIP); VAR_(2, localIP);
-			getline(cf, SIPProxyIP); VAR_(2, SIPProxyIP);
-			getline(cf, audioFilePath); VAR_(2, audioFilePath);
-			getline(cf, outputAudioFilePath); VAR_(2, outputAudioFilePath);
-		} else Main::getMain()->handleError("Configuration file has incorrect format.");
-		//cout << line << endl;
-		cf.close();
-	} else {
+
+	if ( ! cf.is_open())
 		Main::getMain()->handleError("Unable to open configuration file: "+ configFile);
+
+	while ( ! cf.eof() ) {
+		string ln;
+		getline(cf, ln);
+		if (ln[0] == '#' || ln == "") continue;
+		int eqpos = ln.find_first_of('=');
+		string argname = ln.substr(0, eqpos);
+		string argval = ln.substr(eqpos+1);
+		settings[argname] = argval;
+		VAR_(2, argname+" = "+argval);
 	}
 
-	//TODO: usunac i wczytac z pliku
-	doSteg = false;
+	if (settings["calling"] == "1") weAreCalling = true;
+	else if (settings["calling"] == "0") weAreCalling = false;
+	else Main::getMain()->handleError("wrong configuration file format near \"calling\"");
+
+	//wartosci domyslne parametrow tutaj:
 	proxyPort = DEFAULT_SIP_PROXY_PORT;
+
+	if (weAreCalling) {
+		calleeID = settings["callee-username"];
+		doSteg = (settings["do-steg"] == "1");
+		if (doSteg) {
+			maxStegInterval = atoi(settings["max-steg-interval"].c_str());
+			minStegInterval = atoi(settings["min-steg-interval"].c_str());
+			stegSequence = settings["steg-sequence"];
+		}
+	}
+	else {
+		outputAudioFilePath = settings["output-audio-data-file"];
+	}
+
+	//ustawienia ktore wczytujemy zawsze:
+	myUser = settings["username"];
+	myPass = settings["pass"];
+	localIP = settings["local-ip"];
+	SIPProxyIP = settings["proxy-ip"];
+	audioFilePath = settings["audio-data-file"];
 
 	PRN_(2, "end config constr");
 }

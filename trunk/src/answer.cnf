@@ -1,9 +1,24 @@
-answering
-stud6
-stud6
-192.168.169.9
-194.29.169.4
-audiodata.dat
-outputaudio.dat
+#The example configuration file. 
+#Attention: it is important to write <var-name>=<var-value> without blank spaces 
 
+#if calling=1 we are calling. if calling=0, we are answering the call.
+calling=0
+
+#name of our user on proxy
+username=stud6
+
+#our password on proxy
+pass=stud6
+
+#our local actual ip address
+local-ip=192.168.169.9
+
+#proxy ip address
+proxy-ip=194.29.169.4
+
+#the audio data file
+audio-data-file=audiodata.dat
+
+#file where received audio data will be stored
+output-audio-data-file=outputaudiodata.dat
 
