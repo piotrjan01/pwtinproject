@@ -45,6 +45,8 @@ class SIP_Agent {
 
 	private:
 
+		double sleepTime;
+
 		// Threading
 		pthread_t thread;
 		Semaphore mutex;
@@ -52,6 +54,8 @@ class SIP_Agent {
 		// Semafor pozwalajacy na blokowanie metod
 		Semaphore wait;
 		Waitfor waitingfor;
+		// Do timeoutow
+		unsigned long waitTime;
 
 		// Socket
 		int sock;
@@ -82,8 +86,6 @@ class SIP_Agent {
 		std::string partnerID, remoteRtpAddress, partnerTag;
 		bool connectionEstablished;
 
-		// czy czekamy na telefon?
-		bool waitingForCall;
 
 		std::string addressString();
 
