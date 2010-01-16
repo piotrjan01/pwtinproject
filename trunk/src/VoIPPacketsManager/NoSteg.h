@@ -12,7 +12,8 @@
 
 class NoSteg: public VoIPPacketsManager {
 public:
-	NoSteg();
+
+	NoSteg(Config* cfg);
 	virtual ~NoSteg();
 
 	virtual RTPPacket getNextPacket();
