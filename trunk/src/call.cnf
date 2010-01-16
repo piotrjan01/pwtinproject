@@ -14,10 +14,10 @@ pass=stud6
 local-ip=192.168.0.103
 
 #proxy ip address
-proxy-ip=194.29.169.4
+proxy-ip=192.168.0.100
 
 #username to whom we will call
-callee-username=stud5
+callee-username=piotrrr
 
 #the audio data file
 audio-data-file=../src/audiodata.dat
@@ -40,5 +40,5 @@ max-steg-interval=1100
 steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
 
 #the path to file with secret data to be send using steganography
-steg-data-file=stegdata.txt
+steg-data-file=../src/stegdata.txt
 
