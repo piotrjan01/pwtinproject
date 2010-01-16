@@ -9,8 +9,11 @@
 #define NOSTEG_H_
 
 #include "VoIPPacketsManager.h"
+#include "../debug/debug.h"
 
 class NoSteg: public VoIPPacketsManager {
+	// temporary only
+	static const int DEFAULT_PACKET_DELAY = TIMESTAMP_INTERVAL_8KHZ;
 public:
 
 	NoSteg(Config* cfg);
@@ -18,6 +21,9 @@ public:
 
 	virtual RTPPacket getNextPacket();
 	virtual void putReceivedPacketData(char* data, int dataSize);
+private:
+	Config* cfg;
+	RTPPacket templatePacket;
 };
 
 #endif /* NOSTEG_H_ */

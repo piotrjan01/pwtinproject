@@ -8,11 +8,11 @@
 #ifndef RTPHEADER_H_
 #define RTPHEADER_H_
 
-#include <limits.h>
+#include <climits>
+#include <cstdlib>
 
 #include <string>
 #include <sstream>
-
 
 #include "RTPConstants.h"
 
@@ -42,6 +42,7 @@ using namespace std;
  */
 class RTPHeader {
 	friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
+	static const int USED_RTP_VERSION = 2;
 public:
 	RTPHeader();
 	RTPHeader(char* data);
@@ -49,9 +50,10 @@ public:
 
 	static const quint32 SIZE_IN_BYTES = 12;
 
-	string toStream();
+	ostream& toStream(ostream& os);
+	string toString();
 
-//private:
+	//private:
 	/* version 2 bits  - it is always set to the value 2, which is the current version of RTP */
 	quint8 v;
 	/* padding 1 bit - is set when the packet contains one or more additional padding octets at the end which are not part of the payload - for this project it should be set to zero */
@@ -91,33 +93,11 @@ public:
 	RTPHeader(SampleRate _sampleRate, quint16 _sequenceNumber,
 			quint32 _timestamp, quint32 _ssrc);
 
-	/* RTP assignement operator */
+	/* RTP assignment operator */
 	RTPHeader & operator=(const RTPHeader& another);
 
 	/* change actual RTP header to new next packet */
 	void nextRTPHeader(SampleRate _sampleRate);
-
-#if 0
-	/* indicates that there is padding or not */
-	bool isPadding();
-
-	/* returns payload type */
-	quint8 getPayloadType();
-
-	/* returns sequence number */
-	quint16 getSequenceNumber();
-
-	/* returns timestamp */
-	quint32 getTimestamp();
-
-	/* return SSRC */
-	quint32 getSSRC();
-
-	/* returns cycle of sequence number */
-	quint8 getSequenceNumberCycle();
-
-	/* set cycle of sequence number */
-	void setSequenceNumberCycle(quint8 _sequenceNumberCycle);
 
 	/* to generate appropriate sequenceNumber */
 	static quint16 generateSequenceNumber();
@@ -125,14 +105,40 @@ public:
 	/* to generate appropriate timestamp */
 	static quint32 generateTimestamp();
 
-	/* to write header data to QdataStream */
-	friend QDataStream& operator<<(QDataStream& str, RTPHeader & head);
+	/* to generate appropriate synchronization source identifier -- actually should be unique and conflicts should be resolved */
+	static quint32 generateSSRC();
 
-	/* to write header data to standard stream */
-	friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
+#if 0
+	/* indicates that there is padding or not */
+	bool isPadding();oSteg::getNextPacket() {
+		// TODO
 
-	/* to read header data from QDataStream */
-	friend QDataStream& operator>>(QDataStream& str, RTPHeader & head);
+		/* returns payload type */
+		quint8 getPayloadType();
+
+		/* returns sequence number */
+		quint16 getSequenceNumber();
+
+		/* returns timestamp */
+		quint32 getTimestamp();
+
+		/* return SSRC */
+		quint32 getSSRC();
+
+		/* returns cycle of sequence number */
+		quint8 getSequenceNumberCycle();
+
+		/* set cycle of sequence number */
+		void setSequenceNumberCycle(quint8 _sequenceNumberCycle);
+
+		/* to write header data to QdataStream */
+		friend QDataStream& operator<<(QDataStream& str, RTPHeader & head);
+
+		/* to write header data to standard stream */
+		friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
+
+		/* to read header data from QDataStream */
+		friend QDataStream& operator>>(QDataStream& str, RTPHeader & head);
 
 #endif
 };

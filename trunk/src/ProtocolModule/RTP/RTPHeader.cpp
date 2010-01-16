@@ -7,25 +7,35 @@
 
 #include "RTPHeader.h"
 
-string RTPHeader::toStream() {
-	stringbuf sb;
+ostream& RTPHeader::toStream(ostream& os) {
+	char value[SIZE_IN_BYTES];
 
-	// TODO
-	sb.sputc(((v << 6) & 0xc0) | ((((quint8) p) << 5) & 0x20) | ((((quint8) x)
-			<< 4) & 0x10) | (cc & 0x0f));
-	sb.sputc(((((quint8) m) << 7) & 0x80) | (pt & 0x7f));
-	sb.sputc((sequenceNumber >> 8) & 0x0F);
-	sb.sputc((sequenceNumber) & 0x0F);
-	sb.sputc((timestamp >> 24) & 0x0F);
-	sb.sputc((timestamp >> 16) & 0x0F);
-	sb.sputc((timestamp >> 8) & 0x0F);
-	sb.sputc((timestamp) & 0x0F);
-	sb.sputc((ssrc >> 24) & 0x0F);
-	sb.sputc((ssrc >> 16) & 0x0F);
-	sb.sputc((ssrc >> 8) & 0x0F);
-	sb.sputc((ssrc) & 0x0F);
-	return sb.str();
+	value[0] = ((v << 6) & 0xc0) | ((((quint8) p) << 5) & 0x20)
+			| ((((quint8) x) << 4) & 0x10) | (cc & 0x0f);
+	value[1] = (((((quint8) m) << 7) & 0x80) | (pt & 0x7f));
+
+	value[2] = (sequenceNumber >> 8) & 0xFF;
+	value[3] = (sequenceNumber) & 0xFF;
+
+	value[4] = (timestamp >> 24) & 0xFF;
+	value[5] = (timestamp >> 16) & 0xFF;
+	value[6] = (timestamp >> 8) & 0xFF;
+	value[7] = (timestamp) & 0xFF;
+
+	value[8] = (ssrc >> 24) & 0xFF;
+	value[9] = (ssrc >> 16) & 0xFF;
+	value[10] = (ssrc >> 8) & 0xFF;
+	value[11] = (ssrc) & 0xFF;
+	os.write(value, SIZE_IN_BYTES);
+	return os;
 }
+
+string RTPHeader::toString() {
+	ostringstream oss;
+	toStream(oss);
+	return oss.str();
+}
+
 RTPHeader::~RTPHeader() {
 	// TODO Auto-generated destructor stub
 }
@@ -43,8 +53,8 @@ RTPHeader::RTPHeader(char* data) {
 }
 
 RTPHeader::RTPHeader() :
-	v(2), p(true), x(false), cc(0), m(false), pt(0), sequenceNumber(0),
-			timestamp(0), ssrc(0) {
+	v(USED_RTP_VERSION), p(false), x(false), cc(0), m(false), pt(G711_PCMU),
+			sequenceNumber(1), timestamp(0), ssrc(0) {
 	sequenceNumberCycle = 0;
 }
 
@@ -86,7 +96,6 @@ RTPHeader & RTPHeader::operator=(const RTPHeader& another) {
 //***********************************************
 void RTPHeader::nextRTPHeader(SampleRate _sampleRate) {
 	int difference = 0;
-
 	// change pt (payload type) and timestamp
 	if (_sampleRate == NARROW_BAND) {
 		if (timestamp + TIMESTAMP_INTERVAL_8KHZ <= UINT_MAX) {
@@ -103,8 +112,7 @@ void RTPHeader::nextRTPHeader(SampleRate _sampleRate) {
 			timestamp = TIMESTAMP_INTERVAL_16KHZ - difference - 1; // count from zero
 		}
 	}
-
-	// change for sequence number
+	// change sequence number
 	if (sequenceNumber + 1 > USHRT_MAX) {
 		sequenceNumber = 0;
 		++sequenceNumberCycle;
@@ -126,5 +134,23 @@ std::ostream& operator<<(std::ostream& str, RTPHeader head) {
 	str << "SSRC: " << head.ssrc << std::endl;
 
 	return str;
+}
+
+//***********************************************
+quint16 RTPHeader::generateSequenceNumber() {
+	srand(time(NULL));
+	return (quint16) (rand() % USHRT_MAX + 1); // unsigned short max value
+}
+
+//***********************************************
+quint32 RTPHeader::generateTimestamp() {
+	srand(time(NULL));
+	return (quint32) (rand() % ULONG_MAX + 1); // unsigned long max value
+}
+
+//***********************************************
+quint32 RTPHeader::generateSSRC() {
+	srand(time(NULL));
+	return (quint32) (rand() % ULONG_MAX + 1); // unsigned long max value
 }
 

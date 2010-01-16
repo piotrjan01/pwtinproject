@@ -17,18 +17,24 @@
 using namespace std;
 
 class RTPPacket {
+	static const int DEFAULT_DELAY = 0;
 public:
 	RTPPacket();
+	RTPPacket(const RTPPacket& another);
+
 	RTPPacket(char* data, int dataSize);
-	RTPPacket(RTPHeader& hdr, char* data, int dataSize);
+	RTPPacket(const RTPHeader& hdr, char* data, int dataSize);
 	virtual ~RTPPacket();
 
-	string toStream();
+	ostream& toStream(ostream& os);
+	string toString();
 
-	long delay;
+	RTPPacket& operator=(const RTPPacket& another);
+
+	long delay;	// delay that should be used for sending the packet
+
 	RTPHeader* header;
 
-private:
 	char* data;
 	unsigned dataSize;
 };

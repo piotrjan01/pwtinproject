@@ -12,7 +12,8 @@
 Main* Main::main = 0;
 
 Main::Main() {
-	if (Main::main != NULL) return;
+	if (Main::main != NULL)
+		return;
 	main = this;
 }
 
@@ -21,18 +22,18 @@ Main::~Main() {
 }
 
 Main* Main::getMain() {
-	if (main != NULL) return main;
+	if (main != NULL)
+		return main;
 	main = new Main();
 	return main;
 }
 
 void Main::printUsage() {
-	cout<<endl<<"Usage: ProjectLack.exe <config-file-path>"<<endl;
+	cout << endl << "Usage: ProjectLack.exe <config-file-path>" << endl;
 }
 
-
 void Main::handleError(string message) {
-	cerr<<"====> ERROR: "+message<<endl;
+	cerr << "====> ERROR: " + message << endl;
 	exit(EXIT_SUCCESS);
 }
 
@@ -47,20 +48,20 @@ int Main::startProgram(int argc, char **argv) {
 		printUsage();
 		return 1;
 	}
-	configFile = argv[1];
 
-	cnf = new Config(configFile);
+	try {
+		configFile = argv[1];
 
+		cnf = new Config(configFile);
 
-	//TODO:
-	PRN_(1, "tworzymy VoIPModule..");
-	VoIPModule* voip = new VoIPModule(cnf);
+		//TODO:
+		PRN_(1, "tworzymy VoIPModule..");
+		VoIPModule* voip = new VoIPModule(cnf);
 
-//	voip->connect();
-
-
-
-
+		voip->connect();
+	} catch (runtime_error& e) {
+		Main::handleError(e.what());
+	}
 
 	PRN("TODO: zapisuje loga do pliku...");
 
