@@ -20,7 +20,8 @@ NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
 	// TODO inicjalizacja danych na char* ?
 	vector<char> data = getAudioDataToSend();
 	templatePacket.data = new char[data.size()];
-	for (int i=0; i<data.size(); i++) templatePacket.data[i]=data[i];
+	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
+	templatePacket.dataSize = data.size();
 
 }
 
@@ -35,9 +36,12 @@ RTPPacket NoSteg::getNextPacket() {
 
 	// TODO
 	RTPPacket packet(templatePacket);
+	VAR_(2, DEFAULT_PACKET_DELAY);
 	packet.delay = DEFAULT_PACKET_DELAY;
-	packet.data = NULL;
-	packet.dataSize = 0;
+	VAR_(2, (int)packet.delay);
+//	Zatrzymujemy dane z templeate'a :)
+//	packet.data = NULL;
+//	packet.dataSize = 0;
 	return packet;
 }
 
