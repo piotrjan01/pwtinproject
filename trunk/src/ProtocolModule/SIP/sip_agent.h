@@ -92,6 +92,8 @@ private:
     std::string generateCallID();
     void generateFromTag();
 
+	bool unregistering;
+
     void sendMessage(SIP_Message &m, std::string address, unsigned short port);
     void receiveMessage();
 
@@ -111,6 +113,8 @@ public:
     ~SIP_Agent();
 
     bool Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
+
+    void Unregister();
 
     CallInfo Answer(unsigned short port);
     CallInfo Call(std::string id, unsigned short port);

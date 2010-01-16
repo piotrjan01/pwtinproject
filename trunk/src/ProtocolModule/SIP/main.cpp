@@ -7,8 +7,8 @@ using namespace std;
 
 //by Piotr: definiuje konfigi, zeby mozna bylo testowac
 //w roznych miejscach.
-#define CNF_PIOTR
-//#define CNF_MICHAL
+//#define CNF_PIOTR
+#define CNF_MICHAL
 
 #if defined(CNF_PIOTR)
 	#define MY_IP "192.168.0.103"
@@ -48,6 +48,8 @@ int main(int argc, char *argv[]) {
     agent.Disconnect();
 
     sleep(5.0);
+
+	agent.Unregister();
 
     return 0;
 
