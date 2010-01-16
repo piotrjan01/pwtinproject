@@ -11,9 +11,9 @@ VoIPModule::VoIPModule(Config* _config) :
 	config(*_config) {
 	sipAgent = new SIP_Agent(config.localIP);
 	if (config.doSteg) {
-		packetsManager = new StegLACK();
+		packetsManager = new StegLACK(_config);
 	} else {
-		packetsManager = new NoSteg();
+		packetsManager = new NoSteg(_config);
 	}
 }
 
@@ -62,6 +62,8 @@ void VoIPModule::doReceiving() {
  * TODO
  *
  *	Osobny wątek przetwarza pakiety przychodzące
+ *	Uwaga: będziemy musieli zasymulować bufor klienta i rozpoznawać pakiety które bylyby
+ *	normalnie drop-owane, czyli prawdopodobnie nasze dane steganograficzne.
  */
 void VoIPModule::processIncomingPackets() {
 	//	while(rtpAgent->hasNextPacket()) {

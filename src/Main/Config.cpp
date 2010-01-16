@@ -12,10 +12,15 @@
 #include <fstream>
 #include <map>
 
+//Jesli w konfiguracji nie podano portu to uzywamy tego
 #define DEFAULT_SIP_PROXY_PORT 5060;
 
+//Rozmiar danych w pakiecie RTP w bajtach
+#define DEFAULT_RTP_PAYLOAD_SIZE 160
+
 Config::Config(string configFile) {
-	VAR_(2, configFile);
+	VAR_(3, "in config constr");
+	VAR_(3, configFile);
 
 	map<string, string> settings;
 	ifstream cf;
@@ -33,7 +38,7 @@ Config::Config(string configFile) {
 		string argname = ln.substr(0, eqpos);
 		string argval = ln.substr(eqpos+1);
 		settings[argname] = argval;
-		VAR_(2, argname+" = "+argval);
+		VAR_(3, argname+" = "+argval);
 	}
 
 	if (settings["calling"] == "1") weAreCalling = true;
@@ -42,6 +47,7 @@ Config::Config(string configFile) {
 
 	//wartosci domyslne parametrow tutaj:
 	proxyPort = DEFAULT_SIP_PROXY_PORT;
+	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 
 	if (weAreCalling) {
 		calleeID = settings["callee-username"];
@@ -50,6 +56,7 @@ Config::Config(string configFile) {
 			maxStegInterval = atoi(settings["max-steg-interval"].c_str());
 			minStegInterval = atoi(settings["min-steg-interval"].c_str());
 			stegSequence = settings["steg-sequence"];
+			stegDataFile = settings["steg-data-file"];
 		}
 	}
 	else {
@@ -63,7 +70,7 @@ Config::Config(string configFile) {
 	SIPProxyIP = settings["proxy-ip"];
 	audioFilePath = settings["audio-data-file"];
 
-	PRN_(2, "end config constr");
+	PRN_(3, "end config constr");
 }
 
 Config::~Config() {

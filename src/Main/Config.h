@@ -81,6 +81,16 @@ public:
 	 * Steganography sequence from config file
 	 */
 	string stegSequence;
+
+	/**
+	 * Path to file with secret data
+	 */
+	string stegDataFile;
+
+	/**
+	 * the size of RTP packet payload in bytes
+	 */
+	int RTPPayloadSize;
 };
 
 #endif /* CONFIG_H_ */

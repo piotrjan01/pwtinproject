@@ -11,7 +11,7 @@ username=stud6
 pass=stud6
 
 #our local actual ip address
-local-ip=192.168.169.9
+local-ip=192.168.0.103
 
 #proxy ip address
 proxy-ip=194.29.169.4
@@ -20,7 +20,7 @@ proxy-ip=194.29.169.4
 callee-username=stud5
 
 #the audio data file
-audio-data-file=audiodata.dat
+audio-data-file=../src/audiodata.dat
 
 #determines wether or not we do steganography
 do-steg=1
@@ -35,5 +35,10 @@ max-steg-interval=1100
 #the steganography sequence. <delay-in-ms>:<packet-type>
 #<delay-in-ms> can have form of single integer or range separated with '-', e.g. 10-15
 #<pachet-type> can be A for audio packet and S for steganography packet
-steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10:S 10:S
+#Attention: it is important to keep one space between each sequence element
+#Example: steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
+steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
+
+#the path to file with secret data to be send using steganography
+steg-data-file=stegdata.txt
 
