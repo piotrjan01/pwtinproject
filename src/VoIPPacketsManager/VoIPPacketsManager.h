@@ -29,7 +29,7 @@ public:
 	/**
 	 * Zwraca pakiet który jest gotowy do wysłania.
 	 */
-	virtual RTPPacket getNextPacket() = 0;
+	virtual RTPPacket& getNextPacket() = 0;
 
 	//TODO: czy bedzie uzywane?
 	virtual void putReceivedPacketData(char* data, int dataSize) = 0;
@@ -37,7 +37,8 @@ public:
 	virtual vector<char> getAudioDataToSend();
 
 	void readAudioDataFileToMem();
-
+protected:
+	RTPPacket templatePacket;
 };
 
 #endif /* VOIPPACKETSMANAGER_H_ */

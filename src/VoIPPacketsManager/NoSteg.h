@@ -19,11 +19,8 @@ public:
 	NoSteg(Config* cfg);
 	virtual ~NoSteg();
 
-	virtual RTPPacket getNextPacket();
+	virtual RTPPacket& getNextPacket();
 	virtual void putReceivedPacketData(char* data, int dataSize);
-private:
-	Config* cfg;
-	RTPPacket templatePacket;
 };
 
 #endif /* NOSTEG_H_ */
