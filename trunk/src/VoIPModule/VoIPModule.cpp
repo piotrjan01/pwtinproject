@@ -55,7 +55,7 @@ void VoIPModule::doReceiving() {
 
 void VoIPModule::doTransport() {
 	RTPPacket rtpPacket;
-	while (sipAgent->connected()) {
+	while (sipAgent->connected() && ! Main::getMain()->isHangUp()) {
 		PRN_(3, "VoIP: getNextPacket...");
 		rtpPacket = packetsManager->getNextPacket();
 		PRN_(3, "VoIP: OK have packet");
@@ -102,6 +102,8 @@ void VoIPModule::connect() {
 		PRN("SIP Register failed")
 		return; // TODO throw exception
 	}
+
+	Main::getMain()->setSignalHandlers();
 
 	rtpAgent = new RTPAgent();
 

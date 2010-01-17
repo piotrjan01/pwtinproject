@@ -11,10 +11,26 @@
 
 Main* Main::main = 0;
 
+
+void mainSignalHandler(int signal) {
+	VAR_(2, signal);
+	if (signal == SIGINT) {
+		PRN_(2, "CTRL-C pressed (signal SIGINT)")
+		Main::getMain()->hangUp = true;
+	}
+}
+
 Main::Main() {
-	if (Main::main != NULL)
-		return;
 	main = this;
+	hangUp = false;
+}
+
+bool Main::isHangUp() {
+	return hangUp;
+}
+
+void Main::setSignalHandlers() {
+	signal(SIGINT, mainSignalHandler);
 }
 
 Main::~Main() {

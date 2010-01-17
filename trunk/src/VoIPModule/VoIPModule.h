@@ -16,6 +16,7 @@
 #include "debug/debug.h"
 
 #include "../Main/Config.h"
+#include "../Main/Main.h"
 
 #include "../ProtocolModule/SIP/sip_agent.h"
 #include "../ProtocolModule/RTP/RTPAgent.h"

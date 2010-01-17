@@ -9,22 +9,23 @@
 #define MAIN_H_
 
 #include <cstdlib>
-
+#include <csignal>
 #include <string>
+
 #include "Config.h"
 
 using namespace std;
 
+void mainSignalHandler(int signal);
+
 class Main {
+	friend void mainSignalHandler(int signal);
 public:
-	Main();
 	virtual ~Main();
 
 	static Main* getMain();
 
-	static Main* main;
-
-	Config* cnf;
+	bool isHangUp();
 
 	/**
 	 * Tak na prawd� jedyne co mo�emy zrbi� ze string to wy�wietli�, zalogowa� lub nic.
@@ -37,6 +38,16 @@ public:
 	int startProgram(int argc, char **argv);
 
 	void printUsage();
+	Config* cnf;
+
+	void setSignalHandlers();
+private:
+	bool hangUp;
+
+	typedef void (*sighandler_t)(int);
+
+	Main();
+	static Main* main;
 
 };
 
