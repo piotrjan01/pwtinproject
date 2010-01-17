@@ -51,6 +51,8 @@ public:
 	 */
 	int localPort;
 
+	int localPortRTCP; // powinno być localPortRTP + 1
+
 	/**
 	 * Ustawia adres IP hosta docelowego
 	 */
@@ -65,8 +67,10 @@ private:
 	string remoteIP;
 	int remotePort;
 
-	int socketfd;
-	sockaddr_in addr_in;
+	int socketfd_rtp;
+	int socketfd_rtcp;
+	sockaddr_in addr_in_rtp;
+	sockaddr_in addr_in_rtcp;
 
 	bool killThread;
 	pthread_t thread;
