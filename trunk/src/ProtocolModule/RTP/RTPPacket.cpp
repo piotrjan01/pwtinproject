@@ -18,6 +18,7 @@ RTPPacket::RTPPacket(const RTPPacket& another) {
 	delay = another.delay;
 	header = new RTPHeader(*another.header);
 	dataSize = another.dataSize;
+	data = new char[another.dataSize];
 	memcpy(data, another.data, another.dataSize);
 }
 
@@ -27,6 +28,7 @@ RTPPacket::RTPPacket(char* packet, int _dataSize) {
 	}
 	header = new RTPHeader(packet);
 	dataSize = _dataSize - RTPHeader::SIZE_IN_BYTES;
+	data = new char[dataSize];
 	memcpy(data, packet + RTPHeader::SIZE_IN_BYTES, dataSize);
 }
 

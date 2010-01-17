@@ -23,8 +23,6 @@ NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
 	templatePacket.data = new char[data.size()];
 	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
 	templatePacket.dataSize = data.size();
-
-
 }
 
 NoSteg::~NoSteg() {
