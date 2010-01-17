@@ -67,10 +67,13 @@ void VoIPModule::doTransport() {
 		usleep(USECONDS_IN_A_MILISECOND * rtpPacket.delay);
 		PRN_(3, "VoIP: sendPacket");
 		rtpAgent->sendPacket(rtpPacket);
-		PRN_(3, "VoIP: processIncomingPackets...");
-		processIncomingPackets(); // można wyrzucić przed pętlę -- musi to być wtedy wątek przetwarzający pakiety, gdy kolejka nie jest pusta
 	}
 	sipAgent->Disconnect();
+}
+
+//@Override
+void VoIPModule::update() {
+	processIncomingPackets();
 }
 
 /**
@@ -81,6 +84,7 @@ void VoIPModule::doTransport() {
  *	normalnie drop-owane, czyli prawdopodobnie nasze dane steganograficzne.
  */
 void VoIPModule::processIncomingPackets() {
+	PRN_(4, "VoIP: processIncomingPackets...");
 	while (rtpAgent->hasReceivedPacket()) {
 		RTPPacket& packet = rtpAgent->getReceivedPacket();
 		packetsManager->putReceivedPacketData(packet.data, packet.dataSize);

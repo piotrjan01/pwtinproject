@@ -155,13 +155,14 @@ void RTPAgent::recvPacket() {
 	PRN_(2, "--------------------------------");
 	VAR(length);
 	incomingPackets.pushBack(rtpPacket);
+	notifyObservers();
 }
 
 void* RTPAgentReceiverThread(void* rtpAgent) {
 	RTPAgent* agent = (RTPAgent*) rtpAgent;
 	PRN_(1, "receiver thread started");
 	while (1) {
-		sleep(0.1);
+		usleep(1000 * 5);
 		agent->mutex.P();
 		agent->recvPacket();
 		if (agent->killThread) {
