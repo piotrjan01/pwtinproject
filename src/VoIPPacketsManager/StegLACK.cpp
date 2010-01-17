@@ -78,11 +78,13 @@ RTPPacket& StegLACK::getNextPacket() {
 		//wysylamy steg packet
 		if (se.isStegPacket && ! stegTransferDone) {
 			payloadData = getStegDataToSend();
+			PRN_(1, "in steg sequence: sending packet: steg, delay="+delay);
 		}
 		//wysylamy audio packet
 		else {
 			//dodajemy audio do pakietu:
 			payloadData = getAudioDataToSend();
+			PRN_(1, "in steg sequence: sending packet: audio, delay="+delay);
 		}
 		seqPosition++;
 
@@ -96,6 +98,8 @@ RTPPacket& StegLACK::getNextPacket() {
 	//we send the normal package
 	else {
 		intervalCount++;
+		templatePacket.delay = config->noStegRTPDelay;
+		PRN_(1, "sending normal packet");
 		//dodajemy audio do pakietu:
 		payloadData = getAudioDataToSend();
 	}
@@ -125,7 +129,6 @@ StegSeqElem::StegSeqElem(string stegSeq) {
 	} else {
 		intervMin = atoi(timing.substr(0, dashpos).c_str());
 		intervMax = atoi(timing.substr(dashpos + 1).c_str());
-
 	}
 }
 

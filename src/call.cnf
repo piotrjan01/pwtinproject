@@ -20,20 +20,20 @@ proxy-ip=192.168.0.100
 proxy-port=5060
 
 #username to whom we will call
-callee-username=bogdan
+callee-username=marek
 
 #the audio data file
 audio-data-file=../src/audiodata.dat
 
 #determines wether or not we do steganography
-do-steg=0
+do-steg=1
 
 #steganography packets interval: how many normal audio packets minimally have to be send
 #between each steganography sequence
-min-steg-interval=1000
+min-steg-interval=100
 
 #and the maximum. the real interval will be randomized in this range.
-max-steg-interval=1100
+max-steg-interval=110
 
 #the steganography sequence. <delay-in-ms>:<packet-type>
 #<delay-in-ms> can have form of single integer or range separated with '-', e.g. 10-15

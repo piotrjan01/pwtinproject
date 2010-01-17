@@ -111,15 +111,15 @@ void RTPAgent::setRemotePort(int port) {
 }
 
 void RTPAgent::sendPacket(RTPPacket& rtpPacket) {
-	PRN_(2, "RTP: sendPacket");
+	PRN_(3, "RTP: sendPacket");
 	ostringstream oss;
 	rtpPacket.toStream(oss);
 	sendto(socketfd_rtp, oss.str().data(), oss.str().length(), 0,
 			(sockaddr *) &addr_in_rtp, sizeof(addr_in_rtp));
 
-	PRN_(2, "-----   RTPPacket sent    -----");
-	PRNBITS_(2, oss.str());
-	PRN_(2, "--------------------------------");
+	PRN_(3, "-----   RTPPacket sent    -----");
+	PRNBITS_(3, oss.str());
+	PRN_(3, "--------------------------------");
 }
 
 bool RTPAgent::hasReceivedPacket() {
@@ -150,10 +150,10 @@ void RTPAgent::recvPacket() {
 		PRN("Received invalid data");
 		return;
 	}
-	PRN_(2, "-----  RTPPacket received  -----");
-	PRNBITS_(2, rtpPacket->toString());
-	PRN_(2, "--------------------------------");
-	VAR(length);
+	PRN_(3, "-----  RTPPacket received  -----");
+	PRNBITS_(3, rtpPacket->toString());
+	PRN_(3, "--------------------------------");
+	VAR_(3, length);
 	incomingPackets.pushBack(rtpPacket);
 	notifyObservers();
 }
