@@ -5,22 +5,22 @@
 calling=1
 
 #name of our user on proxy
-username=stud6
+username=stud5
 
 #our password on proxy
-pass=stud6
+pass=
 
 #our local actual ip address
 local-ip=192.168.0.103
 
 #proxy ip address
-proxy-ip=194.29.169.4
+proxy-ip=192.168.0.100
 
 #proxy port
-proxy-port=8060
+proxy-port=5060
 
 #username to whom we will call
-callee-username=pio
+callee-username=bogdan
 
 #the audio data file
 audio-data-file=../src/audiodata.dat

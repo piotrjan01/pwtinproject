@@ -34,6 +34,7 @@ RTPPacket NoSteg::getNextPacket() {
 	templatePacket.header->nextRTPHeader(NARROW_BAND); // changes sequenceNumber and timestamp
 	PRNBITS_(4, templatePacket.header->toString());
 
+	vector<char> data = getAudioDataToSend();
 	templatePacket.data = new char[data.size()];
 	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
 
