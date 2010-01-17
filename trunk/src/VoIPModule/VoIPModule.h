@@ -36,8 +36,8 @@ public:
 
 private:
 	void doSending();
-
 	void doReceiving();
+	void doTransport();
 
 	void processIncomingPackets();
 
