@@ -6,6 +6,8 @@
  */
 
 #include "NoSteg.h"
+#include "../Main/Main.h"
+#include <fstream>
 
 NoSteg::NoSteg(Config* cfg) :
 	VoIPPacketsManager(cfg) {
@@ -43,5 +45,13 @@ RTPPacket& NoSteg::getNextPacket() {
 }
 
 void NoSteg::putReceivedPacketData(char* data, int dataSize) {
-	// TODO
+	//nie interesuje nas to co dostajemy gdy my dzwonimy.
+	if (config->weAreCalling) return;
+	ofstream myfile (config->outputAudioFilePath.c_str());
+	if (myfile.is_open()) {
+		myfile.write(data, dataSize);
+		myfile.close();
+	}
+	else Main::getMain()->handleError("Unable to open output audio data file: "
+										+config->outputAudioFilePath);
 }

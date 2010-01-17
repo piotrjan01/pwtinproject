@@ -58,6 +58,10 @@ public:
 	 */
 	bool stegTransferDone;
 
+	/**
+	 * Used when simulating the incoming packets queue. Says how much space is left in incoming packets queue.
+	 */
+	int queueFreeSpace;
 
 	/**
 	 * The sequence we will use to send our steganographic data

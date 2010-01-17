@@ -92,7 +92,22 @@ public:
 	 */
 	int RTPPayloadSize;
 
+	/**
+	 * opoznienie miedzy pakietami gdy wysylamy normalne dane audio z pliku
+	 */
 	int noStegRTPDelay;
+
+	/**
+	 * Czas pomiedzy odczytywaniem pojednczych pakietow z kolejki pakietow przychodzacych
+	 * (razem z rozmiarem kolejki definiuje model kolejki pakietow przychodzacych)
+	 */
+	int incQueueReadInterval;
+
+	/**
+	 * Rozmiar kolejki pakietów przychodzacych
+	 */
+	int incQueueSize;
+
 };
 
 #endif /* CONFIG_H_ */

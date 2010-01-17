@@ -52,6 +52,8 @@ Config::Config(string configFile) {
 	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
+	incQueueReadInterval = DEFAULT_NOSTEG_RTP_DELAY;
+	incQueueSize = 5;
 
 	if (weAreCalling) {
 		calleeID = settings["callee-username"];
