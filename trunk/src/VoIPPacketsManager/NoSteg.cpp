@@ -34,12 +34,17 @@ RTPPacket NoSteg::getNextPacket() {
 	templatePacket.header->nextRTPHeader(NARROW_BAND); // changes sequenceNumber and timestamp
 	PRNBITS_(4, templatePacket.header->toString());
 
+	templatePacket.data = new char[data.size()];
+	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
+
 	// TODO
 	RTPPacket packet(templatePacket);
 	packet.delay = config->noStegRTPDelay;
 	VAR_(2, (int)packet.delay);
 
 	VAR_(2, (int)templatePacket.dataSize);
+
+
 
 //	Zatrzymujemy dane z template'a :)
 //	packet.data = NULL;
