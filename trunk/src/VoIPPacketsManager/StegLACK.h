@@ -73,7 +73,7 @@ public:
 	/**
 	 * Incoming packets queue
 	 */
-	queue<RTPPacket> queue;
+	queue<RTPPacket> incQueue;
 
 	/**
 	 * The packets that didn't fit to queue, so they may be steganographic packets.
@@ -84,7 +84,7 @@ public:
 	/**
 	 * The sequence we will use to send our steganographic data
 	 */
-	queue<StegSeqElem> stegSeq;
+	vector<StegSeqElem> stegSeq;
 
 
 
