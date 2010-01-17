@@ -39,6 +39,7 @@ RTPPacket& RTPPacket::operator=(const RTPPacket& another) {
 	delay = another.delay;
 	*header = *another.header;
 	dataSize = another.dataSize;
+	data = new char[another.dataSize];
 	memcpy(data, another.data, another.dataSize);
 	return *this;
 }
@@ -46,6 +47,7 @@ RTPPacket& RTPPacket::operator=(const RTPPacket& another) {
 RTPPacket::RTPPacket(const RTPHeader& hdr, char* packetData, int _dataSize) {
 	header = new RTPHeader(hdr);
 	dataSize = _dataSize;
+	data = new char[dataSize];
 	memcpy(data, packetData, dataSize);
 }
 
