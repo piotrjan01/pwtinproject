@@ -32,10 +32,28 @@ void VoIPModule::doSending() {
 	if (callInfo.remotePort == 0) {
 		throw runtime_error("Call failed");
 	}
-
 	rtpAgent->setRemoteIP(callInfo.remoteIP);
 	rtpAgent->setRemotePort(callInfo.remotePort);
 
+	doTransport();
+}
+
+/**
+ * Czekamy na połączenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
+ */
+void VoIPModule::doReceiving() {
+	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
+	callInfo = sipAgent->Answer(rtpAgent->localPort);
+	if (callInfo.remotePort == 0) {
+		throw runtime_error("Call failed");
+	}
+	rtpAgent->setRemoteIP(callInfo.remoteIP);
+	rtpAgent->setRemotePort(callInfo.remotePort);
+
+	doTransport();
+}
+
+void VoIPModule::doTransport() {
 	RTPPacket rtpPacket;
 	while (sipAgent->connected()) {
 		PRN_(3, "VoIP: getNextPacket...");
@@ -53,16 +71,6 @@ void VoIPModule::doSending() {
 		processIncomingPackets(); // można wyrzucić przed pętlę -- musi to być wtedy wątek przetwarzający pakiety, gdy kolejka nie jest pusta
 	}
 	sipAgent->Disconnect();
-}
-
-/**
- * Czekamy na połączenie, odbieramy je i zapisujemy dane audio do wskazanego pliku.
- */
-void VoIPModule::doReceiving() {
-	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
-	//	CallInfo callInfo = sipAgent->Answer(rtpAgent->port);
-
-	// TODO
 }
 
 /**
