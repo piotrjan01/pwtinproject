@@ -20,7 +20,7 @@ public:
 	virtual ~NoSteg();
 
 	virtual RTPPacket& getNextPacket();
-	virtual void putReceivedPacketData(char* data, int dataSize);
+	virtual void putReceivedPacketData(RTPPacket& packet);
 };
 
 #endif /* NOSTEG_H_ */

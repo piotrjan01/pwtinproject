@@ -114,11 +114,17 @@ RTPPacket& StegLACK::getNextPacket() {
 	return templatePacket;
 }
 
-void StegLACK::putReceivedPacketData(char* data, int dataSize) {
+void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	//TODO: symulacja kolejki wejsciowej, a gdy kolejka sie zapycha, dane te traktujemy jako stego.
 
 	//sth arrived -> dec free space in queue
 	queueFreeSpace--;
+
+	//if it is time to read something from the queue:
+	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
+		timeSinceLastQueueRead.start();
+
+	}
 
 
 
