@@ -84,7 +84,7 @@ void VoIPModule::processIncomingPackets() {
  */
 void VoIPModule::connect() {
 	if (sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP,
-			config.proxyPort)) {
+			config.SIPProxyPort)) {
 		PRN("SIP Register successfully done")
 	} else {
 		PRN("SIP Register failed")
