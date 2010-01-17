@@ -23,7 +23,7 @@ class Main {
 public:
 	virtual ~Main();
 
-	static Main* getMain();
+	static Main* getInstance();
 
 	bool isHangUp();
 
@@ -38,16 +38,16 @@ public:
 	int startProgram(int argc, char **argv);
 
 	void printUsage();
-	Config* cnf;
 
 private:
+	Config* cnf;
 	void setSignalHandlers();
 	bool hangUp;
 
 	typedef void (*sighandler_t)(int);
 
 	Main();
-	static Main* main;
+	static Main* instance;
 
 };
 

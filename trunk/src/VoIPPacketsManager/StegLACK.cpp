@@ -44,7 +44,7 @@ void StegLACK::readStegDataToMem() {
 		}
 		f.close();
 	} else
-		Main::getMain()->handleError(
+		Main::getInstance()->handleError(
 				"Can't open the steganography input file: "
 						+ config->stegDataFile);
 }

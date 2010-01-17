@@ -9,19 +9,19 @@
 #include "../debug/debug.h"
 #include "../VoIPModule/VoIPModule.h"
 
-Main* Main::main = 0;
+Main* Main::instance = 0;
 
 
 void mainSignalHandler(int signal) {
 	VAR_(2, signal);
 	if (signal == SIGINT) {
 		PRN_(2, "CTRL-C pressed (signal SIGINT)")
-		Main::getMain()->hangUp = true;
+		Main::getInstance()->hangUp = true;
 	}
 }
 
 Main::Main() {
-	main = this;
+	instance = this;
 	hangUp = false;
 	setSignalHandlers();
 }
@@ -35,14 +35,14 @@ void Main::setSignalHandlers() {
 }
 
 Main::~Main() {
-	main = NULL;
+	instance = NULL;
 }
 
-Main* Main::getMain() {
-	if (main != NULL)
-		return main;
-	main = new Main();
-	return main;
+Main* Main::getInstance() {
+	if (instance != NULL)
+		return instance;
+	instance = new Main();
+	return instance;
 }
 
 void Main::printUsage() {
