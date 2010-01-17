@@ -79,14 +79,13 @@ void RTPAgent::sendPacket(RTPPacket& rtpPacket) {
 	sendto(socketfd, oss.str().data(), oss.str().length(), 0,
 			(sockaddr *) &addr_in, sizeof(addr_in));
 
-	PRN_(2, "-----   RTPPacket sent   -----");
+	PRN_(2, "-----   RTPPacket sent    -----");
 	PRNBITS_(2, oss.str());
 	PRN_(2, "--------------------------------");
 }
 
-
 bool RTPAgent::hasReceivedPacket() {
-	return ! incomingPackets.empty();
+	return !incomingPackets.empty();
 }
 
 RTPPacket& RTPAgent::getReceivedPacket() {
@@ -113,6 +112,9 @@ void RTPAgent::recvPacket() {
 		return;
 	}
 	PRN("Received RTP Packet: ");
+	PRN_(2, "-----  RTPPacket received  -----");
+	PRNBITS_(2, rtpPacket->toString());
+	PRN_(2, "--------------------------------");
 	VAR(length);
 	incomingPackets.pushBack(rtpPacket);
 }
