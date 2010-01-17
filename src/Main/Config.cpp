@@ -31,7 +31,7 @@ Config::Config(string configFile) {
 	cf.open(configFile.c_str());
 
 	if ( ! cf.is_open())
-		Main::getMain()->handleError("Unable to open configuration file: "+ configFile);
+		Main::getInstance()->handleError("Unable to open configuration file: "+ configFile);
 
 	while ( ! cf.eof() ) {
 		string ln;
@@ -46,7 +46,7 @@ Config::Config(string configFile) {
 
 	if (settings["calling"] == "1") weAreCalling = true;
 	else if (settings["calling"] == "0") weAreCalling = false;
-	else Main::getMain()->handleError("wrong configuration file format near \"calling\"");
+	else Main::getInstance()->handleError("wrong configuration file format near \"calling\"");
 
 	//wartosci domyslne parametrow tutaj:
 	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;

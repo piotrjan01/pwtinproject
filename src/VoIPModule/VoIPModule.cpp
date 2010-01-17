@@ -55,7 +55,7 @@ void VoIPModule::doReceiving() {
 
 void VoIPModule::doTransport() {
 	RTPPacket rtpPacket;
-	while (sipAgent->connected() && ! Main::getMain()->isHangUp()) {
+	while (sipAgent->connected() && ! Main::getInstance()->isHangUp()) {
 		PRN_(3, "VoIP: getNextPacket...");
 		rtpPacket = packetsManager->getNextPacket();
 		PRN_(3, "VoIP: OK have packet");

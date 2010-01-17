@@ -52,6 +52,6 @@ void NoSteg::putReceivedPacketData(char* data, int dataSize) {
 		myfile.write(data, dataSize);
 		myfile.close();
 	}
-	else Main::getMain()->handleError("Unable to open output audio data file: "
+	else Main::getInstance()->handleError("Unable to open output audio data file: "
 										+config->outputAudioFilePath);
 }

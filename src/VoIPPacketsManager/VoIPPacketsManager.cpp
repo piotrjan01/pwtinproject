@@ -49,5 +49,5 @@ void VoIPPacketsManager::readAudioDataFileToMem() {
 		}
 		f.close();
 	}
-	else Main::getMain()->handleError("Can't open the audio input file: "+config->audioFilePath);
+	else Main::getInstance()->handleError("Can't open the audio input file: "+config->audioFilePath);
 }
