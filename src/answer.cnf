@@ -10,18 +10,21 @@ username=stud6
 #our password on proxy
 pass=stud6
 
+#determines whether or not we do steganography
+do-steg=0
+
 #our local actual ip address
-local-ip=192.168.169.9
+local-ip=192.168.0.104
 
 #proxy ip address
-proxy-ip=194.29.169.4
+proxy-ip=192.168.0.100
 
 #proxy port
-proxy-port=8060
+proxy-port=5060
 
 #the audio data file
-audio-data-file=audiodata.dat
+audio-data-file=../src/audiodata.dat
 
 #file where received audio data will be stored
-output-audio-data-file=outputaudiodata.dat
+output-audio-data-file=../src/outputaudiodata.dat
 
