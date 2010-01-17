@@ -13,6 +13,7 @@
 class Timer {
 	clock_t t;
 public:
+	static const long USECONDS_IN_A_MILISECOND = 1000;
 	/**
 	 * Resetuje i startuje stoper.
 	 */

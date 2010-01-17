@@ -26,7 +26,7 @@
 #include "../../debug/debug.h"
 #include "../../Util/SynchronizedQueue.h"
 #include "../../Util/Net.h"
-#include "../../Observer/Observable.h"
+#include "../../Util/Observer/Observable.h"
 
 using namespace std;
 

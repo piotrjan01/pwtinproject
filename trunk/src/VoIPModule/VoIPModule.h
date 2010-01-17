@@ -26,7 +26,8 @@
 #include "../VoIPPacketsManager/NoSteg.h"
 #include "../VoIPPacketsManager/StegLACK.h"
 
-#include "../Observer/Observer.h"
+#include "../Util/Observer/Observer.h"
+#include "../Util/timer.h"
 
 using namespace std;
 
