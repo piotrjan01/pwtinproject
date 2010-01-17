@@ -103,8 +103,6 @@ void VoIPModule::connect() {
 		return; // TODO throw exception
 	}
 
-	Main::getMain()->setSignalHandlers();
-
 	rtpAgent = new RTPAgent();
 
 	if (config.weAreCalling) {
