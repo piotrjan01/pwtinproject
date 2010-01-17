@@ -44,12 +44,12 @@ RTPPacket& NoSteg::getNextPacket() {
 	return templatePacket;
 }
 
-void NoSteg::putReceivedPacketData(char* data, int dataSize) {
+void NoSteg::putReceivedPacketData(RTPPacket& packet) {
 	//nie interesuje nas to co dostajemy gdy my dzwonimy.
 	if (config->weAreCalling) return;
 	ofstream myfile (config->outputAudioFilePath.c_str());
 	if (myfile.is_open()) {
-		myfile.write(data, dataSize);
+		myfile.write(packet.data, packet.dataSize);
 		myfile.close();
 	}
 	else Main::getInstance()->handleError("Unable to open output audio data file: "

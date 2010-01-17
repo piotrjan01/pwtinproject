@@ -87,7 +87,7 @@ void VoIPModule::processIncomingPackets() {
 	PRN_(4, "VoIP: processIncomingPackets...");
 	while (rtpAgent->hasReceivedPacket()) {
 		RTPPacket& packet = rtpAgent->getReceivedPacket();
-		packetsManager->putReceivedPacketData(packet.data, packet.dataSize);
+		packetsManager->putReceivedPacketData(packet);
 	}
 }
 

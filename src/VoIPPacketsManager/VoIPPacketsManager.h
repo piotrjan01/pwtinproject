@@ -31,7 +31,7 @@ public:
 	 */
 	virtual RTPPacket& getNextPacket() = 0;
 
-	virtual void putReceivedPacketData(char* data, int dataSize) = 0;
+	virtual void putReceivedPacketData(RTPPacket& packet) = 0;
 
 	virtual vector<char> getAudioDataToSend();
 

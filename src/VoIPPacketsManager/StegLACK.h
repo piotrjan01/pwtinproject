@@ -10,6 +10,7 @@
 
 #include <vector>
 #include "VoIPPacketsManager.h"
+#include "../Util/timer.h"
 
 /**
  * Steganographic sequence element
@@ -64,9 +65,27 @@ public:
 	int queueFreeSpace;
 
 	/**
+	 * Counts the time that passed since last packet was read from the incoming queue
+	 */
+	Timer timeSinceLastQueueRead;
+
+	/**
+	 * Incoming packets queue
+	 */
+	vector<RTPPacket> queue;
+
+	/**
+	 * The packets that didn't fit to queue, so they may be steganographic packets.
+	 */
+	vector<RTPPacket> stegPackets;
+
+
+	/**
 	 * The sequence we will use to send our steganographic data
 	 */
 	vector<StegSeqElem> stegSeq;
+
+
 
 	long getRandNumber(long min, long max);
 
@@ -74,7 +93,7 @@ public:
 	virtual ~StegLACK();
 
 	virtual RTPPacket& getNextPacket();
-	virtual void putReceivedPacketData(char* data, int dataSize);
+	virtual void putReceivedPacketData(RTPPacket& packet);
 
 	void readStegDataToMem();
 
