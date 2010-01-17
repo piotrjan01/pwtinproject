@@ -66,10 +66,11 @@ Config::Config(string configFile) {
 		}
 	}
 	else {
-		outputAudioFilePath = settings["output-audio-data-file"];
+
 	}
 
 	//ustawienia ktore wczytujemy zawsze:
+	outputAudioFilePath = settings["output-audio-data-file"];
 	myUser = settings["username"];
 	myPass = settings["pass"];
 	localIP = settings["local-ip"];

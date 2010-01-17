@@ -45,8 +45,7 @@ RTPPacket& NoSteg::getNextPacket() {
 }
 
 void NoSteg::putReceivedPacketData(RTPPacket& packet) {
-	//nie interesuje nas to co dostajemy gdy my dzwonimy.
-	if (config->weAreCalling) return;
+	//TODO: to moze byc za wolne - lepiej trzymac uchwyt do pliku
 	ofstream myfile (config->outputAudioFilePath.c_str());
 	if (myfile.is_open()) {
 		myfile.write(packet.data, packet.dataSize);

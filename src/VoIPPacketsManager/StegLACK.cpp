@@ -63,7 +63,7 @@ vector<char> StegLACK::getStegDataToSend() {
 }
 
 StegLACK::~StegLACK() {
-	// TODO Auto-generated destructor stub
+
 }
 
 RTPPacket& StegLACK::getNextPacket() {
@@ -117,26 +117,41 @@ RTPPacket& StegLACK::getNextPacket() {
 void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	//TODO: symulacja kolejki wejsciowej, a gdy kolejka sie zapycha, dane te traktujemy jako stego.
 
-	//sth arrived -> dec free space in queue
-	queueFreeSpace--;
+	//if there is space in a queue
+	if (queueFreeSpace > 0) {
+		PRN_(1, "receiving package: putting it to incoming queue");
+		queue.push(packet);
+		if (queueFreeSpace > 0) queueFreeSpace--;
+	}
+	//if not, it may be steg packet
+	else {
+		PRN_(1, "receiving package: no space in queue - possibly steg package");
+		stegPackets.push_back(packet);
+	}
 
 	//if it is time to read something from the queue:
 	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
-		timeSinceLastQueueRead.start();
+		timeSinceLastQueueRead.start(); //restart timer
+		PRN_(1, "its time to read package from incoming queue...");
+		if (queue.size() > 0) {
+			RTPPacket p = queue.front();
+			queue.pop();
+			PRN_(1, "writing package to output audio data file");
+			if (queueFreeSpace < config->incQueueSize) queueFreeSpace++;
+			ofstream myfile (config->outputAudioFilePath.c_str(), ios::app);
+			if (myfile.is_open()) {
+				myfile.write(p.data, p.dataSize);
+				myfile.close();
+			}
+			else Main::getMain()->handleError("Unable to open output audio data file: "
+												+config->outputAudioFilePath);
+		}
+		else {
+			PRN_(1, "nothing to write.");
+		}
 
 	}
 
-
-
-
-/*	if (config->weAreCalling) return;
-	ofstream myfile (config->outputAudioFilePath.c_str());
-	if (myfile.is_open()) {
-		myfile.write(data, dataSize);
-		myfile.close();
-	}
-	else Main::getMain()->handleError("Unable to open output audio data file: "
-										+config->outputAudioFilePath);*/
 }
 
 StegSeqElem::StegSeqElem(string stegSeq) {
