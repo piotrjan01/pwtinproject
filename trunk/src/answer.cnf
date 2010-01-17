@@ -8,7 +8,7 @@ calling=0
 username=stud6
 
 #our password on proxy
-pass=stud6
+pass=
 
 #determines whether or not we do steganography
 do-steg=1

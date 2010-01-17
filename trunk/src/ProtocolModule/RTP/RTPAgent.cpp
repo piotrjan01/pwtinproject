@@ -125,12 +125,11 @@ void RTPAgent::recvPacket() {
 	sockaddr_in sender;
 	unsigned int senderlength;
 	char buf[BUF_LENGTH];
-	if (0 >= recvfrom(socketfd_rtp, buf, 10, MSG_PEEK | MSG_DONTWAIT, NULL,
-			NULL)) {
+	int length;
+	if (0 >= (length = recvfrom(socketfd_rtp, buf, BUF_LENGTH, 0,
+			(sockaddr *) &sender, &senderlength))) {
 		return;
 	}
-	int length = recvfrom(socketfd_rtp, buf, BUF_LENGTH, 0,
-			(sockaddr *) &sender, &senderlength);
 
 	RTPPacket* rtpPacket;
 	try {
@@ -151,13 +150,14 @@ void* RTPAgentReceiverThread(void* rtpAgent) {
 	RTPAgent* agent = (RTPAgent*) rtpAgent;
 	PRN_(1, "receiver thread started");
 	while (1) {
-		usleep(1000 * 5);
+		PRN_(9, "mutex.P");
 		agent->mutex.P();
 		agent->recvPacket();
 		if (agent->killThread) {
 			agent->mutex.V();
 			break;
 		}
+		PRN_(9, "mutex.V");
 		agent->mutex.V();
 	}
 	PRN_(1, "receiver thread stopped");

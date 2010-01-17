@@ -5,13 +5,13 @@
 calling=1
 
 #name of our user on proxy
-username=stud5
+username=stud6
 
 #our password on proxy
 pass=
 
 #our local actual ip address
-local-ip=192.168.0.103
+local-ip=192.168.0.104
 
 #proxy ip address
 proxy-ip=192.168.0.100
@@ -20,15 +20,15 @@ proxy-ip=192.168.0.100
 proxy-port=5060
 
 #username to whom we will call
-callee-username=marek
+callee-username=stud5
 
 #the audio data file
 audio-data-file=../src/audiodata.dat
 
 #file where received audio data will be stored
-output-audio-data-file=outputaudiodata.dat
+output-audio-data-file=../src/outputaudiodata.dat
 
-#determines wether or not we do steganography
+#determines whether or not we do steganography
 do-steg=1
 
 #steganography packets interval: how many normal audio packets minimally have to be send
