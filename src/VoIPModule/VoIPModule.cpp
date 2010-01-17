@@ -109,6 +109,7 @@ void VoIPModule::connect() {
 	}
 
 	rtpAgent = new RTPAgent();
+	rtpAgent->addObserver(*this);
 
 	if (config.weAreCalling) {
 		doSending();
