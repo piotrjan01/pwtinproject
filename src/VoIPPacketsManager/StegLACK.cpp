@@ -120,22 +120,22 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	//if there is space in a queue
 	if (queueFreeSpace > 0) {
 		PRN_(1, "receiving package: putting it to incoming queue");
-		queue.push(packet);
+		incQueue.push(packet);
 		if (queueFreeSpace > 0) queueFreeSpace--;
 	}
 	//if not, it may be steg packet
 	else {
 		PRN_(1, "receiving package: no space in queue - possibly steg package");
-		stegPackets.push_back(packet);
+		stegPackets.push(packet);
 	}
 
 	//if it is time to read something from the queue:
 	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
 		timeSinceLastQueueRead.start(); //restart timer
 		PRN_(1, "its time to read package from incoming queue...");
-		if (queue.size() > 0) {
-			RTPPacket p = queue.front();
-			queue.pop();
+		if (incQueue.size() > 0) {
+			RTPPacket p = incQueue.front();
+			incQueue.pop();
 			PRN_(1, "writing package to output audio data file");
 			if (queueFreeSpace < config->incQueueSize) queueFreeSpace++;
 			ofstream myfile (config->outputAudioFilePath.c_str(), ios::app);
@@ -143,7 +143,7 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 				myfile.write(p.data, p.dataSize);
 				myfile.close();
 			}
-			else Main::getMain()->handleError("Unable to open output audio data file: "
+			else Main::getInstance()->handleError("Unable to open output audio data file: "
 												+config->outputAudioFilePath);
 		}
 		else {
