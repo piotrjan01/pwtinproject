@@ -30,14 +30,13 @@ NoSteg::~NoSteg() {
 }
 
 RTPPacket NoSteg::getNextPacket() {
-	PRNBITS_(2, templatePacket.header->toString());
+	PRNBITS_(4, templatePacket.header->toString());
 	templatePacket.header->nextRTPHeader(NARROW_BAND); // changes sequenceNumber and timestamp
-	PRNBITS_(2, templatePacket.header->toString());
+	PRNBITS_(4, templatePacket.header->toString());
 
 	// TODO
 	RTPPacket packet(templatePacket);
-	VAR_(2, DEFAULT_PACKET_DELAY);
-	packet.delay = DEFAULT_PACKET_DELAY;
+	packet.delay = config->noStegRTPDelay;
 	VAR_(2, (int)packet.delay);
 
 	VAR_(2, (int)templatePacket.dataSize);
