@@ -72,7 +72,7 @@ public:
 			}
 			cout << "> ";
 		}
-		cout << endl;
+		cout << endl << flush;
 	}
 	static void printBits(string s) {
 		printBits(s.data(), s.length());
