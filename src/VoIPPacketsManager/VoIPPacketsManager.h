@@ -19,6 +19,8 @@ public:
 
 	Config* config;
 
+	int lastReadByte;
+
 	vector<char> audioData;
 
 	VoIPPacketsManager(Config *cfg);
