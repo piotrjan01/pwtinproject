@@ -28,7 +28,7 @@ static const long USECONDS_IN_A_MILISECOND = 1000;
  */
 void VoIPModule::doSending() {
 	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
-	callInfo = sipAgent->Call(config.calleeID, rtpAgent->localPort);
+	callInfo = sipAgent->Call(config.calleeID, rtpAgent->localPortRTP);
 	if (callInfo.remotePort == 0) {
 		throw runtime_error("Call failed");
 	}
@@ -43,7 +43,7 @@ void VoIPModule::doSending() {
  */
 void VoIPModule::doReceiving() {
 	// tutaj odbieramy od sipAgent dane potrzebne dla RTPAgent (ewentualnie też RTCPAgent)
-	callInfo = sipAgent->Answer(rtpAgent->localPort);
+	callInfo = sipAgent->Answer(rtpAgent->localPortRTP);
 	if (callInfo.remotePort == 0) {
 		throw runtime_error("Call failed");
 	}
