@@ -32,15 +32,13 @@ RTPPacket& NoSteg::getNextPacket() {
 	PRNBITS_(4, templatePacket.header->toString());
 
 	templatePacket.delay = config->noStegRTPDelay;
-	VAR_(2, (int)templatePacket.delay);
-
 	vector<char> data = getAudioDataToSend();
 	templatePacket.data = new char[data.size()];
 	templatePacket.dataSize = data.size();
 	for (int i = 0; i < (int) data.size(); i++) {
 		templatePacket.data[i] = data[i];
 	}
-	VAR_(2, (int)templatePacket.dataSize);
+	VAR_(4, (int)templatePacket.dataSize);
 	return templatePacket;
 }
 

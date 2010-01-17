@@ -30,23 +30,29 @@ Config::Config(string configFile) {
 
 	cf.open(configFile.c_str());
 
-	if ( ! cf.is_open())
-		Main::getInstance()->handleError("Unable to open configuration file: "+ configFile);
+	if (!cf.is_open())
+		Main::getInstance()->handleError("Unable to open configuration file: "
+				+ configFile);
 
-	while ( ! cf.eof() ) {
+	while (!cf.eof()) {
 		string ln;
 		getline(cf, ln);
-		if (ln[0] == '#' || ln == "") continue;
+		if (ln[0] == '#' || ln == "")
+			continue;
 		int eqpos = ln.find_first_of('=');
 		string argname = ln.substr(0, eqpos);
-		string argval = ln.substr(eqpos+1);
+		string argval = ln.substr(eqpos + 1);
 		settings[argname] = argval;
 		VAR_(4, argname+" = "+argval);
 	}
 
-	if (settings["calling"] == "1") weAreCalling = true;
-	else if (settings["calling"] == "0") weAreCalling = false;
-	else Main::getInstance()->handleError("wrong configuration file format near \"calling\"");
+	if (settings["calling"] == "1")
+		weAreCalling = true;
+	else if (settings["calling"] == "0")
+		weAreCalling = false;
+	else
+		Main::getInstance()->handleError(
+				"wrong configuration file format near \"calling\"");
 
 	//wartosci domyslne parametrow tutaj:
 	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;
@@ -55,21 +61,17 @@ Config::Config(string configFile) {
 	incQueueReadInterval = DEFAULT_NOSTEG_RTP_DELAY;
 	incQueueSize = 5;
 
-	if (weAreCalling) {
-		calleeID = settings["callee-username"];
-		doSteg = (settings["do-steg"] == "1");
-		if (doSteg) {
-			maxStegInterval = atoi(settings["max-steg-interval"].c_str());
-			minStegInterval = atoi(settings["min-steg-interval"].c_str());
-			stegSequence = settings["steg-sequence"];
-			stegDataFile = settings["steg-data-file"];
-		}
-	}
-	else {
-
-	}
+	//ustawienia ktore wczytujemy zawsze:
+	doSteg = (settings["do-steg"] == "1");
 
 	//ustawienia ktore wczytujemy zawsze:
+	if (doSteg) {
+		maxStegInterval = atoi(settings["max-steg-interval"].c_str());
+		minStegInterval = atoi(settings["min-steg-interval"].c_str());
+		stegSequence = settings["steg-sequence"];
+		stegDataFile = settings["steg-data-file"];
+	}
+
 	outputAudioFilePath = settings["output-audio-data-file"];
 	myUser = settings["username"];
 	myPass = settings["pass"];
@@ -77,6 +79,10 @@ Config::Config(string configFile) {
 	SIPProxyIP = settings["proxy-ip"];
 	SIPProxyPort = atoi(settings["proxy-port"].c_str());
 	audioFilePath = settings["audio-data-file"];
+
+	if (weAreCalling) {
+		calleeID = settings["callee-username"];
+	}
 
 	PRN_(4, "end config constr");
 }
