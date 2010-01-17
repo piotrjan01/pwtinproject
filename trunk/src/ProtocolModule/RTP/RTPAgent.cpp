@@ -111,7 +111,6 @@ void RTPAgent::recvPacket() {
 		PRN("Received invalid data");
 		return;
 	}
-	PRN("Received RTP Packet: ");
 	PRN_(2, "-----  RTPPacket received  -----");
 	PRNBITS_(2, rtpPacket->toString());
 	PRN_(2, "--------------------------------");

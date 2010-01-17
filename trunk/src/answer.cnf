@@ -16,6 +16,9 @@ local-ip=192.168.169.9
 #proxy ip address
 proxy-ip=194.29.169.4
 
+#proxy port
+proxy-port=8060
+
 #the audio data file
 audio-data-file=audiodata.dat
 

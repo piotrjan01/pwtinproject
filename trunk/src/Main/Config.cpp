@@ -49,7 +49,7 @@ Config::Config(string configFile) {
 	else Main::getMain()->handleError("wrong configuration file format near \"calling\"");
 
 	//wartosci domyslne parametrow tutaj:
-	proxyPort = DEFAULT_SIP_PROXY_PORT;
+	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
 
@@ -72,6 +72,7 @@ Config::Config(string configFile) {
 	myPass = settings["pass"];
 	localIP = settings["local-ip"];
 	SIPProxyIP = settings["proxy-ip"];
+	SIPProxyPort = atoi(settings["proxy-port"].c_str());
 	audioFilePath = settings["audio-data-file"];
 
 	PRN_(4, "end config constr");

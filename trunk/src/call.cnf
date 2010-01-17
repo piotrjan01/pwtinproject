@@ -14,7 +14,10 @@ pass=stud6
 local-ip=192.168.0.103
 
 #proxy ip address
-proxy-ip=192.168.0.100
+proxy-ip=194.29.169.4
+
+#proxy port
+proxy-port=8060
 
 #username to whom we will call
 callee-username=pio
