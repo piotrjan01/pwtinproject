@@ -54,16 +54,21 @@ void VoIPModule::doReceiving() {
 
 void VoIPModule::doTransport() {
 	RTPPacket rtpPacket;
-	while (sipAgent->connected() && ! Main::getInstance()->isHangUp()) {
+	Timer timer;
+	timer.start();
+	int delay;
+
+	while (sipAgent->connected() && !Main::getInstance()->isHangUp()) {
 		PRN_(3, "VoIP: getNextPacket...");
 		rtpPacket = packetsManager->getNextPacket();
 		PRN_(3, "VoIP: OK have packet");
 		PRNBITS_(4, rtpPacket.header->toString());
 
-		// TODO właściwie to ma być <delay> milisekund różnicy pomiędzy kolejnymi wysłaniami pakietów
-		// a poniżej jest <delay> milisekund przerwy + obliczenia (pobranie pakietu itp., przygotowanie danych)
 		VAR_(2, (int) rtpPacket.delay);
-		usleep(Timer::USECONDS_IN_A_MILISECOND * rtpPacket.delay);
+
+		delay = min(rtpPacket.delay - (int)timer.seeTime(), rtpPacket.delay);
+		usleep(delay);
+		timer.start();
 		PRN_(3, "VoIP: sendPacket");
 		rtpAgent->sendPacket(rtpPacket);
 	}

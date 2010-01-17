@@ -18,24 +18,24 @@ public:
 	 * Resetuje i startuje stoper.
 	 */
 	void start() {
-		t=clock();
+		t = clock();
 	}
 
 	/**
 	 * Zwraca milisekundy od startu stopera
 	 */
 	double seeTime() {
-		double ret=clock()-t;
-		return (double)(1000.0*ret / (double)CLOCKS_PER_SEC);
+		double ret = clock() - t;
+		return (double) (USECONDS_IN_A_MILISECOND * ret
+				/ (double) CLOCKS_PER_SEC);
 	}
-
 
 	/**
 	 * Zwraca milisekundy i zatrzymuje stoper
 	 */
 	double stop() {
-		t=clock()-t;
-		return (double)(1000.0*t / (double)CLOCKS_PER_SEC);
+		t = clock() - t;
+		return (double) (USECONDS_IN_A_MILISECOND * t / (double) CLOCKS_PER_SEC);
 	}
 };
 
