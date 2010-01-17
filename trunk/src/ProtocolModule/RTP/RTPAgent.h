@@ -43,6 +43,9 @@ public:
 	 */
 	void sendPacket(RTPPacket& rtpPacket);
 
+	bool hasReceivedPacket();
+	RTPPacket& getReceivedPacket();
+
 	/**
 	 *	Port lokalny na którym zachodzi komunikacja przez RTP
 	 */

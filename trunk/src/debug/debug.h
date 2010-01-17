@@ -66,7 +66,7 @@ public:
 		int i, j, v;
 		for (i = 0; i < len; ++i) {
 			v = s[i];
-			cout << "Byte[" << i << "]=<";
+			cout << "[" << i << "]=<";
 			for (j = 0; j < 8; ++j) {
 				cout << (((v >> (7 - j)) & 0x01) ? 1 : 0);
 			}

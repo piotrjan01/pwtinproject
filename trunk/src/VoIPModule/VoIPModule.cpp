@@ -41,7 +41,7 @@ void VoIPModule::doSending() {
 		PRN_(3, "VoIP: getNextPacket...");
 		rtpPacket = packetsManager->getNextPacket();
 		PRN_(3, "VoIP: OK have packet");
-		PRNBITS_(2, rtpPacket.header->toString());
+		PRNBITS_(4, rtpPacket.header->toString());
 
 		// TODO właściwie to ma być <delay> milisekund różnicy pomiędzy kolejnymi wysłaniami pakietów
 		// a poniżej jest <delay> milisekund przerwy + obliczenia (pobranie pakietu itp., przygotowanie danych)
@@ -73,16 +73,18 @@ void VoIPModule::doReceiving() {
  *	normalnie drop-owane, czyli prawdopodobnie nasze dane steganograficzne.
  */
 void VoIPModule::processIncomingPackets() {
-	//	while(rtpAgent->hasNextPacket()) {
-	//		 processPacket(rtpAgent->getReceivedPacket());
-	//	}
+	while (rtpAgent->hasReceivedPacket()) {
+		RTPPacket& packet = rtpAgent->getReceivedPacket();
+		packetsManager->putReceivedPacketData(packet.data, packet.dataSize);
+	}
 }
 
 /**
  * W zaleznosci od configa rozpoczyna dzwonienie lub nasluchiwanie
  */
 void VoIPModule::connect() {
-	if(sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP, config.proxyPort)) {
+	if (sipAgent->Register(config.myUser, config.myPass, config.SIPProxyIP,
+			config.proxyPort)) {
 		PRN("SIP Register successfully done")
 	} else {
 		PRN("SIP Register failed")

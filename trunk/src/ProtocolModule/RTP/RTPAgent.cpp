@@ -84,15 +84,25 @@ void RTPAgent::sendPacket(RTPPacket& rtpPacket) {
 	PRN_(2, "--------------------------------");
 }
 
+
+bool RTPAgent::hasReceivedPacket() {
+	return ! incomingPackets.empty();
+}
+
+RTPPacket& RTPAgent::getReceivedPacket() {
+	return *incomingPackets.popFront();
+}
+
 void RTPAgent::recvPacket() {
+	static const int BUF_LENGTH = 32768;
 	// TODO
 	sockaddr_in sender;
 	unsigned int senderlength;
-	char buf[32768];
+	char buf[BUF_LENGTH];
 	if (0 >= recvfrom(socketfd, buf, 10, MSG_PEEK | MSG_DONTWAIT, NULL, NULL)) {
 		return;
 	}
-	int length = recvfrom(socketfd, buf, 32768, 0, (sockaddr *) &sender,
+	int length = recvfrom(socketfd, buf, BUF_LENGTH, 0, (sockaddr *) &sender,
 			&senderlength);
 
 	RTPPacket* rtpPacket;
