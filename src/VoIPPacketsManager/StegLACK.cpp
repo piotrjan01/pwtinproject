@@ -78,13 +78,15 @@ RTPPacket& StegLACK::getNextPacket() {
 		//wysylamy steg packet
 		if (se.isStegPacket && ! stegTransferDone) {
 			payloadData = getStegDataToSend();
-			PRN_(1, "in steg sequence: sending packet: steg, delay="+delay);
+			PRN_(1, "in steg sequence: sending packet: steg");
+			VAR_(1, delay);
 		}
 		//wysylamy audio packet
 		else {
 			//dodajemy audio do pakietu:
 			payloadData = getAudioDataToSend();
-			PRN_(1, "in steg sequence: sending packet: audio, delay="+delay);
+			PRN_(1, "in steg sequence: sending packet: audio");
+			VAR_(1, delay);
 		}
 		seqPosition++;
 
