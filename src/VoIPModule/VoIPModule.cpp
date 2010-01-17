@@ -22,7 +22,6 @@ VoIPModule::~VoIPModule() {
 	delete &packetsManager;
 }
 
-static const long USECONDS_IN_A_MILISECOND = 1000;
 /**
  * Wysyłamy dane z pliku audio do wskazanego hosta zestawiając najpierw połączenia VoIP.
  */
@@ -64,7 +63,7 @@ void VoIPModule::doTransport() {
 		// TODO właściwie to ma być <delay> milisekund różnicy pomiędzy kolejnymi wysłaniami pakietów
 		// a poniżej jest <delay> milisekund przerwy + obliczenia (pobranie pakietu itp., przygotowanie danych)
 		VAR_(2, (int) rtpPacket.delay);
-		usleep(USECONDS_IN_A_MILISECOND * rtpPacket.delay);
+		usleep(Timer::USECONDS_IN_A_MILISECOND * rtpPacket.delay);
 		PRN_(3, "VoIP: sendPacket");
 		rtpAgent->sendPacket(rtpPacket);
 	}
