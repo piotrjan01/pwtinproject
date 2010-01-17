@@ -25,10 +25,11 @@
 
 #include "../../debug/debug.h"
 #include "../../Util/SynchronizedQueue.h"
+#include "../../Observer/Observable.h"
 
 using namespace std;
 
-class RTPAgent {
+class RTPAgent : public Observable {
 	friend void* RTPAgentReceiverThread(void *);
 public:
 	/**

@@ -25,21 +25,25 @@
 #include "../VoIPPacketsManager/NoSteg.h"
 #include "../VoIPPacketsManager/StegLACK.h"
 
+#include "../Observer/Observer.h"
+
 using namespace std;
 
-class VoIPModule {
+class VoIPModule : public Observer {
 public:
 	VoIPModule(Config* config);
 	virtual ~VoIPModule();
 
 	void connect();
 
+	//@Override
+	void update();
 private:
+	void processIncomingPackets();
+
 	void doSending();
 	void doReceiving();
 	void doTransport();
-
-	void processIncomingPackets();
 
 	Config& config;
 
