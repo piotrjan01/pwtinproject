@@ -228,14 +228,21 @@ void SIP_Agent::answerCall(SIP_Message &m) {
 
     reply.body = "v=0\n";
     reply.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-    reply.body += "s=CounterPath X-Lite 3.0\n";
+    reply.body += "s=X-Lite\n";
+//    reply.body += "s=CounterPath X-Lite 3.0\n";
     reply.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
     reply.body += string("t=0 0\n");
-    reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
+    reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 0 8 3 98 97 101 107\n");
+//    reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
     reply.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
-    reply.body += "a=fmtp:101 0-15\n";
-    reply.body += "a=rtpmap:107 BV32/16000\n";
+    reply.body += "a=rtpmap:0 pcmu/8000\n";
+    reply.body += "a=rtpmap:8 pcma/8000\n";
+    reply.body += "a=rtpmap:3 gsm/8000\n";
+    reply.body += "a=rtpmap:98 iLBC/8000\n";
+    reply.body += "a=rtpmap:97 speex/8000\n";
     reply.body += "a=rtpmap:101 telephone-event/8000\n";
+    reply.body += "a=rtpmap:107 BV32/16000\n";
+    reply.body += "a=fmtp:101 0-15\n";
     reply.body += "a=sendrecv\n";
 
     reply.lines.push_back("Content-Length: " + toString(reply.body.length()));
@@ -493,14 +500,20 @@ void SIP_Agent::Call() {
 
     m.body = "v=0\n";
     m.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-    m.body += "s=CounterPath X-Lite 3.0\n";
+    m.body += "s=X-Lite\n";
     m.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
     m.body += string("t=0 0\n");
-    m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
+    m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 0 8 3 98 97 101 107\n");
+//    m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
     m.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
-    m.body += "a=fmtp:101 0-15\n";
-    m.body += "a=rtpmap:107 BV32/16000\n";
+    m.body += "a=rtpmap:0 pcmu/8000\n";
+    m.body += "a=rtpmap:8 pcma/8000\n";
+    m.body += "a=rtpmap:3 gsm/8000\n";
+    m.body += "a=rtpmap:98 iLBC/8000\n";
+    m.body += "a=rtpmap:97 speex/8000\n";
     m.body += "a=rtpmap:101 telephone-event/8000\n";
+    m.body += "a=rtpmap:107 BV32/16000\n";
+    m.body += "a=fmtp:101 0-15\n";
     m.body += "a=sendrecv\n";
 
     m.lines.push_back("Content-Length: " + toString(m.body.length()));
