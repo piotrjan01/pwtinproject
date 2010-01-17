@@ -96,4 +96,5 @@ void VoIPModule::connect() {
 	} else {
 		doReceiving();
 	}
+	sipAgent->Unregister();
 }

@@ -24,6 +24,7 @@ NoSteg::NoSteg(Config* cfg) : VoIPPacketsManager(cfg) {
 	for (int i=0; i<(int)data.size(); i++) templatePacket.data[i]=data[i];
 	templatePacket.dataSize = data.size();
 
+
 }
 
 NoSteg::~NoSteg() {
@@ -40,7 +41,10 @@ RTPPacket NoSteg::getNextPacket() {
 	VAR_(2, DEFAULT_PACKET_DELAY);
 	packet.delay = DEFAULT_PACKET_DELAY;
 	VAR_(2, (int)packet.delay);
-//	Zatrzymujemy dane z templeate'a :)
+
+	VAR_(2, (int)templatePacket.dataSize);
+
+//	Zatrzymujemy dane z template'a :)
 //	packet.data = NULL;
 //	packet.dataSize = 0;
 	return packet;
