@@ -25,6 +25,7 @@
 
 #include "../../debug/debug.h"
 #include "../../Util/SynchronizedQueue.h"
+#include "../../Util/Net.h"
 #include "../../Observer/Observable.h"
 
 using namespace std;
@@ -50,7 +51,7 @@ public:
 	/**
 	 *	Port lokalny na którym zachodzi komunikacja przez RTP
 	 */
-	int localPort;
+	int localPortRTP;
 
 	int localPortRTCP; // powinno być localPortRTP + 1
 

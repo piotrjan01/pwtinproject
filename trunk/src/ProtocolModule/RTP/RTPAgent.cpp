@@ -14,11 +14,8 @@ RTPAgent::RTPAgent() :
 	// =========================================================================
 	// utwórz gniazdo RTP
 	PRN_(1, "Creating socket for RTP...");
-	socketfd_rtp = socket(AF_INET, SOCK_DGRAM, 0);
-	VAR(socketfd_rtp);
-	if (socketfd_rtp == -1) {
-		throw runtime_error("Can't create UDP socket!");
-	}
+	socketfd_rtp = Net::socket_s(AF_INET, SOCK_DGRAM, 0);
+	VAR_(1, socketfd_rtp);
 
 	PRN_(1, "Binding to address...");
 	sockaddr_in addr_rtp;
@@ -26,9 +23,7 @@ RTPAgent::RTPAgent() :
 	addr_rtp.sin_addr.s_addr = htonl(INADDR_ANY);
 	addr_rtp.sin_port = 0;
 
-	if (bind(socketfd_rtp, (sockaddr *) &addr_rtp, sizeof(addr_rtp)) == -1) {
-		throw runtime_error("Can't bind to address!");
-	}
+	Net::bind_s(socketfd_rtp, (sockaddr *) &addr_rtp, sizeof(addr_rtp));
 
 	int length = sizeof(addr_rtp);
 	if (getsockname(socketfd_rtp, (sockaddr *) &addr_rtp, (socklen_t *) &length)
@@ -40,28 +35,22 @@ RTPAgent::RTPAgent() :
 	addr_in_rtp.sin_family = AF_INET;
 
 	//	 ustaw localPort na port gniazda
-	localPort = ntohs(addr_rtp.sin_port);
+	localPortRTP = ntohs(addr_rtp.sin_port);
 	VAR_(1, inet_ntoa(addr_rtp.sin_addr));
-	VAR_(1, localPort);
+	VAR_(1, localPortRTP);
 
 	// =========================================================================
 	// utwórz gniazdo RTCP
 	PRN_(1, "Creating socket for RTCP...");
-	VAR(socketfd_rtcp);
-	socketfd_rtcp = socket(AF_INET, SOCK_DGRAM, 0);
-	if (socketfd_rtcp == -1) {
-		throw runtime_error("Can't create UDP socket!");
-	}
+	socketfd_rtcp = Net::socket_s(AF_INET, SOCK_DGRAM, 0);
+	VAR_(1, socketfd_rtcp);
 
 	PRN_(1, "Binding to address...");
 	sockaddr_in addr_rtcp;
 	addr_rtcp.sin_family = AF_INET;
 	addr_rtcp.sin_addr.s_addr = addr_rtp.sin_addr.s_addr;
-	addr_rtcp.sin_port = htons(localPort + 1);
-
-	if (bind(socketfd_rtcp, (sockaddr *) &addr_rtcp, sizeof(addr_rtp)) == -1) {
-		throw runtime_error("Can't bind to address!");
-	}
+	addr_rtcp.sin_port = htons(localPortRTP + 1);
+	Net::bind_s(socketfd_rtcp, (sockaddr *) &addr_rtcp, sizeof(addr_rtp));
 
 	length = sizeof(addr_rtcp);
 	if (getsockname(socketfd_rtcp, (sockaddr *) &addr_rtcp,
