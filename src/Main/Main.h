@@ -40,8 +40,8 @@ public:
 	void printUsage();
 	Config* cnf;
 
-	void setSignalHandlers();
 private:
+	void setSignalHandlers();
 	bool hangUp;
 
 	typedef void (*sighandler_t)(int);

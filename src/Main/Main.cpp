@@ -23,6 +23,7 @@ void mainSignalHandler(int signal) {
 Main::Main() {
 	main = this;
 	hangUp = false;
+	setSignalHandlers();
 }
 
 bool Main::isHangUp() {
