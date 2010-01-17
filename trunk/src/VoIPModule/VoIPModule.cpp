@@ -56,7 +56,7 @@ void VoIPModule::doTransport() {
 	RTPPacket rtpPacket;
 	Timer timer;
 	timer.start();
-	int delay;
+	int delay_us;
 
 	while (sipAgent->connected() && !Main::getInstance()->isHangUp()) {
 		PRN_(3, "VoIP: getNextPacket...");
@@ -64,10 +64,11 @@ void VoIPModule::doTransport() {
 		PRN_(3, "VoIP: OK have packet");
 		PRNBITS_(4, rtpPacket.header->toString());
 
-		VAR_(2, (int) rtpPacket.delay);
+		VAR_(4, (int) rtpPacket.delay);
 
-		delay = min(rtpPacket.delay - (int)timer.seeTime(), rtpPacket.delay);
-		usleep(delay);
+		delay_us = min(rtpPacket.delay - (int)timer.seeTime(), rtpPacket.delay);
+		VAR_(4, delay_us);
+		usleep(Timer::USECONDS_IN_A_MILISECOND * delay_us);
 		timer.start();
 		PRN_(3, "VoIP: sendPacket");
 		rtpAgent->sendPacket(rtpPacket);
