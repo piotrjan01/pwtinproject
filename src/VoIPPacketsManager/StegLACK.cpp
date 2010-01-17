@@ -115,7 +115,22 @@ RTPPacket& StegLACK::getNextPacket() {
 }
 
 void StegLACK::putReceivedPacketData(char* data, int dataSize) {
-	// TODO czy to w ogle potrzebne? czy jakis watek sie tym nie bedzie zajmowal VoIPModule::processIncomingPackets()
+	//TODO: symulacja kolejki wejsciowej, a gdy kolejka sie zapycha, dane te traktujemy jako stego.
+
+	//sth arrived -> dec free space in queue
+	queueFreeSpace--;
+
+
+
+
+/*	if (config->weAreCalling) return;
+	ofstream myfile (config->outputAudioFilePath.c_str());
+	if (myfile.is_open()) {
+		myfile.write(data, dataSize);
+		myfile.close();
+	}
+	else Main::getMain()->handleError("Unable to open output audio data file: "
+										+config->outputAudioFilePath);*/
 }
 
 StegSeqElem::StegSeqElem(string stegSeq) {

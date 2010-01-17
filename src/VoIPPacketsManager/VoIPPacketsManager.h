@@ -31,7 +31,6 @@ public:
 	 */
 	virtual RTPPacket& getNextPacket() = 0;
 
-	//TODO: czy bedzie uzywane?
 	virtual void putReceivedPacketData(char* data, int dataSize) = 0;
 
 	virtual vector<char> getAudioDataToSend();
