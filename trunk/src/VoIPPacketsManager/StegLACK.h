@@ -58,13 +58,14 @@ public:
 	StegLACK(Config* cfg);
 	virtual ~StegLACK();
 
-	virtual RTPPacket getNextPacket();
+	virtual RTPPacket& getNextPacket();
 	virtual void putReceivedPacketData(char* data, int dataSize);
 
 	void readStegDataToMem();
 
 	vector<char> getStegDataToSend();
-
+private:
+	RTPPacket templatePacket;
 };
 
 #endif /* STEGLACK_H_ */

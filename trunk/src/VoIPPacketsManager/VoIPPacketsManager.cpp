@@ -14,6 +14,14 @@ VoIPPacketsManager::VoIPPacketsManager(Config* cfg) {
 	config = cfg;
 	lastReadByte = 0;
 	readAudioDataFileToMem();
+
+	templatePacket.header->sequenceNumber = RTPHeader::generateSequenceNumber();
+	VAR_(2, templatePacket.header->sequenceNumber);
+	templatePacket.header->timestamp = RTPHeader::generateTimestamp();
+	VAR_(2, (int) templatePacket.header->timestamp);
+	templatePacket.header->ssrc = RTPHeader::generateSSRC();
+	VAR_(2, (int) templatePacket.header->ssrc);
+	PRNBITS_(2, templatePacket.header->toString());
 }
 
 VoIPPacketsManager::~VoIPPacketsManager() {
