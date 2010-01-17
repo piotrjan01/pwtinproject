@@ -28,6 +28,7 @@ StegLACK::StegLACK(Config* cfg) :
 	seqPosition = 0;
 	seqFireInterval = getRandNumber(config->minStegInterval,
 			config->maxStegInterval);
+	stegTransferDone = false;
 	readStegDataToMem();
 	VAR_(3, seqFireInterval);
 }
@@ -50,11 +51,14 @@ void StegLACK::readStegDataToMem() {
 
 vector<char> StegLACK::getStegDataToSend() {
 	int size = config->RTPPayloadSize;
-	if (stegData.size() < (unsigned) size)
-		size = stegData.size();
 	vector<char> ret;
-	for (int i = 0; i < size; i++)
-		ret.push_back(stegData[i]);
+	for (int i=1; i<size; i++) {
+		lastReadStegByte++;
+		if (lastReadStegByte<(int)stegData.size())
+			ret.push_back(stegData[lastReadStegByte]);
+		else ret.push_back(' ');
+	}
+	if (lastReadStegByte>=(int)stegData.size()) stegTransferDone = true;
 	return ret;
 }
 
@@ -63,18 +67,22 @@ StegLACK::~StegLACK() {
 }
 
 RTPPacket& StegLACK::getNextPacket() {
+
+	vector<char> payloadData;
+
 	//we are doing the sequence
-	if (intervalCount >= seqFireInterval) {
+	if ( ! stegTransferDone && intervalCount >= seqFireInterval) {
 		StegSeqElem se = stegSeq[seqPosition];
 		long delay = getRandNumber(se.intervMin, se.intervMax);
 		templatePacket.delay = delay;
 		//wysylamy steg packet
-		if (se.isStegPacket) {
-			//todo: dodac do ret dane steg
+		if (se.isStegPacket && ! stegTransferDone) {
+			payloadData = getStegDataToSend();
 		}
 		//wysylamy audio packet
 		else {
-			//todo: dodac do ret dane audio
+			//dodajemy audio do pakietu:
+			payloadData = getAudioDataToSend();
 		}
 		seqPosition++;
 
@@ -88,8 +96,16 @@ RTPPacket& StegLACK::getNextPacket() {
 	//we send the normal package
 	else {
 		intervalCount++;
-		//todo: dodac do ret dane audio
+		//dodajemy audio do pakietu:
+		payloadData = getAudioDataToSend();
 	}
+
+	templatePacket.data = new char[payloadData.size()];
+	templatePacket.dataSize = payloadData.size();
+	for (int i = 0; i < (int) payloadData.size(); i++) {
+		templatePacket.data[i] = payloadData[i];
+	}
+
 	//return prepared packet
 	return templatePacket;
 }

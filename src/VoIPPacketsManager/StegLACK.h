@@ -31,6 +31,7 @@ public:
 	 */
 	int intervalCount;
 
+
 	/**
 	 * The interval at which the sequence fires. After it fires, the new seq interval is being
 	 * randomly chosen according to min and max intervals from config.
@@ -46,6 +47,16 @@ public:
 	 * Steganographic data read from a file
 	 */
 	vector<char> stegData;
+
+	/**
+	 * Pointer to remember the position in stegData
+	 */
+	int lastReadStegByte;
+
+	/**
+	 * Flags wether steg data has been already transfered
+	 */
+	bool stegTransferDone;
 
 
 	/**
