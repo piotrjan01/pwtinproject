@@ -58,7 +58,7 @@ int Main::startProgram(int argc, char **argv) {
 		PRN_(1, "tworzymy VoIPModule..");
 		VoIPModule* voip = new VoIPModule(cnf);
 
-		voip->connect();
+//		voip->connect();
 	} catch (runtime_error& e) {
 		Main::handleError(e.what());
 	}

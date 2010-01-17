@@ -12,6 +12,7 @@
 
 VoIPPacketsManager::VoIPPacketsManager(Config* cfg) {
 	config = cfg;
+	lastReadByte = 0;
 	readAudioDataFileToMem();
 }
 
@@ -23,9 +24,9 @@ VoIPPacketsManager::~VoIPPacketsManager() {
  */
 vector<char> VoIPPacketsManager::getAudioDataToSend() {
 	int size = config->RTPPayloadSize;
-	if (audioData.size() < (unsigned)size) size = audioData.size();
 	vector<char> ret;
-	for (int i=0; i<size; i++) ret.push_back(audioData[i]);
+	for (int i=1; i<size; i++) ret.push_back(audioData[(++lastReadByte) % audioData.size()]);
+	lastReadByte = lastReadByte % audioData.size();
 	return ret;
 }
 
