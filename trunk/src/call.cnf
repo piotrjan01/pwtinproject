@@ -25,6 +25,9 @@ callee-username=marek
 #the audio data file
 audio-data-file=../src/audiodata.dat
 
+#file where received audio data will be stored
+output-audio-data-file=outputaudiodata.dat
+
 #determines wether or not we do steganography
 do-steg=1
 

@@ -11,6 +11,7 @@
 #include <vector>
 #include "VoIPPacketsManager.h"
 #include "../Util/timer.h"
+#include <queue>
 
 /**
  * Steganographic sequence element
@@ -72,18 +73,18 @@ public:
 	/**
 	 * Incoming packets queue
 	 */
-	vector<RTPPacket> queue;
+	queue<RTPPacket> queue;
 
 	/**
 	 * The packets that didn't fit to queue, so they may be steganographic packets.
 	 */
-	vector<RTPPacket> stegPackets;
+	queue<RTPPacket> stegPackets;
 
 
 	/**
 	 * The sequence we will use to send our steganographic data
 	 */
-	vector<StegSeqElem> stegSeq;
+	queue<StegSeqElem> stegSeq;
 
 
 
