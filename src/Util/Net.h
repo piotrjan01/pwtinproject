@@ -1,8 +1,13 @@
-/*
- * Net.h
+/**
+ * @file Net.h
+ * @brief Wrapper classes for networking functions.
  *
- *  Created on: 2010-01-17
- *      Author: marek
+ * Wrapper classes for networking functions, which check the returned value and
+ * throw a \a std::runtime_error if the standard function fails.
+ *
+ * @date created 2010-01-17
+ * @author: Marek
+ * @see std::runtime_error
  */
 
 #ifndef NET_H_

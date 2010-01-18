@@ -25,16 +25,16 @@ using namespace std;
  *
  * 0123 4567 0123 4567
  * ===================
- * vvpx <cc> m<  pt  >
- * < sequenceNumber  >
- * <    timestamp
- *      timestamp    >
- * < synchronization
- *       source      >
+ * vvpx [cc] m[  pt  ]
+ * [ sequenceNumber  ]
+ * [    timestamp
+ *      timestamp    ]
+ * [ synchronization
+ *       source      ]
  *
  * optionally: from 0 to 15 times
- * <   contributing
- *       source      >
+ * [   contributing
+ *       source      ]
  */
 
 /*

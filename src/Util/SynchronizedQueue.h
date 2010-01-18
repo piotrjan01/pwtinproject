@@ -1,8 +1,11 @@
 /*
- * ThreadSafeQueue.h
+ * @file SynchronizedQueue.h
  *
- *  Created on: 2010-01-16
- *      Author: marek
+ * A thread-safe (synchronized) queue for <code>RTPPacket</code>s.
+ *
+ * @date created 2010-01-16
+ * @author: Marek
+ * @see RTPPacket.h
  */
 
 #ifndef SYNCHRONIZEDQUEUE_H_
