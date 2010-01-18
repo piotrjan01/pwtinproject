@@ -27,7 +27,7 @@
 #include "../VoIPPacketsManager/StegLACK.h"
 
 #include "../Util/Observer/Observer.h"
-#include "../Util/timer.h"
+#include "../Util/Timer.h"
 
 using namespace std;
 

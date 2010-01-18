@@ -19,9 +19,10 @@
 #include "Observer.h"
 
 /**
- * Interface of the observer
+ * Interface of the observed object (observable / subject)
  *
- * @see Observable
+ * @see Observer
+ * @see http://en.wikipedia.org/wiki/Observer_pattern
  */
 class Observable {
 public:

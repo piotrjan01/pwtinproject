@@ -31,7 +31,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
-#include "../Util/timer.h"
+#include "../Util/Timer.h"
 
 using namespace std;
 

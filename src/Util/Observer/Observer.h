@@ -19,9 +19,13 @@ using namespace std;
  * Interface of the observer
  *
  * @see Observable
+ * @see http://en.wikipedia.org/wiki/Observer_pattern
  */
 class Observer {
 public:
+	/**
+	 * Virtual destructor with empty body
+	 */
 	virtual ~Observer() {
 	}
 
