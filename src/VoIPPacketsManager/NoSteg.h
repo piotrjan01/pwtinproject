@@ -14,7 +14,7 @@
 /**
  * \~
  * \~polish
- * Imlementacja @ref VoIPPacketsManager wysyłająca wyłącznie dane audio.
+ * Implementacja @ref VoIPPacketsManager wysyłająca wyłącznie dane audio.
  *
  * Dzieli dane audio na pakiety i wysyła je w równych odstępach czasu.
  * Jest nieświadoma transmisji pakietów steganograficznych.
