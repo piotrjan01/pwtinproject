@@ -97,8 +97,9 @@ public:
 	int noStegRTPDelay;
 
 	/**
-	 * Czas pomiedzy odczytywaniem pojednczych pakietow z kolejki pakietow przychodzacych
+	 * Czas pomiedzy odczytywaniem pakietow z kolejki pakietow przychodzacych
 	 * (razem z rozmiarem kolejki definiuje model kolejki pakietow przychodzacych)
+	 * po tym czasie, powinna zostać przeczytana cała kolejka.
 	 */
 	long incQueueReadInterval;
 

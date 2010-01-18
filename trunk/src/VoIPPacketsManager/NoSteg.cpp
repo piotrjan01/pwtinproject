@@ -7,6 +7,7 @@
 
 #include "NoSteg.h"
 #include "../Main/Main.h"
+#include "../Util/FileOperations.h"
 #include <fstream>
 
 NoSteg::NoSteg(Config* cfg) :
@@ -43,12 +44,14 @@ RTPPacket& NoSteg::getNextPacket() {
 }
 
 void NoSteg::putReceivedPacketData(RTPPacket& packet) {
+
+	FileOperations::writeToFile(config->outputAudioFilePath, packet.payload, packet.payloadSize);
 	//TODO: to moze byc za wolne - lepiej trzymac uchwyt do pliku
-	ofstream myfile (config->outputAudioFilePath.c_str());
-	if (myfile.is_open()) {
-		myfile.write(packet.payload, packet.payloadSize);
-		myfile.close();
-	}
-	else Main::getInstance()->handleError("Unable to open output audio data file: "
-										+config->outputAudioFilePath);
+//	ofstream myfile (config->outputAudioFilePath.c_str());
+//	if (myfile.is_open()) {
+//		myfile.write(packet.payload, packet.payloadSize);
+//		myfile.close();
+//	}
+//	else Main::getInstance()->handleError("Unable to open output audio data file: "
+//										+config->outputAudioFilePath);
 }

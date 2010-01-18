@@ -60,7 +60,7 @@ Config::Config(string configFile) {
 	SIPProxyPort = DEFAULT_SIPPROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
-	incQueueReadInterval = DEFAULT_QUEUE_READ_INTERVAL;
+	incQueueReadInterval = 160;
 	incQueueSize = 10;
 
 	//ustawienia ktore wczytujemy zawsze:

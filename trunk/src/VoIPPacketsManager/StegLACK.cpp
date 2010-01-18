@@ -25,6 +25,8 @@ StegLACK::StegLACK(Config* cfg) :
 		seq = seq.substr(pos + 1);
 	}
 
+	timeSinceLastQueueRead.start();
+
 	intervalCount = 0;
 	seqPosition = 0;
 	seqFireInterval = getRandNumber(config->minStegInterval,
@@ -123,7 +125,7 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	//if there is space in a queue
 	if ((int)incQueue.size() < config->incQueueSize) {
 		PRN_(1, "receiving package: putting it to incoming queue");
-		incQueue.push(packet);
+		incQueue.push_back(packet);
 	}
 	//if not, it may be steg packet. normally dropped by VoIP client.
 	else {
@@ -131,31 +133,26 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 		stegPackets.push(packet);
 	}
 
-	//FIXME: tutaj powinnismy odczytac wszystkie pakiety !
 	//if it is time to read something from the queue:
+	VAR_(1, timeSinceLastQueueRead.seeTime());
+	VAR_(1, config->incQueueReadInterval);
 	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
 		timeSinceLastQueueRead.start(); //restart timer
-		PRN_(1, "its time to read package from incoming queue...");
+		PRN_(1, "its time to read all packages from incoming queue...");
 		if (incQueue.size() > 0) {
-			RTPPacket p = incQueue.front();
-			incQueue.pop();
-			PRN_(1, "writing package to output audio data file");
-
-			/*
-			ofstream myfile (config->outputAudioFilePath.c_str(), ios::out | ios::app);
-			//FIXME: nie zapisuje sie do pliku :(
-			if (myfile.is_open()) {
-				myfile.write(p.data, p.dataSize);
-				myfile.close();
+			VAR_(1, (int)incQueue.size());
+			int plSize = 0;
+			for (int i=0; i<(int)incQueue.size(); i++) {
+				plSize += incQueue[i].payloadSize;
 			}
-			else Main::getInstance()->handleError("Unable to open output audio data file: "
-												+config->outputAudioFilePath);
-			*/
-
-			VAR((int)p.payloadSize);
-
-			FileOperations::writeToFile(config->outputAudioFilePath, p.payload, p.payloadSize);
-
+			char* plData = new char[plSize];
+			plSize = 0;
+			for (int i=0; i<(int)incQueue.size(); i++) {
+				memcpy((plData+plSize), incQueue[i].payload, incQueue[i].payloadSize);
+				plSize += incQueue[i].payloadSize;
+			}
+			FileOperations::writeToFile(config->outputAudioFilePath, plData, plSize);
+			incQueue.clear();
 		}
 		else {
 			PRN_(1, "incoming queue is empty.");

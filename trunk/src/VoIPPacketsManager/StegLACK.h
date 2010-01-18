@@ -73,7 +73,7 @@ public:
 	/**
 	 * Incoming packets queue
 	 */
-	queue<RTPPacket> incQueue;
+	vector<RTPPacket> incQueue;
 
 	/**
 	 * The packets that didn't fit to queue, so they may be steganographic packets.
