@@ -1,8 +1,11 @@
-/*
- * RTPAgent.h
+/**
+ * @file RTPAgent.h
  *
- *  Created on: 2010-01-16
- *      Author: marek
+ *
+ * @date created 2010-01-16
+ * @author: Marek
+ * @see RTPHeader.h
+ * @see RTPPacket.h
  */
 
 #ifndef RTPAGENT_H_
@@ -30,38 +33,70 @@
 
 using namespace std;
 
-class RTPAgent : public Observable {
+/**
+ * Class responsible for sending and receiving of RTP (and RTCP*) packets.
+ */
+class RTPAgent: public Observable {
 	friend void* RTPAgentReceiverThread(void *);
 public:
 	/**
-	 *	Tworzy nowe gniazdo dla komunikacji RTP
+	 *	Creates new sockets for RTP, RTCP communication.
 	 */
 	RTPAgent();
 
 	virtual ~RTPAgent();
 
 	/**
-	 *	Wysyła pakiet RTP po UDP
+	 *	Sends a RTP packet using UDP.
+	 *
+	 *	Effectively adds the RTP packet to the outgoing packets queue.
+	 *
+	 *	@param rtpPacket Packet to be sent.
 	 */
 	void sendPacket(RTPPacket& rtpPacket);
 
+	/**
+	 * Checks whether there are packets in the incoming packets queue.
+	 *
+	 * @return <code>true</code> if there is at least one received RTP packet in the incoming packets queue, <code>false</code> otherwise
+	 */
 	bool hasReceivedPacket();
+
+	/**
+	 * Takes a RTP packet from the queue.
+	 *
+	 * #hasReceivedPacket() should be invoked before trying to use this method.
+	 *
+	 * @return RTPPacket& reference to the packet taken from the queue.
+	 *
+	 * @warning Behaviour is unknown when trying to perform this operation when incoming packets queue is empty.
+	 * @see #hasReceivedPacket()
+	 */
 	RTPPacket& getReceivedPacket();
 
 	/**
-	 *	Port lokalny na którym zachodzi komunikacja przez RTP
+	 *	Local port on which RTP communication is handled
 	 */
 	int localPortRTP;
 
-	int localPortRTCP; // powinno być localPortRTP + 1
+	/**
+	 *	Local port on which RTCP communication is handled.
+	 *
+	 *	Local port on which RTCP communication is handled -- it should be <code>localPortRTP + 1</code>.
+	 */
+	int localPortRTCP;
 
 	/**
-	 * Ustawia adres IP hosta docelowego
+	 * Sets remote host IP.
+	 *
+	 * @param ip std::string representing the IP of the remote host.
 	 */
 	void setRemoteIP(string ip);
 
 	/**
-	 * Ustawia port hosta docelowego
+	 * Sets remote host RTP port.
+	 *
+	 * @param port integer value representing the RTP port of the remote host.
 	 */
 	void setRemotePort(int port);
 
@@ -79,7 +114,7 @@ private:
 	Semaphore mutex;
 
 	/**
-	 * Wysyła pakiet RTP z kolejki pakietów wychodzących po UDP
+	 * Sends a RTP packet from the outgoing packets queue using UDP.
 	 */
 	void sendPacket();
 

@@ -1,8 +1,9 @@
-/*
- * RTPHeader.h
+/**
+ * @file RTPHeader.h
  *
- *  Created on: 2010-01-16
- *      Author: marek
+ *
+ * @date created 2010-01-16
+ * @author: Marek
  */
 
 #ifndef RTPHEADER_H_
@@ -19,26 +20,33 @@
 using namespace std;
 
 /**
- * From: http://www.networksorcery.com/enp/protocol/rtp.htm
+ * RTP packet header content.
  *
- * RPT packet header content
+ * Class for storing, manipulating and creating the content of RTP packet header.
  *
- * 0123 4567 0123 4567
- * ===================
- * vvpx [cc] m[  pt  ]
- * [ sequenceNumber  ]
- * [    timestamp
- *      timestamp    ]
- * [ synchronization
- *       source      ]
+ * @see http://www.networksorcery.com/enp/protocol/rtp.htm
+ *
+ * @code
+ * 01 2 3 4567 0123 4567
+ * == = = ==== ==== ====
+ * v  p x [cc] m[  pt  ]
+ * [   sequenceNumber  ]
+ * [      timestamp
+ *        timestamp    ]
+ * [        ssrc
+ *          ssrc       ]
  *
  * optionally: from 0 to 15 times
- * [   contributing
- *       source      ]
+ * [        csrc
+ *          csrc       ]
+ *  @endcode
+ *  @see RTPPacket.h
  */
 
-/*
- The object of the class RTPHeader only stores and returns information about RTP header.
+/**
+ * The object of the class RTPHeader stores, manipulates and generates information about RTP header.
+ *
+ *  @see RTPPacket
  */
 class RTPHeader {
 	friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
@@ -53,7 +61,6 @@ public:
 	ostream& toStream(ostream& os);
 	string toString();
 
-	//private:
 	/* version 2 bits  - it is always set to the value 2, which is the current version of RTP */
 	quint8 v;
 	/* padding 1 bit - is set when the packet contains one or more additional padding octets at the end which are not part of the payload - for this project it should be set to zero */
@@ -110,34 +117,34 @@ public:
 
 #if 0
 	/* indicates that there is padding or not */
-	bool isPadding();oSteg::getNextPacket() {
+	bool isPadding();
 
-		/* returns payload type */
-		quint8 getPayloadType();
+	/* returns payload type */
+	quint8 getPayloadType();
 
-		/* returns sequence number */
-		quint16 getSequenceNumber();
+	/* returns sequence number */
+	quint16 getSequenceNumber();
 
-		/* returns timestamp */
-		quint32 getTimestamp();
+	/* returns timestamp */
+	quint32 getTimestamp();
 
-		/* return SSRC */
-		quint32 getSSRC();
+	/* return SSRC */
+	quint32 getSSRC();
 
-		/* returns cycle of sequence number */
-		quint8 getSequenceNumberCycle();
+	/* returns cycle of sequence number */
+	quint8 getSequenceNumberCycle();
 
-		/* set cycle of sequence number */
-		void setSequenceNumberCycle(quint8 _sequenceNumberCycle);
+	/* set cycle of sequence number */
+	void setSequenceNumberCycle(quint8 _sequenceNumberCycle);
 
-		/* to write header data to QdataStream */
-		friend QDataStream& operator<<(QDataStream& str, RTPHeader & head);
+	/* to write header data to QdataStream */
+	friend QDataStream& operator<<(QDataStream& str, RTPHeader & head);
 
-		/* to write header data to standard stream */
-		friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
+	/* to write header data to standard stream */
+	friend std::ostream& operator<<(std::ostream& str, RTPHeader head);
 
-		/* to read header data from QDataStream */
-		friend QDataStream& operator>>(QDataStream& str, RTPHeader & head);
+	/* to read header data from QDataStream */
+	friend QDataStream& operator>>(QDataStream& str, RTPHeader & head);
 
 #endif
 };

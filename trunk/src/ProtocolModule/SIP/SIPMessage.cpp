@@ -2,33 +2,33 @@
 #include <iostream>
 #include <string>
 
-#include "sip_message.h"
-#include "sip_authentication.h"
+#include "SIPMessage.h"
+#include "SIPAuthentication.h"
 #include "parsing.h"
 
-bool SIP_Message::isReply() {
+bool SIPMessage::isReply() {
     return (rline.find("SIP/2.0 ") == 0);
 }
 
-bool SIP_Message::isRequest() {
+bool SIPMessage::isRequest() {
     return !isReply();
 }
 
-int SIP_Message::replyCode() {
+int SIPMessage::replyCode() {
     if (!isReply())
         return 0;
     else
         return atoi( rline.c_str() + 8 );
 }
 
-std::string SIP_Message::method() {
+std::string SIPMessage::method() {
     if (!isRequest())
         return "";
     else
         return rline.substr(0, rline.find(" "));
 }
 
-std::string SIP_Message::getField(std::string name) {
+std::string SIPMessage::getField(std::string name) {
     for (std::vector<std::string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
         if (getKey(*iter, ':') == name)
             return trim(getValue(*iter, ':'));
@@ -36,7 +36,7 @@ std::string SIP_Message::getField(std::string name) {
     return "";
 }
 
-void SIP_Message::setField(std::string name, std::string value) {
+void SIPMessage::setField(std::string name, std::string value) {
 
     for (std::vector<std::string>::iterator iter = lines.begin(); iter != lines.end(); ++iter)
         if (getKey(*iter, ':') == name) {
@@ -47,7 +47,7 @@ void SIP_Message::setField(std::string name, std::string value) {
     lines.push_back( name + " " + value );
 }
 
-SIP_Message::SIP_Message( char *buf, int len ) {
+SIPMessage::SIPMessage( char *buf, int len ) {
 
     buf[len] = '\000';
 
@@ -76,9 +76,9 @@ SIP_Message::SIP_Message( char *buf, int len ) {
         body = packet;
 }
 
-SIP_Authentication SIP_Message::getAuthentication() {
+SIPAuthentication SIPMessage::getAuthentication() {
 
-    SIP_Authentication result;
+    SIPAuthentication result;
     std::string s = getField("WWW-Authenticate");
     std::vector<std::string> v = split(s, ' ');
 
@@ -101,9 +101,9 @@ SIP_Authentication SIP_Message::getAuthentication() {
     return result;
 }
 
-SIP_Authentication SIP_Message::getProxyAuthentication() {
+SIPAuthentication SIPMessage::getProxyAuthentication() {
 
-    SIP_Authentication result;
+    SIPAuthentication result;
     std::string s = getField("Proxy-Authenticate");
     std::vector<std::string> v = split(s, ' ');
 
@@ -126,7 +126,7 @@ SIP_Authentication SIP_Message::getProxyAuthentication() {
     return result;
 }
 
-std::string SIP_Message::toStream() {
+std::string SIPMessage::toStream() {
     std::string result = rline + "\015\012";
 
     for (std::vector<std::string>::const_iterator iter = via.begin(); iter != via.end(); ++iter)
@@ -142,7 +142,7 @@ std::string SIP_Message::toStream() {
     return result;
 }
 
-std::string SIP_Message::getSdpAddress() {
+std::string SIPMessage::getSdpAddress() {
 
     std::vector<std::string> l = split(body, '\n');
 
@@ -156,7 +156,7 @@ std::string SIP_Message::getSdpAddress() {
 
 }
 
-std::string SIP_Message::getSdpPort() {
+std::string SIPMessage::getSdpPort() {
 
     std::vector<std::string> l = split(body, '\n');
 
@@ -168,7 +168,7 @@ std::string SIP_Message::getSdpPort() {
 
 }
 
-std::ostream & operator<<(std::ostream & out, const SIP_Message & m) {
+std::ostream & operator<<(std::ostream & out, const SIPMessage & m) {
 
     out << m.rline << std::endl;
 

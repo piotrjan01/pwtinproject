@@ -1,7 +1,7 @@
 #include <cstdlib>
 #include <iostream>
-#include "sip_agent.h"
-#include "sip_message.h"
+#include "SIPAgent.h"
+#include "SIPMessage.h"
 
 using namespace std;
 
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
 
     srand( time(NULL) );
 
-    SIP_Agent agent(MY_IP);
+    SIPAgent agent(MY_IP);
 
     agent.Register(MY_UID, MY_PASS, PROXY_IP, PROXY_PORT);
 

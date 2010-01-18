@@ -13,7 +13,7 @@
 #include <map>
 
 //Jesli w konfiguracji nie podano portu to uzywamy tego
-#define DEFAULT_SIP_PROXY_PORT 5060;
+#define DEFAULT_SIPPROXY_PORT 5060;
 
 //Rozmiar danych w pakiecie RTP w bajtach
 #define DEFAULT_RTP_PAYLOAD_SIZE 160
@@ -57,7 +57,7 @@ Config::Config(string configFile) {
 				"wrong configuration file format near \"calling\"");
 
 	//wartosci domyslne parametrow tutaj:
-	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;
+	SIPProxyPort = DEFAULT_SIPPROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
 	incQueueReadInterval = DEFAULT_QUEUE_READ_INTERVAL;

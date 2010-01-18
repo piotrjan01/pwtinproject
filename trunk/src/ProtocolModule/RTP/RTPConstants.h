@@ -1,8 +1,10 @@
-/*
- * RTPConstants.h
+/**
+ * @file RTPConstants.h
  *
- *  Created on: 2010-01-16
- *      Author: marek
+ *
+ * @date created 2010-01-16
+ * @author: Marek
+ * @see RTPHeader.h
  */
 
 #ifndef RTPCONSTANTS_H_

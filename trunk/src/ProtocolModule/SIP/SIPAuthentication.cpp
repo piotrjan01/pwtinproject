@@ -4,7 +4,7 @@
 
 #include <openssl/md5.h>
 
-#include "sip_authentication.h"
+#include "SIPAuthentication.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ string md5toString(unsigned char * t) {
     return out.str();
 }
 
-string SIP_Authentication::getMD5() {
+string SIPAuthentication::getMD5() {
     unsigned char h1[16];
     unsigned char h2[16];
     unsigned char result[16];

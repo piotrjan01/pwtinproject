@@ -1,10 +1,10 @@
 /*
- * sip_agent.h
+ * SIPAgent.h
  * Agent SIP - glowna klasa
  */
 
-#ifndef SIP_AGENT_H
-#define SIP_AGENT_H
+#ifndef SIPAGENT_H
+#define SIPAGENT_H
 
 #include <string>
 #include <sstream>
@@ -17,10 +17,12 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "semaphore.h"
+#include "../../debug/debug.h"
 
-#include "sip_message.h"
-#include "sip_authentication.h"
+#include "../../Util/Semaphore.h"
+
+#include "SIPMessage.h"
+#include "SIPAuthentication.h"
 
 struct CallInfo {
     std::string callID;
@@ -28,18 +30,18 @@ struct CallInfo {
     unsigned short remotePort;
 };
 
-struct SIP_Info {
+struct SIPInfo {
     unsigned int cseq;
     std::string callid;
-    SIP_Authentication authentication;
+    SIPAuthentication authentication;
 };
 
-enum Waitfor { NONE, REGISTER, CALL, ANSWER };
+enum WaitFor { NONE, REGISTER, CALL, ANSWER };
 
-class SIP_Agent {
+class SIPAgent {
 
-    friend void * SIP_AgentThread( void * );
-    friend class SIP_Message;
+    friend void * SIPAgentThread( void * );
+    friend class SIPMessage;
 
 private:
 
@@ -51,7 +53,7 @@ private:
 
     // Semafor pozwalajacy na blokowanie metod
     Semaphore wait;
-    Waitfor waitingfor;
+    WaitFor waitingfor;
     // Do timeoutow
     unsigned long waitTime;
 
@@ -70,10 +72,10 @@ private:
     std::string fromtoline;
 
     // Sesja rejestrujaca
-    SIP_Info registration;
+    SIPInfo registration;
 
     // Sesja nawiazujaca polaczenia
-    SIP_Info invite;
+    SIPInfo invite;
 
     // port proxy
     unsigned short proxyPort;
@@ -81,7 +83,7 @@ private:
     // porty RTP
     unsigned short localRtpPort, remoteRtpPort;
 
-    // identyfikator oraz ip rozmówcy
+    // identyfikator oraz ip rozmï¿½wcy
     std::string partnerID, remoteRtpAddress, partnerTag;
     bool connectionEstablished;
 
@@ -94,14 +96,14 @@ private:
 
 	bool unregistering;
 
-    void sendMessage(SIP_Message &m, std::string address, unsigned short port);
+    void sendMessage(SIPMessage &m, std::string address, unsigned short port);
     void receiveMessage();
 
-    void replyAck(SIP_Message &m, std::string information = "");
-    void replyToOptions(SIP_Message &m);
-    void replyRinging(SIP_Message &m);
+    void replyAck(SIPMessage &m, std::string information = "");
+    void replyToOptions(SIPMessage &m);
+    void replyRinging(SIPMessage &m);
 
-    void answerCall(SIP_Message &m);
+    void answerCall(SIPMessage &m);
 
     void Register();
     void Call();
@@ -109,8 +111,8 @@ private:
 
 public:
 
-    SIP_Agent(std::string localaddr);
-    ~SIP_Agent();
+    SIPAgent(std::string localaddr);
+    ~SIPAgent();
 
     bool Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
 

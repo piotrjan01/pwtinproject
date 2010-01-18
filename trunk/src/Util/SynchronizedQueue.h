@@ -16,7 +16,7 @@
 
 #include "../ProtocolModule/RTP/RTPPacket.h"
 
-#include "../ProtocolModule/SIP/semaphore.h"
+#include "../Util/Semaphore.h"
 
 typedef unsigned int size_type;
 
