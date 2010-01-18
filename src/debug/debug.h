@@ -38,7 +38,7 @@ using namespace std;
 class Dbg {
 public:
 
-	static const int debugLevel = 2;
+	static const int debugLevel = 4;
 
 	static Timer t;
 

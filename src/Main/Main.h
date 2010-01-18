@@ -13,6 +13,7 @@
 #include <string>
 
 #include "Config.h"
+#include "../Exceptions/BindException.h"
 
 using namespace std;
 
@@ -31,6 +32,7 @@ public:
 	 * Tak na prawd� jedyne co mo�emy zrbi� ze string to wy�wietli�, zalogowa� lub nic.
 	 */
 	void handleError(string message);
+	void info(string message);
 
 	/**
 	 * Tu przekazujemy argumenty wywo�ania programu.

@@ -20,6 +20,7 @@
 #include "../../debug/debug.h"
 
 #include "../../Util/Semaphore.h"
+#include "../../Util/Net.h"
 
 #include "SIPMessage.h"
 #include "SIPAuthentication.h"

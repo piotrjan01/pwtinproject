@@ -32,21 +32,14 @@ SIPAgent::SIPAgent(std::string localaddr) :
 	sleepTime = 1.0;
 
 	std::cout << "Creating socket...";
-	sock = socket(AF_INET, SOCK_DGRAM, 0);
-
-	if (sock == -1)
-		throw std::runtime_error("Can't create UDP socket!");
-
+	sock = Net::socket_s(AF_INET, SOCK_DGRAM, 0);
 	std::cout << "OK, assigned socket number is " << sock << std::endl;
 
 	std::cout << "Binding to address...";
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = inet_addr(localaddr.c_str()); // INADDR_ANY;
 	address.sin_port = 0;
-
-	if (bind(sock, (sockaddr *) &address, sizeof(address)) == -1)
-		throw std::runtime_error("Can't bind to address!");
-
+	Net::bind_s(sock, (sockaddr *) &address, sizeof(address));
 	std::cout << "OK, address: ";
 
 	int length = sizeof(address);
@@ -733,7 +726,7 @@ bool SIPAgent::connected() {
 }
 
 void* SIPAgentThread(void* sipAgent) {
-	SIPAgent* agent = (SIPAgent*)sipAgent;
+	SIPAgent* agent = (SIPAgent*) sipAgent;
 
 	PRN_(1, "SIP: Agent thread started.");
 

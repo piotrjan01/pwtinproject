@@ -49,6 +49,10 @@ void Main::printUsage() {
 	cout << endl << "Usage: ProjectLack.exe <config-file-path>" << endl;
 }
 
+void Main::info(string message) {
+	cerr << "====> INFO: " + message << endl;
+}
+
 void Main::handleError(string message) {
 	cerr << "====> ERROR: " + message << endl;
 	exit(EXIT_FAILURE);
@@ -75,6 +79,9 @@ int Main::startProgram(int argc, char **argv) {
 		VoIPModule* voip = new VoIPModule(cnf);
 
 		voip->connect();
+	} catch (BindException& e) {
+		Main::info("Check the IP address and port number");
+		Main::handleError(e.what());
 	} catch (runtime_error& e) {
 		Main::handleError(e.what());
 	}
