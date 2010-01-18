@@ -11,10 +11,11 @@
 #ifndef STEGLACK_H_
 #define STEGLACK_H_
 
-#include <vector>
+
 #include "VoIPPacketsManager.h"
 #include "../Util/Timer.h"
 #include <queue>
+#include <vector>
 
 /**
  * It is used to flag the steganographic packets. The payload will start with this string.
@@ -94,11 +95,6 @@ public:
 	 * Flags wether steg data has been already transfered
 	 */
 	bool stegTransferDone;
-
-	/**
-	 * Used when simulating the incoming packets queue. Says how much space is left in incoming packets queue.
-	 */
-	int queueFreeSpace;
 
 	/**
 	 * Counts the time that passed since last packet was read from the incoming queue

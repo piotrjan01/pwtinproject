@@ -22,7 +22,6 @@ proxy-port=5060
 #username to whom we will call
 callee-username=answering
 
-
 #the audio data file
 audio-data-file=../cnf/audiodata.dat
 
@@ -51,4 +50,27 @@ steg-data-file=../cnf/stegdata.txt
 
 #path to the file where we will output captured steg data
 output-steg-data-file=capturedsteg-callee.txt
+
+
+
+# --- Following parameters model the incoming packets buffer of the program: ---
+
+#the size of incoming queue in packets:
+inc-queue-size=10
+
+#defines with what period the incoming packets queue will be processed (all packets read from it). 
+#In miliseconds. 
+inc-queue-read-interval=160
+
+# --- Some additiona data that we may not like to change too much: ---
+
+#port of SIP Proxy
+sip-proxy-port=5060
+
+#RTP payload size used when calling - the amount of data in bytes that each RTP packet carries.
+rtp-payload-size=160
+
+#Delay introduced between packets when sending in no-steg mode (just audio data) or between steg sequences.
+#note: notation in format min-max is not implemented here !
+no-steg-rtp-delay=20
 

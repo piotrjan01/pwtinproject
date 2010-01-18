@@ -10,6 +10,8 @@
 
 #include "VoIPPacketsManager.h"
 #include "../Debug/Debug.h"
+#include "../Util/Timer.h"
+#include <vector>
 
 /**
  * \~
@@ -36,6 +38,18 @@ public:
 
 	virtual RTPPacket& getNextPacket();
 	virtual void putReceivedPacketData(RTPPacket& packet);
+
+	/**
+	 * Counts the time that passed since last packet was read from the incoming queue
+	 */
+	Timer timeSinceLastQueueRead;
+
+	/**
+	 * Incoming packets queue
+	 */
+	vector<RTPPacket> incQueue;
+
+
 };
 
 #endif /* NOSTEG_H_ */

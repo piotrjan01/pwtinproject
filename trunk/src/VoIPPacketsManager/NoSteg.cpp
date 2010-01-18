@@ -21,6 +21,9 @@ NoSteg::NoSteg(Config* cfg) :
 		templatePacket.payload[i] = data[i];
 	}
 	templatePacket.payloadSize = data.size();
+
+	timeSinceLastQueueRead.start();
+
 }
 
 NoSteg::~NoSteg() {
@@ -45,13 +48,40 @@ RTPPacket& NoSteg::getNextPacket() {
 
 void NoSteg::putReceivedPacketData(RTPPacket& packet) {
 
-	FileOperations::writeToFile(config->outputAudioFilePath, packet.payload, packet.payloadSize);
-	//TODO: to moze byc za wolne - lepiej trzymac uchwyt do pliku
-//	ofstream myfile (config->outputAudioFilePath.c_str());
-//	if (myfile.is_open()) {
-//		myfile.write(packet.payload, packet.payloadSize);
-//		myfile.close();
-//	}
-//	else Main::getInstance()->handleError("Unable to open output audio data file: "
-//										+config->outputAudioFilePath);
+	//if there is space in a queue
+		if ((int)incQueue.size() < config->incQueueSize) {
+			PRN_(1, "receiving package: putting it to incoming queue");
+			incQueue.push_back(packet);
+		}
+		//if not, it may be steg packet. normally dropped by VoIP client.
+		else {
+			PRN_(1, "receiving package: no space in incoming queue, dropping package.");
+		}
+
+		//if it is time to read something from the queue:
+		VAR_(3, timeSinceLastQueueRead.seeTime());
+		VAR_(3, config->incQueueReadInterval);
+		if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
+			timeSinceLastQueueRead.start(); //restart timer
+			PRN_(1, "its time to read all packages from incoming queue...");
+			if (incQueue.size() > 0) {
+				VAR_(1, (int)incQueue.size());
+				int plSize = 0;
+				for (int i=0; i<(int)incQueue.size(); i++) {
+					plSize += incQueue[i].payloadSize;
+				}
+				char* plData = new char[plSize];
+				plSize = 0;
+				for (int i=0; i<(int)incQueue.size(); i++) {
+					memcpy((plData+plSize), incQueue[i].payload, incQueue[i].payloadSize);
+					plSize += incQueue[i].payloadSize;
+				}
+				FileOperations::writeToFile(config->outputAudioFilePath, plData, plSize);
+				incQueue.clear();
+			}
+			else {
+				PRN_(1, "incoming queue is empty.");
+			}
+
+		}
 }

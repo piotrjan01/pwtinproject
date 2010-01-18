@@ -66,7 +66,10 @@ vector<char> StegLACK::getStegDataToSend() {
 			ret.push_back(stegData[lastReadStegByte]);
 		else ret.push_back(' ');
 	}
-	if (lastReadStegByte>=(int)stegData.size()) stegTransferDone = true;
+	if (lastReadStegByte>=(int)stegData.size()) {
+		stegTransferDone = true;
+		PRN_(1, "All steg data sent. From now on, no steg sequences should appear.");
+	}
 	return ret;
 }
 
@@ -150,12 +153,13 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	}
 	//if not, it may be steg packet. normally dropped by VoIP client.
 	else {
+		PRN_(1, "receiving package: no space in incoming queue, possibly steg data!");
 		saveIfStegPacket(packet);
 	}
 
 	//if it is time to read something from the queue:
-	VAR_(1, timeSinceLastQueueRead.seeTime());
-	VAR_(1, config->incQueueReadInterval);
+	VAR_(3, timeSinceLastQueueRead.seeTime());
+	VAR_(3, config->incQueueReadInterval);
 	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
 		timeSinceLastQueueRead.start(); //restart timer
 		PRN_(1, "its time to read all packages from incoming queue...");
