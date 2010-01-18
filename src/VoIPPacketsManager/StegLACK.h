@@ -1,10 +1,13 @@
-/*
- * StegLACK.h
+/**
+ * @file StegLACK.h
  *
- *  Created on: 2010-01-14
- *      Author: Piotr Gwizda�a
+ * \~
+ * \~polish
+ * \~english
+ * \~
+ * @date created 2010-01-14
+ * @author Piotr Gwizdała
  */
-
 #ifndef STEGLACK_H_
 #define STEGLACK_H_
 
@@ -14,7 +17,12 @@
 #include <queue>
 
 /**
- * Steganographic sequence element
+ * \~
+ * \~polish
+ * Element sekwencji danych steganograficznych.
+ * \~english
+ * Steganographic sequence element.
+ * \~
  */
 class StegSeqElem {
 public:
@@ -24,6 +32,24 @@ public:
 	bool isStegPacket;
 };
 
+/**
+ * \~
+ * \~polish
+ * Imlementacja @ref VoIPPacketsManager wysyłająca dane steganograficzne.
+ *
+ * Dzieli dane audio jak @ref NoSteg, ale dodatkowo wplata w pakiety audio
+ * pakiety z danymi  steganograficznymi. W przypadku odbioru informacji, posiada
+ * odpowiednio powiększony bufor i nie opuszcza pakietów, co umożliwia odczytanie danych
+ * steganograficznych.
+ *
+ * \~english
+ * Implementation of @ref VoIPPacketsManager that sends steganographic data.
+ *
+ * Differs from @ref NoSteg by sending not only audio data but also
+ * steganographic data.
+ * \~
+ * @see NoSteg
+ */
 class StegLACK: public VoIPPacketsManager {
 public:
 
@@ -32,7 +58,6 @@ public:
 	 * being send according to its structure stored in stegSeq.
 	 */
 	int intervalCount;
-
 
 	/**
 	 * The interval at which the sequence fires. After it fires, the new seq interval is being
@@ -80,13 +105,10 @@ public:
 	 */
 	queue<RTPPacket> stegPackets;
 
-
 	/**
 	 * The sequence we will use to send our steganographic data
 	 */
 	vector<StegSeqElem> stegSeq;
-
-
 
 	long getRandNumber(long min, long max);
 

@@ -16,6 +16,12 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+/**
+ * \~
+ * \~polish
+ * \~english
+ * \~
+ */
 class BindException: public std::exception {
 	static const char* DEFAULT_MESSAGE;
 public:
