@@ -35,7 +35,7 @@ public:
 /**
  * \~
  * \~polish
- * Imlementacja @ref VoIPPacketsManager wysyłająca dane steganograficzne.
+ * Implementacja @ref VoIPPacketsManager wysyłająca dane steganograficzne.
  *
  * Dzieli dane audio jak @ref NoSteg, ale dodatkowo wplata w pakiety audio
  * pakiety z danymi  steganograficznymi. W przypadku odbioru informacji, posiada
