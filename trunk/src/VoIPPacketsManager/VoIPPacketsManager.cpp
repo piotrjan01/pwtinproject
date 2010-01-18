@@ -8,7 +8,7 @@
 #include "VoIPPacketsManager.h"
 #include "../Main/Main.h"
 #include <fstream>
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 
 VoIPPacketsManager::VoIPPacketsManager(Config* cfg) {
 	config = cfg;

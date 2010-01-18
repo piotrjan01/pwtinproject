@@ -17,7 +17,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "../../debug/debug.h"
+#include "../../Debug/Debug.h"
 
 #include "../../Util/Semaphore.h"
 #include "../../Util/Net.h"

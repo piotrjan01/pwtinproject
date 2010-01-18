@@ -26,7 +26,7 @@
 #include <arpa/inet.h>
 #include "RTPPacket.h"
 
-#include "../../debug/debug.h"
+#include "../../Debug/Debug.h"
 #include "../../Util/SynchronizedQueue.h"
 #include "../../Util/Net.h"
 #include "../../Util/Observer/Observable.h"

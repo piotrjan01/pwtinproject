@@ -6,7 +6,7 @@
  */
 
 #include "Config.h"
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 #include "Main.h"
 #include <iostream>
 #include <fstream>

@@ -7,7 +7,7 @@
 
 #include "StegLACK.h"
 #include "../Main/Main.h"
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 #include "../Util/FileOperations.h"
 #include <cstdlib>
 #include <fstream>

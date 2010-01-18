@@ -1,23 +1,27 @@
-/*
- * debug.h
- *
- *  Created on: 2010-01-14
- *      Author: Piotr Gwizda�a
+/**
+ * \~
+ * @file Debug.h
+ * \~polish
+ * Zbiór makr i klasa używane do debugowania/logowania.
+ * \~english
+ * Macros and a class used for debugging/logging.
+ * \~
+ * @date created 2010-01-14
+ * @author Piotr Gwizdała
  */
-
 #ifndef DEBUG_H_
 #define DEBUG_H_
 
 #ifdef DEBUG
-#define PRN_(LVL, X) if (Dbg::debugLevel >= LVL) { PRN(X) }
-#define VAR_(LVL, X) if (Dbg::debugLevel >= LVL) { VAR(X) }
-#define PRNBITS_(LVL, X) if (Dbg::debugLevel >= LVL) { PRNBITS(X) }
+#define PRN_(LVL, X) if (Debug::debugLevel >= LVL) { PRN(X) }
+#define VAR_(LVL, X) if (Debug::debugLevel >= LVL) { VAR(X) }
+#define PRNBITS_(LVL, X) if (Debug::debugLevel >= LVL) { PRNBITS(X) }
 
-#define PRN(X) Dbg::prnTime(); Dbg::prn("msg:: "); Dbg::prn(__FILE__); Dbg::prn("@"); Dbg::prn(__LINE__); \
-				Dbg::prn(" "); Dbg::prn(X); Dbg::prn("\n");
-#define VAR(X) Dbg::prnTime(); Dbg::prn("var::"); Dbg::prn(__FILE__); Dbg::prn("@"); Dbg::prn(__LINE__); \
-				Dbg::prn(": "); Dbg::prn(#X); Dbg::prn(" = "); Dbg::prn(X); Dbg::prn("\n");
-#define PRNBITS(X) Dbg::printBits(X);
+#define PRN(X) Debug::prnTime(); Debug::prn("msg:: "); Debug::prn(__FILE__); Debug::prn("@"); Debug::prn(__LINE__); \
+				Debug::prn(" "); Debug::prn(X); Debug::prn("\n");
+#define VAR(X) Debug::prnTime(); Debug::prn("var::"); Debug::prn(__FILE__); Debug::prn("@"); Debug::prn(__LINE__); \
+				Debug::prn(": "); Debug::prn(#X); Debug::prn(" = "); Debug::prn(X); Debug::prn("\n");
+#define PRNBITS(X) Debug::printBits(X);
 
 #else
 #define PRN_(LVL, X)
@@ -35,7 +39,18 @@
 
 using namespace std;
 
-class Dbg {
+/**
+ * \~
+ * @file Debug.h
+ * \~polish
+ * Klasa używana do debugowania/logowania.
+ * \~english
+ * Class used for debugging/logging.
+ * \~
+ * @date created 2010-01-14
+ * @author Piotr Gwizdała
+ */
+class Debug {
 public:
 
 	static const int debugLevel = 2;

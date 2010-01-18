@@ -9,7 +9,7 @@
 #define NOSTEG_H_
 
 #include "VoIPPacketsManager.h"
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 
 /**
  * \~
