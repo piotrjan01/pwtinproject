@@ -67,7 +67,13 @@ vector<char> StegLACK::getStegDataToSend() {
 }
 
 StegLACK::~StegLACK() {
-	//FIXME: zapisywanie danych steg do pliku
+	PRN_(1, "Analyzing packets suspected to be steganographic.")
+	VAR_(1, (int)stegPackets.size());
+	while (stegPackets.size() > 0) {
+		RTPPacket p = stegPackets.front();
+		stegPackets.pop();
+		FileOperations::writeToFile(config->stegDataFile, p.payload, p.payloadSize);
+	}
 }
 
 RTPPacket& StegLACK::getNextPacket() {

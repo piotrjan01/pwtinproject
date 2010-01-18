@@ -14,6 +14,10 @@
 
 class FileOperations {
 public:
+
+	/**
+	 * Appends given data to given file.
+	 */
 	static void writeToFile(string fname, char* data, int dataSize) {
 		FILE *fp = 0;
 		fp = fopen(fname.c_str(), "a+");
