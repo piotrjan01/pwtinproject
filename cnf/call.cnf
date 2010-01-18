@@ -27,7 +27,7 @@ callee-username=answering
 audio-data-file=../cnf/audiodata.dat
 
 #file where received audio data will be stored
-output-audio-data-file=outputaudiodata-callers.dat
+output-audio-data-file=outputaudiodata-caller.dat
 
 #determines whether or not we do steganography
 do-steg=1
@@ -48,4 +48,7 @@ steg-sequence=10-15:A 180-200:A 5-10:A 5-10:A 5-10:A 5-10:A 5-10:A 5-10:A 5-10:A
 
 #the path to file with secret data to be send using steganography
 steg-data-file=../cnf/stegdata.txt
+
+#path to the file where we will output captured steg data
+output-steg-data-file=capturedsteg-callee.txt
 

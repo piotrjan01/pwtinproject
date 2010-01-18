@@ -63,15 +63,14 @@ Config::Config(string configFile) {
 	incQueueReadInterval = 160;
 	incQueueSize = 10;
 
-	//ustawienia ktore wczytujemy zawsze:
 	doSteg = (settings["do-steg"] == "1");
 
-	//ustawienia ktore wczytujemy zawsze:
 	if (doSteg) {
 		maxStegInterval = atoi(settings["max-steg-interval"].c_str());
 		minStegInterval = atoi(settings["min-steg-interval"].c_str());
 		stegSequence = settings["steg-sequence"];
 		stegDataFile = settings["steg-data-file"];
+		outputStegDataFile = settings["output-steg-data-file"];
 	}
 
 	outputAudioFilePath = settings["output-audio-data-file"];

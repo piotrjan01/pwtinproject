@@ -56,7 +56,11 @@ void StegLACK::readStegDataToMem() {
 vector<char> StegLACK::getStegDataToSend() {
 	int size = config->RTPPayloadSize;
 	vector<char> ret;
-	for (int i=1; i<size; i++) {
+	string flag = STEG_DATA_FLAG;
+	for (int i=0; i<STEG_DATA_FLAG_SIZE; i++) {
+		ret.push_back(flag[i]);
+	}
+	for (int i=STEG_DATA_FLAG_SIZE; i<size; i++) {
 		lastReadStegByte++;
 		if (lastReadStegByte<(int)stegData.size())
 			ret.push_back(stegData[lastReadStegByte]);
@@ -67,13 +71,7 @@ vector<char> StegLACK::getStegDataToSend() {
 }
 
 StegLACK::~StegLACK() {
-	PRN_(1, "Analyzing packets suspected to be steganographic.")
-	VAR_(1, (int)stegPackets.size());
-	while (stegPackets.size() > 0) {
-		RTPPacket p = stegPackets.front();
-		stegPackets.pop();
-		FileOperations::writeToFile(config->stegDataFile, p.payload, p.payloadSize);
-	}
+
 }
 
 RTPPacket& StegLACK::getNextPacket() {
@@ -126,6 +124,23 @@ RTPPacket& StegLACK::getNextPacket() {
 	return templatePacket;
 }
 
+void StegLACK::saveIfStegPacket(RTPPacket &p) {
+	//we verify if it is flagged as steg packet:
+	string flag = STEG_DATA_FLAG;
+	if (p.payloadSize < STEG_DATA_FLAG_SIZE) return;
+	for (int i=0; i<STEG_DATA_FLAG_SIZE; i++) {
+		if (p.payload[i] != flag[i]) {
+			PRN_(1, "no steg packet flag present: dropping packet");
+			return;
+		}
+	}
+
+	PRN_(1, "steg packet! saving to file...");
+	FileOperations::writeToFile(config->outputStegDataFile,
+			(p.payload+STEG_DATA_FLAG_SIZE), p.payloadSize-STEG_DATA_FLAG_SIZE);
+
+}
+
 void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 
 	//if there is space in a queue
@@ -135,8 +150,7 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 	}
 	//if not, it may be steg packet. normally dropped by VoIP client.
 	else {
-		PRN_(1, "receiving package: no space in queue - possibly steg package");
-		stegPackets.push(packet);
+		saveIfStegPacket(packet);
 	}
 
 	//if it is time to read something from the queue:

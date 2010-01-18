@@ -17,6 +17,16 @@
 #include <queue>
 
 /**
+ * It is used to flag the steganographic packets. The payload will start with this string.
+ */
+#define STEG_DATA_FLAG "steg"
+
+/**
+ * The length of string defined by STEG_DATA_FLAG
+ */
+#define STEG_DATA_FLAG_SIZE 4
+
+/**
  * \~
  * \~polish
  * Element sekwencji danych steganograficznych.
@@ -121,6 +131,9 @@ public:
 	void readStegDataToMem();
 
 	vector<char> getStegDataToSend();
+
+	void saveIfStegPacket(RTPPacket &p);
+
 private:
 	RTPPacket templatePacket;
 };
