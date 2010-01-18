@@ -1,8 +1,11 @@
-/*
- * Main.h
+/**
+ * @file Main.h
+ * @brief Observer design pattern.
  *
- *  Created on: 2010-01-14
- *      Author: Piotr Gwizda�a
+ * Interface of the observer.
+ *
+ * @date created 2010-01-14
+ * @author Piotr Gwizdała
  */
 
 #ifndef MAIN_H_
@@ -19,6 +22,34 @@ using namespace std;
 
 void mainSignalHandler(int signal);
 
+/**
+ * \~polish
+ * Klasa startowa -- singleton.
+ *
+ * Klasa startowa zarządzająca startem programu. Wywołuje moduł
+ * wczytywania ustawień @ref Config. Przechwytuje sygnały.
+ * Wywołuje @ref VoIPModule.
+ * Obsługuje błędy, loguje do plików etc.
+ *
+ * Wykorzystuje wzorzec projektowy Singleton.
+ *
+ * @see http://pl.wikipedia.org/wiki/Singleton_(wzorzec_projektowy)
+ *
+ * \~english
+ * Main starting class -- singleton.
+ *
+ * Starting class responsible for delegation of reading configuration files ,
+ * audio and steganography data to @ref Config.
+ * Invokes @ref VoIPModule that handles the transmission.
+ *
+ * Uses Singleton design pattern.
+ *
+ * @see http://en.wikipedia.org/wiki/Singleton_pattern
+ *
+ * \~
+ * @see Config
+ * @see VoIPModule
+ */
 class Main {
 	friend void mainSignalHandler(int signal);
 public:

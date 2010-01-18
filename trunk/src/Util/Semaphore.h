@@ -1,6 +1,9 @@
-/*
- * semaphore.h
- * Klasa semafor, dla ulatwienia synchronizacji.
+/**
+ * \~
+ * @file Semaphore.h
+ * \~polish
+ * \~english
+ * \~
  */
 
 #ifndef SEMAPHORE_H
@@ -16,6 +19,17 @@
 
 #include <semaphore.h>
 
+/**
+ * \~
+ *
+ * \~polish
+ * Pomocnicza klasa używana do synchronizacji.
+ *
+ * \~english
+ * A wrapper commodity class for synchronization.
+ *
+ * \~
+ */
 class Semaphore {
 
 private:

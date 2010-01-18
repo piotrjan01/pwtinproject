@@ -37,7 +37,7 @@ max-steg-interval=110
 
 #the steganography sequence. <delay-in-ms>:<packet-type>
 #<delay-in-ms> can have form of single integer or range separated with '-', e.g. 10-15
-#<pachet-type> can be A for audio packet and S for steganography packet
+#<packet-type> can be A for audio packet and S for steganography packet
 #Attention: it is important to keep one space between each sequence element
 #Example: steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
 steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
