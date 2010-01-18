@@ -5,7 +5,7 @@
  * Interface of the observer.
  *
  * @date created 2010-01-17
- * @author Marek
+ * @author Marek Kurdej
  * @see Observable.h
  * @see http://en.wikipedia.org/wiki/Observer_pattern
  */

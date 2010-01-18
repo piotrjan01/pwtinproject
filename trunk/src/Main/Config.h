@@ -1,10 +1,14 @@
-/*
- * Config.h
- *
- *  Created on: Jan 15, 2010
- *      Author: piotrrr
+/**
+ * \~
+ * @file Config.h
+ * \~polish
+ * Klasa obsługująca pliki konfiguracyjne aplikacji.
+ * \~english
+ * Class responsible for reading [writing] configuration files.
+ * \~
+ * @date created 2010-01-15
+ * @author Piotr Gwizdała
  */
-
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
@@ -12,6 +16,14 @@
 
 using namespace std;
 
+/**
+ * \~
+ * \~polish
+ * Klasa obsługująca pliki konfiguracyjne aplikacji.
+ * \~english
+ * Class responsible for reading [writing] configuration files.
+ * \~
+ */
 class Config {
 public:
 	Config(string configFilePath);
