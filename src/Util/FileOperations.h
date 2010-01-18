@@ -9,6 +9,7 @@
 #define FILEOPERATIONS_H_
 
 #include <string>
+#include "../debug/debug.h"
 #include "../Main/Main.h"
 
 class FileOperations {
@@ -18,6 +19,7 @@ public:
 		fp = fopen(fname.c_str(), "a+");
 		if ( ! fp ) Main::getInstance()->handleError("Couldn't open file to write: "+fname);
 		fwrite(data, sizeof(char), dataSize, fp);
+		PRN_(1, "Wrote to file: "+fname);
 	}
 
 };
