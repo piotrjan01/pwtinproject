@@ -29,6 +29,7 @@ StegLACK::StegLACK(Config* cfg) :
 
 	intervalCount = 0;
 	seqPosition = 0;
+	lastReadStegByte = -1;
 	seqFireInterval = getRandNumber(config->minStegInterval,
 			config->maxStegInterval);
 	stegTransferDone = false;
