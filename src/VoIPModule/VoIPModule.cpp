@@ -9,7 +9,7 @@
 
 VoIPModule::VoIPModule(Config* _config) :
 	config(*_config) {
-	sipAgent = new SIP_Agent(config.localIP);
+	sipAgent = new SIPAgent(config.localIP);
 	if (config.doSteg) {
 		packetsManager = new StegLACK(_config);
 	} else {

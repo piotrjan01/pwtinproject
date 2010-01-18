@@ -1,28 +1,28 @@
 /*
- * sip_message.h
+ * SIPMessage.h
  * Reprezentacja wiadomosci SIP.
  */
 
-#ifndef SIP_MESSAGE_H
-#define SIP_MESSAGE_H
+#ifndef SIPMESSAGE_H
+#define SIPMESSAGE_H
 
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "sip_authentication.h"
+#include "SIPAuthentication.h"
 
-struct SIP_Message {
+struct SIPMessage {
 
-    friend std::ostream & operator<<(std::ostream & out, const SIP_Message & m);
+    friend std::ostream & operator<<(std::ostream & out, const SIPMessage & m);
 
     std::string				 rline;
     std::vector<std::string> via;
     std::vector<std::string> lines;
     std::string              body;
 
-    SIP_Message() {}
-    SIP_Message( char *buf, int len );
+    SIPMessage() {}
+    SIPMessage( char *buf, int len );
 
     std::string getField(std::string name);
     void setField(std::string name, std::string value);
@@ -33,8 +33,8 @@ struct SIP_Message {
     int replyCode();
     std::string method();
 
-    SIP_Authentication getAuthentication();
-    SIP_Authentication getProxyAuthentication();
+    SIPAuthentication getAuthentication();
+    SIPAuthentication getProxyAuthentication();
     std::string toStream();
 
     std::string getSdpAddress();

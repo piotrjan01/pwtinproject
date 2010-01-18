@@ -1,14 +1,14 @@
 /*
- * sip_authentication.h
+ * SIPAuthentication.h
  * Uwierzytelnienie w sesjach SIP.
  */
 
-#ifndef SIP_AUTHENTICATION_H
-#define SIP_AUTHENTICATION_H
+#ifndef SIPAUTHENTICATION_H
+#define SIPAUTHENTICATION_H
 
 #include <string>
 
-struct SIP_Authentication {
+struct SIPAuthentication {
 
     std::string realm, nonce, algorithm;
     std::string uri, method;

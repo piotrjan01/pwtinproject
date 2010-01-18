@@ -10,16 +10,16 @@
 RTPPacket::RTPPacket() :
 	delay(DEFAULT_DELAY) {
 	header = new RTPHeader();
-	data = NULL;
-	dataSize = 0;
+	payload = NULL;
+	payloadSize = 0;
 }
 
 RTPPacket::RTPPacket(const RTPPacket& another) {
 	delay = another.delay;
 	header = new RTPHeader(*another.header);
-	dataSize = another.dataSize;
-	data = new char[another.dataSize];
-	memcpy(data, another.data, another.dataSize);
+	payloadSize = another.payloadSize;
+	payload = new char[another.payloadSize];
+	memcpy(payload, another.payload, another.payloadSize);
 }
 
 RTPPacket::RTPPacket(char* packet, int _dataSize) {
@@ -27,9 +27,9 @@ RTPPacket::RTPPacket(char* packet, int _dataSize) {
 		throw DeserializationException();
 	}
 	header = new RTPHeader(packet);
-	dataSize = _dataSize - RTPHeader::SIZE_IN_BYTES;
-	data = new char[dataSize];
-	memcpy(data, packet + RTPHeader::SIZE_IN_BYTES, dataSize);
+	payloadSize = _dataSize - RTPHeader::SIZE_IN_BYTES;
+	payload = new char[payloadSize];
+	memcpy(payload, packet + RTPHeader::SIZE_IN_BYTES, payloadSize);
 }
 
 RTPPacket& RTPPacket::operator=(const RTPPacket& another) {
@@ -38,28 +38,28 @@ RTPPacket& RTPPacket::operator=(const RTPPacket& another) {
 	}
 	delay = another.delay;
 	*header = *another.header;
-	dataSize = another.dataSize;
-	delete[] data;
-	data = new char[another.dataSize];
-	memcpy(data, another.data, another.dataSize);
+	payloadSize = another.payloadSize;
+	delete[] payload;
+	payload = new char[another.payloadSize];
+	memcpy(payload, another.payload, another.payloadSize);
 	return *this;
 }
 
 RTPPacket::RTPPacket(const RTPHeader& hdr, char* packetData, int _dataSize) {
 	header = new RTPHeader(hdr);
-	dataSize = _dataSize;
-	data = new char[dataSize];
-	memcpy(data, packetData, dataSize);
+	payloadSize = _dataSize;
+	payload = new char[payloadSize];
+	memcpy(payload, packetData, payloadSize);
 }
 
 RTPPacket::~RTPPacket() {
 	delete header;
-	delete[] data;
+	delete[] payload;
 }
 
 ostream& RTPPacket::toStream(ostream& os) {
 	header->toStream(os);
-	os.write(data, dataSize);
+	os.write(payload, payloadSize);
 	return os;
 }
 

@@ -15,11 +15,11 @@ NoSteg::NoSteg(Config* cfg) :
 
 	// TODO inicjalizacja danych na char* ?
 	vector<char> data = getAudioDataToSend();
-	templatePacket.data = new char[data.size()];
+	templatePacket.payload = new char[data.size()];
 	for (int i = 0; i < (int) data.size(); i++) {
-		templatePacket.data[i] = data[i];
+		templatePacket.payload[i] = data[i];
 	}
-	templatePacket.dataSize = data.size();
+	templatePacket.payloadSize = data.size();
 }
 
 NoSteg::~NoSteg() {
@@ -33,12 +33,12 @@ RTPPacket& NoSteg::getNextPacket() {
 
 	templatePacket.delay = config->noStegRTPDelay;
 	vector<char> data = getAudioDataToSend();
-	templatePacket.data = new char[data.size()];
-	templatePacket.dataSize = data.size();
+	templatePacket.payload = new char[data.size()];
+	templatePacket.payloadSize = data.size();
 	for (int i = 0; i < (int) data.size(); i++) {
-		templatePacket.data[i] = data[i];
+		templatePacket.payload[i] = data[i];
 	}
-	VAR_(4, (int)templatePacket.dataSize);
+	VAR_(4, (int)templatePacket.payloadSize);
 	return templatePacket;
 }
 
@@ -46,7 +46,7 @@ void NoSteg::putReceivedPacketData(RTPPacket& packet) {
 	//TODO: to moze byc za wolne - lepiej trzymac uchwyt do pliku
 	ofstream myfile (config->outputAudioFilePath.c_str());
 	if (myfile.is_open()) {
-		myfile.write(packet.data, packet.dataSize);
+		myfile.write(packet.payload, packet.payloadSize);
 		myfile.close();
 	}
 	else Main::getInstance()->handleError("Unable to open output audio data file: "

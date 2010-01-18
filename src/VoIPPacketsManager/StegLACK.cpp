@@ -108,10 +108,10 @@ RTPPacket& StegLACK::getNextPacket() {
 		payloadData = getAudioDataToSend();
 	}
 
-	templatePacket.data = new char[payloadData.size()];
-	templatePacket.dataSize = payloadData.size();
+	templatePacket.payload = new char[payloadData.size()];
+	templatePacket.payloadSize = payloadData.size();
 	for (int i = 0; i < (int) payloadData.size(); i++) {
-		templatePacket.data[i] = payloadData[i];
+		templatePacket.payload[i] = payloadData[i];
 	}
 
 	//return prepared packet
@@ -152,9 +152,9 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 												+config->outputAudioFilePath);
 			*/
 
-			VAR((int)p.dataSize);
+			VAR((int)p.payloadSize);
 
-			FileOperations::writeToFile(config->outputAudioFilePath, p.data, p.dataSize);
+			FileOperations::writeToFile(config->outputAudioFilePath, p.payload, p.payloadSize);
 
 		}
 		else {

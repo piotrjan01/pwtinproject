@@ -18,7 +18,7 @@
 #include "../Main/Config.h"
 #include "../Main/Main.h"
 
-#include "../ProtocolModule/SIP/sip_agent.h"
+#include "../ProtocolModule/SIP/SIPAgent.h"
 #include "../ProtocolModule/RTP/RTPAgent.h"
 #include "../ProtocolModule/RTP/RTPPacket.h"
 
@@ -49,7 +49,7 @@ private:
 
 	Config& config;
 
-	SIP_Agent* sipAgent;
+	SIPAgent* sipAgent;
 	RTPAgent* rtpAgent;
 
 	VoIPPacketsManager* packetsManager;
