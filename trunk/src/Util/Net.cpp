@@ -6,6 +6,7 @@
  */
 
 #include "Net.h"
+#include "../Exceptions/BindException.h"
 
 Net::Net() {
 	// TODO Auto-generated constructor stub
@@ -20,7 +21,7 @@ int Net::bind_s(int socket, const struct sockaddr *address, socklen_t address_le
 	int result;
 	result = bind(socket, address, address_len);
 	if (result == -1) {
-		throw runtime_error("Can't bind to address!");
+		throw BindException(address, address_len);
 	}
 	return result;
 }
