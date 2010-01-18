@@ -21,6 +21,8 @@
 //gdy nie wysyłamy steganografii, pakiety sa wysylane w odstepach 20ms
 #define DEFAULT_NOSTEG_RTP_DELAY 20
 
+#define DEFAULT_QUEUE_READ_INTERVAL 10
+
 Config::Config(string configFile) {
 	PRN_(4, "in config constr");
 	VAR_(4, configFile);
@@ -58,8 +60,8 @@ Config::Config(string configFile) {
 	SIPProxyPort = DEFAULT_SIP_PROXY_PORT;
 	RTPPayloadSize = DEFAULT_RTP_PAYLOAD_SIZE;
 	noStegRTPDelay = DEFAULT_NOSTEG_RTP_DELAY;
-	incQueueReadInterval = DEFAULT_NOSTEG_RTP_DELAY;
-	incQueueSize = 5;
+	incQueueReadInterval = DEFAULT_QUEUE_READ_INTERVAL;
+	incQueueSize = 10;
 
 	//ustawienia ktore wczytujemy zawsze:
 	doSteg = (settings["do-steg"] == "1");

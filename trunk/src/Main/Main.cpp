@@ -51,7 +51,7 @@ void Main::printUsage() {
 
 void Main::handleError(string message) {
 	cerr << "====> ERROR: " + message << endl;
-	exit(EXIT_SUCCESS);
+	exit(EXIT_FAILURE);
 }
 
 int Main::startProgram(int argc, char **argv) {
@@ -71,7 +71,6 @@ int Main::startProgram(int argc, char **argv) {
 
 		cnf = new Config(configFile);
 
-		//TODO:
 		PRN_(1, "tworzymy VoIPModule..");
 		VoIPModule* voip = new VoIPModule(cnf);
 
@@ -83,5 +82,5 @@ int Main::startProgram(int argc, char **argv) {
 	PRN("TODO: zapisuje loga do pliku...");
 
 	PRN_(1, "ends startProgram");
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -58,7 +58,6 @@ public:
 	/**
 	 * ścieżka do pliku w którym zapisujemy dane audio przychodzące.
 	 * tylko w przypadku odbierania połączenia
-	 * TODO: czy w przyadku dzwonienia tez zapisywac dane?
 	 */
 	string outputAudioFilePath;
 
@@ -101,7 +100,7 @@ public:
 	 * Czas pomiedzy odczytywaniem pojednczych pakietow z kolejki pakietow przychodzacych
 	 * (razem z rozmiarem kolejki definiuje model kolejki pakietow przychodzacych)
 	 */
-	int incQueueReadInterval;
+	long incQueueReadInterval;
 
 	/**
 	 * Rozmiar kolejki pakietów przychodzacych

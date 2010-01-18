@@ -8,6 +8,7 @@
 #include "StegLACK.h"
 #include "../Main/Main.h"
 #include "../debug/debug.h"
+#include "../Util/FileOperations.h"
 #include <cstdlib>
 #include <fstream>
 
@@ -30,6 +31,7 @@ StegLACK::StegLACK(Config* cfg) :
 			config->maxStegInterval);
 	stegTransferDone = false;
 	readStegDataToMem();
+
 	VAR_(3, seqFireInterval);
 }
 
@@ -63,7 +65,7 @@ vector<char> StegLACK::getStegDataToSend() {
 }
 
 StegLACK::~StegLACK() {
-
+	//FIXME: zapisywanie danych steg do pliku
 }
 
 RTPPacket& StegLACK::getNextPacket() {
@@ -117,20 +119,19 @@ RTPPacket& StegLACK::getNextPacket() {
 }
 
 void StegLACK::putReceivedPacketData(RTPPacket& packet) {
-	//TODO: symulacja kolejki wejsciowej, a gdy kolejka sie zapycha, dane te traktujemy jako stego.
 
 	//if there is space in a queue
-	if (queueFreeSpace > 0) {
+	if ((int)incQueue.size() < config->incQueueSize) {
 		PRN_(1, "receiving package: putting it to incoming queue");
 		incQueue.push(packet);
-		if (queueFreeSpace > 0) queueFreeSpace--;
 	}
-	//if not, it may be steg packet
+	//if not, it may be steg packet. normally dropped by VoIP client.
 	else {
 		PRN_(1, "receiving package: no space in queue - possibly steg package");
 		stegPackets.push(packet);
 	}
 
+	//FIXME: tutaj powinnismy odczytac wszystkie pakiety !
 	//if it is time to read something from the queue:
 	if (timeSinceLastQueueRead.seeTime() > config->incQueueReadInterval) {
 		timeSinceLastQueueRead.start(); //restart timer
@@ -139,17 +140,25 @@ void StegLACK::putReceivedPacketData(RTPPacket& packet) {
 			RTPPacket p = incQueue.front();
 			incQueue.pop();
 			PRN_(1, "writing package to output audio data file");
-			if (queueFreeSpace < config->incQueueSize) queueFreeSpace++;
-			ofstream myfile (config->outputAudioFilePath.c_str(), ios::app);
+
+			/*
+			ofstream myfile (config->outputAudioFilePath.c_str(), ios::out | ios::app);
+			//FIXME: nie zapisuje sie do pliku :(
 			if (myfile.is_open()) {
 				myfile.write(p.data, p.dataSize);
 				myfile.close();
 			}
 			else Main::getInstance()->handleError("Unable to open output audio data file: "
 												+config->outputAudioFilePath);
+			*/
+
+			VAR((int)p.dataSize);
+
+			FileOperations::writeToFile(config->outputAudioFilePath, p.data, p.dataSize);
+
 		}
 		else {
-			PRN_(1, "nothing to write.");
+			PRN_(1, "incoming queue is empty.");
 		}
 
 	}
