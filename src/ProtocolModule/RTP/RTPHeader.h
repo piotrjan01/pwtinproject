@@ -111,7 +111,6 @@ public:
 #if 0
 	/* indicates that there is padding or not */
 	bool isPadding();oSteg::getNextPacket() {
-		// TODO
 
 		/* returns payload type */
 		quint8 getPayloadType();

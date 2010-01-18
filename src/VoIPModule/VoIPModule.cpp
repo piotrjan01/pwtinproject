@@ -82,8 +82,6 @@ void VoIPModule::update() {
 }
 
 /**
- * TODO
- *
  *	Osobny wątek przetwarza pakiety przychodzące
  *	Uwaga: będziemy musieli zasymulować bufor klienta i rozpoznawać pakiety które bylyby
  *	normalnie drop-owane, czyli prawdopodobnie nasze dane steganograficzne.

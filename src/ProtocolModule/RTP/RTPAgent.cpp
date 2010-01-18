@@ -121,7 +121,6 @@ RTPPacket& RTPAgent::getReceivedPacket() {
 
 void RTPAgent::recvPacket() {
 	static const int BUF_LENGTH = 32768;
-	// TODO
 	sockaddr_in sender;
 	unsigned int senderlength;
 	char buf[BUF_LENGTH];
