@@ -1,8 +1,8 @@
-/*
- * BindException.h
+/**
+ * @file BindException.h
  *
- *  Created on: 2010-01-18
- *      Author: marek
+ * @date created 2010-01-18
+ * @author Marek
  */
 
 #ifndef BINDEXCEPTION_H_

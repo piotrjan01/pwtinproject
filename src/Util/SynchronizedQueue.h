@@ -1,8 +1,11 @@
 /*
+ * \~
  * @file SynchronizedQueue.h
  *
- * A thread-safe (synchronized) queue for <code>RTPPacket</code>s.
+ * \~english
+ * A thread-safe (synchronized) queue for <code>RTPPacket</code>s header file.
  *
+ * \~
  * @date created 2010-01-16
  * @author: Marek
  * @see RTPPacket.h
@@ -21,6 +24,10 @@
 typedef unsigned int size_type;
 
 /**
+ * \~english
+ * A thread-safe (synchronized) queue for <code>RTPPacket</code>s
+ *
+ * \~polish
  * Synchronizowana kolejka nieblokująca dla pakietów RTP
  */
 class SynchronizedQueue {
