@@ -11,7 +11,7 @@
 #include <vector>
 
 #include "../ProtocolModule/RTP/RTPPacket.h"
-#include "debug/debug.h"
+#include "../Debug/Debug.h"
 #include "../Main/Config.h"
 
 /**

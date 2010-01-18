@@ -6,7 +6,7 @@
  */
 
 #include "Main.h"
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 #include "../VoIPModule/VoIPModule.h"
 
 Main* Main::instance = 0;

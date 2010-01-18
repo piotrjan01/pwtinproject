@@ -16,7 +16,7 @@
 #define FILEOPERATIONS_H_
 
 #include <string>
-#include "../debug/debug.h"
+#include "../Debug/Debug.h"
 #include "../Main/Main.h"
 
 /**

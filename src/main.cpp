@@ -24,7 +24,7 @@ using namespace std;
  * FIXME: Ogólna lista zyczen:
  *
  * todo: wczytywanie konfiga w pelni
- * todo: poziom logowania ustawic lepiej (korzystajac z debug.h) i do skonfigurowania w pliku
+ * todo: poziom logowania ustawic lepiej (korzystajac z Debug.h) i do skonfigurowania w pliku
  *
  * todo: wysylanie pakietow bez steg tez mogloby przyjmowac losowe opoznienia z podanego przedzialu... ?
  *

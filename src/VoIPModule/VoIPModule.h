@@ -1,10 +1,9 @@
-/*
- * VoIPModule.h
+/**
+ * @file VoIPModule.h
  *
- *  Created on: 2010-01-14
- *      Author: Piotr Gwizda�a
+ * @date created 2010-01-14
+ * @author: Piotr Gwizda�a
  */
-
 #ifndef VOIPMODULE_H_
 #define VOIPMODULE_H_
 
@@ -13,7 +12,7 @@
 
 #include <queue>
 
-#include "debug/debug.h"
+#include "../Debug/Debug.h"
 
 #include "../Main/Config.h"
 #include "../Main/Main.h"
