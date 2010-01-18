@@ -1,8 +1,13 @@
-/*
- * Observable.cpp
+/**
+ * @file Observable.cpp
+ * @brief Observer design pattern.
  *
- *  Created on: 2010-01-17
- *      Author: marek
+ * Interface of the subject (observed / observable).
+ *
+ * @date created 2010-01-17
+ * @author Marek
+ * @see Observer.h
+ * @see http://en.wikipedia.org/wiki/Observer_pattern
  */
 
 #include "Observable.h"

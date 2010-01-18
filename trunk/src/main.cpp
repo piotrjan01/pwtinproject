@@ -1,3 +1,20 @@
+/**
+ * \~english
+ * @mainpage [TIN] ProjectLACK
+ *
+ * @section sIntroduction Introduction
+ * The idea of the project...
+ *
+ * @section sAuthors Authors
+ * \~
+ * \li Piotr Gwizdała
+ *
+ * \li Bogdan Jezierski
+ *
+ * \li Marek Kurdej
+ *
+ * \li Michał Leśniewski
+ */
 
 #include "Main/Main.h"
 
