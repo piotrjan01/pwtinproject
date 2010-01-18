@@ -2,7 +2,7 @@
 #include <cstdlib>
 // std:ostream
 #include <iostream>
-// throw runtime_error...
+// throw std::runtime_error...
 #include <stdexcept>
 
 // Sockety
@@ -22,39 +22,37 @@
 #include "sip_agent.h"
 #include "parsing.h"
 
-using namespace std;
-
 void * SIP_AgentThread( void * sip_agent );
 
-SIP_Agent::SIP_Agent(string localaddr) : mutex(0), wait(0) {
+SIP_Agent::SIP_Agent(std::string localaddr) : mutex(0), wait(0) {
 
     registered = false;
     connectionEstablished = false;
     sleepTime = 1.0;
 
-    cout << "Creating socket...";
+    std::cout << "Creating socket...";
     sock = socket( AF_INET, SOCK_DGRAM, 0);
 
     if (sock == -1)
-        throw runtime_error("Can't create UDP socket!");
+        throw std::runtime_error("Can't create UDP socket!");
 
-    cout << "OK, assigned socket number is " << sock << endl;
+    std::cout << "OK, assigned socket number is " << sock << std::endl;
 
-    cout << "Binding to address...";
+    std::cout << "Binding to address...";
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = inet_addr(localaddr.c_str());  // INADDR_ANY;
     address.sin_port = 0;
 
     if (bind(sock, (sockaddr *) &address, sizeof(address)) == -1)
-        throw runtime_error("Can't bind to address!");
+        throw std::runtime_error("Can't bind to address!");
 
-    cout << "OK, address: ";
+    std::cout << "OK, address: ";
 
     int length = sizeof( address );
     if (getsockname( sock, (sockaddr *) &address, (socklen_t *) &length) == -1)
-        throw runtime_error("Can't get assigned address!");
+        throw std::runtime_error("Can't get assigned address!");
 
-    cout << inet_ntoa( address.sin_addr ) << ":" << ntohs( address.sin_port ) << endl;
+    std::cout << inet_ntoa( address.sin_addr ) << ":" << ntohs( address.sin_port ) << std::endl;
 
     killThread = false;
     pthread_create(&thread, NULL, SIP_AgentThread, (void *) this );
@@ -70,14 +68,14 @@ SIP_Agent::~SIP_Agent() {
 
     pthread_join( thread, (void **)NULL );
 
-    cout << "Closing socket...";
+    std::cout << "Closing socket...";
     if (close(sock) != 0)
-        throw runtime_error("Can't close socket!");
-    cout << "OK" << endl;
+        throw std::runtime_error("Can't close socket!");
+    std::cout << "OK" << std::endl;
 }
 
-string SIP_Agent::generateCallID() {
-    string callid = "";
+std::string SIP_Agent::generateCallID() {
+    std::string callid = "";
 
     for (int i = 0; i < 10; ++i)
         callid += toString( rand() % 10 );
@@ -98,19 +96,19 @@ void SIP_Agent::generateFromTag() {
 
 }
 
-string SIP_Agent::generateBranch() {
-    string result = "";
+std::string SIP_Agent::generateBranch() {
+    std::string result = "";
     for (int i = 0; i < 20; ++i)
         result += toString( rand() % 10 );
     return result;
 }
 
-string SIP_Agent::addressString() {
-    return string(inet_ntoa( address.sin_addr )) + ":" + toString(ntohs( address.sin_port ));
+std::string SIP_Agent::addressString() {
+    return std::string(inet_ntoa( address.sin_addr )) + ":" + toString(ntohs( address.sin_port ));
 }
 
-void SIP_Agent::sendMessage(SIP_Message &m, string address, unsigned short port) {
-    string s = m.toStream();
+void SIP_Agent::sendMessage(SIP_Message &m, std::string address, unsigned short port) {
+    std::string s = m.toStream();
 
     sockaddr_in r;
 
@@ -120,10 +118,10 @@ void SIP_Agent::sendMessage(SIP_Message &m, string address, unsigned short port)
 
     sendto(sock, s.c_str(), s.length(), 0, (sockaddr *) &r, sizeof( r ));
 
-    /*	cout << "-----   SIP Message sent   -----" << endl;
-    	cout << m;
-    	cout << "--------------------------------" << endl;*/
-    cout << "SIP: >> " << m.rline << endl;
+    /*	std::cout << "-----   SIP Message sent   -----" << std::endl;
+    	std::cout << m;
+    	std::cout << "--------------------------------" << std::endl;*/
+    std::cout << "SIP: >> " << m.rline << std::endl;
 }
 
 void SIP_Agent::replyToOptions(SIP_Message &m) {
@@ -227,14 +225,14 @@ void SIP_Agent::answerCall(SIP_Message &m) {
     reply.lines.push_back("Content-Type: application/sdp");
 
     reply.body = "v=0\n";
-    reply.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+    reply.body += std::string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + std::string("\n");
     reply.body += "s=X-Lite\n";
 //    reply.body += "s=CounterPath X-Lite 3.0\n";
-    reply.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-    reply.body += string("t=0 0\n");
-    reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 0 8 3 98 97 101 107\n");
-//    reply.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
-    reply.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
+    reply.body += std::string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + std::string("\n");
+    reply.body += std::string("t=0 0\n");
+    reply.body += std::string("m=audio ") + toString(localRtpPort) + std::string(" RTP/AVP 0 8 3 98 97 101 107\n");
+//    reply.body += std::string("m=audio ") + toString(localRtpPort) + std::string(" RTP/AVP 107 101\n");
+    reply.body += std::string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
     reply.body += "a=rtpmap:0 pcmu/8000\n";
     reply.body += "a=rtpmap:8 pcma/8000\n";
     reply.body += "a=rtpmap:3 gsm/8000\n";
@@ -265,30 +263,30 @@ void SIP_Agent::receiveMessage() {
 
     SIP_Message m( buf, buflength );
 
-    /*	cout << "----- SIP Message received -----" << endl;
-    	cout << m;
-    	cout << "------------ Action ------------" << endl;*/
+    /*	std::cout << "----- SIP Message received -----" << std::endl;
+    	std::cout << m;
+    	std::cout << "------------ Action ------------" << std::endl;*/
 
-    cout << "SIP: << " << m.rline << endl;
+    std::cout << "SIP: << " << m.rline << std::endl;
 
     if (m.isReply()) {
-        //cout << "It's a reply to request " + m.getField("CSeq") + " sent by ";
+        //std::cout << "It's a reply to request " + m.getField("CSeq") + " sent by ";
 
         if (m.getField("From") == fromtoline) {
-            //cout << "this agent." << endl;
+            //std::cout << "this agent." << std::endl;
             int code = m.replyCode();
-            //cout << "Result code is " << code << ", ";
+            //std::cout << "Result code is " << code << ", ";
             if (code < 100)
-                cout << "SIP: Error" << endl;
+                std::cout << "SIP: Error" << std::endl;
             else if (code == 200) {
 
                 if (m.getCallID() == invite.callid) {
                     if (waitingfor == CALL) {
 
-                        //cout << "that's great, connection established!" << endl ;
+                        //std::cout << "that's great, connection established!" << std::endl ;
 
-                        cout << "SIP: Connection established." << endl;
-                        cout << "SIP: Remote RTP address: " << m.getSdpAddress() << ":" << m.getSdpPort() << endl;
+                        std::cout << "SIP: Connection established." << std::endl;
+                        std::cout << "SIP: Remote RTP address: " << m.getSdpAddress() << ":" << m.getSdpPort() << std::endl;
 
                         remoteRtpPort = atoi( m.getSdpPort().c_str() );
                         remoteRtpAddress = m.getSdpAddress();
@@ -306,9 +304,9 @@ void SIP_Agent::receiveMessage() {
 
                 } else if (m.getCallID() == registration.callid) {
 					if (unregistering)
-						cout << "SIP: Unregistered." << endl;
+						std::cout << "SIP: Unregistered." << std::endl;
 					else
-						cout << "SIP: Registered." << endl;
+						std::cout << "SIP: Registered." << std::endl;
 
                     if (waitingfor == REGISTER) {
                         registered = true;
@@ -322,16 +320,16 @@ void SIP_Agent::receiveMessage() {
             } else if (code < 400) {
 
             } else if (code == 401) {
-                // cout << "the server wants authentication." << endl;
+                // std::cout << "the server wants authentication." << std::endl;
                 SIP_Authentication auth = m.getAuthentication();
                 if (auth.algorithm != "MD5") {
-                    cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
-                    // cout << "No action" << endl;
+                    std::cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << std::endl;
+                    // std::cout << "No action" << std::endl;
                     registered = false;
                     waitingfor = NONE;
                     wait.V();
                 } else {
-                    cout << "SIP: Register again using authentication." << endl;
+                    std::cout << "SIP: Register again using authentication." << std::endl;
                     auth.user = user;
                     auth.pass = pass;
                     auth.method = "REGISTER";
@@ -343,7 +341,7 @@ void SIP_Agent::receiveMessage() {
             } else if (code == 403) {
 
                 if (waitingfor == REGISTER) {
-                    cout << "SIP: Can't register, wrong password?" << endl;
+                    std::cout << "SIP: Can't register, wrong password?" << std::endl;
                     registered = false;
                     waitingfor = NONE;
                     wait.V();
@@ -352,23 +350,23 @@ void SIP_Agent::receiveMessage() {
             } else if (code == 404) {
 
                 if (waitingfor == CALL) {
-                    cout << "SIP: Can't connect, user not found." << endl;
+                    std::cout << "SIP: Can't connect, user not found." << std::endl;
                     waitingfor = NONE;
                     wait.V();
                 }
 
             } else if (code == 407) {
 
-                //cout << "SIP: Proxy authentication is required." << endl;
+                //std::cout << "SIP: Proxy authentication is required." << std::endl;
                 replyAck(m);
 
                 SIP_Authentication auth = m.getProxyAuthentication();
                 if (auth.algorithm != "MD5") {
-                    cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << endl;
+                    std::cout << "SIP: Authentication with " << auth.algorithm << " is not implemented, I give up." << std::endl;
                     waitingfor = NONE;
                     wait.V();
                 } else {
-                    cout << "SIP: Invite again using authentication." << endl;
+                    std::cout << "SIP: Invite again using authentication." << std::endl;
                     auth.user = user;
                     auth.pass = pass;
                     auth.method = "INVITE";
@@ -379,28 +377,28 @@ void SIP_Agent::receiveMessage() {
 
             } else if (code == 480) {
 
-                //cout << "SIP: Temporary unavailable, busy? rejected?" << endl;
+                //std::cout << "SIP: Temporary unavailable, busy? rejected?" << std::endl;
                 if (waitingfor == CALL) {
-                    cout << "SIP: Temporary unavailable, busy? rejected?" << endl;
+                    std::cout << "SIP: Temporary unavailable, busy? rejected?" << std::endl;
                     waitingfor = NONE;
                     wait.V();
                 }
 
             }
         } else {
-            //	cout << m.getField("From") << "." << endl;
-            //cout << "No action." << endl;
+            //	std::cout << m.getField("From") << "." << std::endl;
+            //std::cout << "No action." << std::endl;
         }
 
     } else {
-        //cout << "It's a request - ";
-        //cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << endl;
+        //std::cout << "It's a request - ";
+        //std::cout << m.getField("From") << " requests " << m.method() << " from " << m.getField("To") << std::endl;
 
         if (m.method() == "OPTIONS")
             replyToOptions(m);
         else if (m.method() == "INVITE") {
 
-            cout << "SIP: Incoming call. " << endl;
+            std::cout << "SIP: Incoming call. " << std::endl;
             replyRinging(m);
 
             if (waitingfor == ANSWER) {
@@ -411,7 +409,7 @@ void SIP_Agent::receiveMessage() {
         } else if (m.method() == "BYE") {
 
             if (connectionEstablished && (invite.callid == m.getCallID())) {
-                cout << "SIP: Disconnecting." << endl;
+                std::cout << "SIP: Disconnecting." << std::endl;
                 connectionEstablished = false;
             }
 
@@ -419,7 +417,7 @@ void SIP_Agent::receiveMessage() {
 
             if (waitingfor == ANSWER) {
                 if (invite.callid == m.getCallID()) {
-                    cout << "SIP: Connection established" << endl;
+                    std::cout << "SIP: Connection established" << std::endl;
                     partnerTag = m.getField("From");
                     partnerTag = partnerTag.substr(partnerTag.find("tag=") + 4 );
                     connectionEstablished = true;
@@ -431,7 +429,7 @@ void SIP_Agent::receiveMessage() {
         }
     }
 
-    //cout << "--------------------------------" << endl;
+    //std::cout << "--------------------------------" << std::endl;
 
 }
 
@@ -499,13 +497,13 @@ void SIP_Agent::Call() {
     m.lines.push_back("Content-Type: application/sdp");
 
     m.body = "v=0\n";
-    m.body += string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
+    m.body += std::string("o=- 9 2 IN IP4 ") + inet_ntoa( address.sin_addr ) + std::string("\n");
     m.body += "s=X-Lite\n";
-    m.body += string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + string("\n");
-    m.body += string("t=0 0\n");
-    m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 0 8 3 98 97 101 107\n");
-//    m.body += string("m=audio ") + toString(localRtpPort) + string(" RTP/AVP 107 101\n");
-    m.body += string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
+    m.body += std::string("c=IN IP4 ") + inet_ntoa( address.sin_addr ) + std::string("\n");
+    m.body += std::string("t=0 0\n");
+    m.body += std::string("m=audio ") + toString(localRtpPort) + std::string(" RTP/AVP 0 8 3 98 97 101 107\n");
+//    m.body += std::string("m=audio ") + toString(localRtpPort) + std::string(" RTP/AVP 107 101\n");
+    m.body += std::string("a=alt:1 1 : JelDk9w1 QTsOTJSj ") + inet_ntoa( address.sin_addr ) + " " + toString(localRtpPort) + "\n";
     m.body += "a=rtpmap:0 pcmu/8000\n";
     m.body += "a=rtpmap:8 pcma/8000\n";
     m.body += "a=rtpmap:3 gsm/8000\n";
@@ -529,7 +527,7 @@ CallInfo SIP_Agent::Call(std::string id, unsigned short port) {
     if (!connected()) {
         mutex.P();
 
-        cout << "SIP: Calling " << id << endl;
+        std::cout << "SIP: Calling " << id << std::endl;
 
         remoteRtpAddress = "0.0.0.0";
         remoteRtpPort = 0;
@@ -569,7 +567,7 @@ CallInfo SIP_Agent::Answer(unsigned short port) {
     if (!connected()) {
         mutex.P();
 
-        cout << "SIP: Waiting for call." << endl;
+        std::cout << "SIP: Waiting for call." << std::endl;
 
         remoteRtpAddress = "0.0.0.0";
         remoteRtpPort = 0;
@@ -604,7 +602,7 @@ void SIP_Agent::Disconnect() {
 
     SIP_Message	m;
 
-    cout << "SIP: Disconnecting." << endl;
+    std::cout << "SIP: Disconnecting." << std::endl;
 
     m.rline = "BYE sip:" + user + "@" + addressString() + " SIP/2.0";
     m.via.push_back("Via: SIP/2.0/UDP " + addressString() + ";branch=" + branch);
@@ -647,7 +645,7 @@ void SIP_Agent::Unregister() {
 
 }
 
-bool SIP_Agent::Register(string user, string pass, string proxy, unsigned short proxyPort) {
+bool SIP_Agent::Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort) {
 
     bool result;
 
@@ -660,7 +658,7 @@ bool SIP_Agent::Register(string user, string pass, string proxy, unsigned short 
 
 	unregistering = false;
 
-    cout << "SIP: Registering." << endl;
+    std::cout << "SIP: Registering." << std::endl;
 
     this->proxyPort = proxyPort;
 
@@ -709,7 +707,7 @@ void * SIP_AgentThread( void * sip_agent ) {
 
     SIP_Agent * agent = (SIP_Agent *) sip_agent;
 
-    cout << "SIP: Agent thread started." << endl;
+    std::cout << "SIP: Agent thread started." << std::endl;
 
     agent->mutex.P();
 
@@ -747,7 +745,7 @@ void * SIP_AgentThread( void * sip_agent ) {
             }
 
             if (timeout) {
-                cout << "SIP: Timeout." << endl;
+                std::cout << "SIP: Timeout." << std::endl;
                 agent->waitingfor = NONE;
                 agent->wait.V();
             }

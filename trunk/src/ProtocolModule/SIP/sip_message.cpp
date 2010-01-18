@@ -6,8 +6,6 @@
 #include "sip_authentication.h"
 #include "parsing.h"
 
-using namespace std;
-
 bool SIP_Message::isReply() {
     return (rline.find("SIP/2.0 ") == 0);
 }
@@ -23,24 +21,24 @@ int SIP_Message::replyCode() {
         return atoi( rline.c_str() + 8 );
 }
 
-string SIP_Message::method() {
+std::string SIP_Message::method() {
     if (!isRequest())
         return "";
     else
         return rline.substr(0, rline.find(" "));
 }
 
-string SIP_Message::getField(string name) {
-    for (vector<string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
+std::string SIP_Message::getField(std::string name) {
+    for (std::vector<std::string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
         if (getKey(*iter, ':') == name)
             return trim(getValue(*iter, ':'));
 
     return "";
 }
 
-void SIP_Message::setField(string name, string value) {
+void SIP_Message::setField(std::string name, std::string value) {
 
-    for (vector<string>::iterator iter = lines.begin(); iter != lines.end(); ++iter)
+    for (std::vector<std::string>::iterator iter = lines.begin(); iter != lines.end(); ++iter)
         if (getKey(*iter, ':') == name) {
             *iter = name + " " + value;
             return;
@@ -53,14 +51,14 @@ SIP_Message::SIP_Message( char *buf, int len ) {
 
     buf[len] = '\000';
 
-    string packet(buf);
+    std::string packet(buf);
 
     rline = packet.substr( 0, packet.find("\015\012") );
     packet = packet.substr( packet.find("\015\012") + 2 );
 
-    string nextline;
+    std::string nextline;
 
-    while (packet.find("\015\012") != string::npos) {
+    while (packet.find("\015\012") != std::string::npos) {
         nextline = packet.substr( 0, packet.find("\015\012") );
 
         if (nextline.length() == 0)
@@ -81,17 +79,17 @@ SIP_Message::SIP_Message( char *buf, int len ) {
 SIP_Authentication SIP_Message::getAuthentication() {
 
     SIP_Authentication result;
-    string s = getField("WWW-Authenticate");
-    vector<string> v = split(s, ' ');
+    std::string s = getField("WWW-Authenticate");
+    std::vector<std::string> v = split(s, ' ');
 
     if (v.size() != 2)
         return result;
 
-    vector<string> u = split(v[1], ',');
+    std::vector<std::string> u = split(v[1], ',');
 
     for (unsigned int i = 0; i < u.size(); ++i) {
-        string k = getKey(u[i]);
-        string v = trim(getValue(u[i]), '\"');
+        std::string k = getKey(u[i]);
+        std::string v = trim(getValue(u[i]), '\"');
         if (k == "realm")
             result.realm = v;
         else if (k == "algorithm")
@@ -106,17 +104,17 @@ SIP_Authentication SIP_Message::getAuthentication() {
 SIP_Authentication SIP_Message::getProxyAuthentication() {
 
     SIP_Authentication result;
-    string s = getField("Proxy-Authenticate");
-    vector<string> v = split(s, ' ');
+    std::string s = getField("Proxy-Authenticate");
+    std::vector<std::string> v = split(s, ' ');
 
     if (v.size() != 2)
         return result;
 
-    vector<string> u = split(v[1], ',');
+    std::vector<std::string> u = split(v[1], ',');
 
     for (unsigned int i = 0; i < u.size(); ++i) {
-        string k = getKey(u[i]);
-        string v = trim(getValue(u[i]), '\"');
+        std::string k = getKey(u[i]);
+        std::string v = trim(getValue(u[i]), '\"');
         if (k == "realm")
             result.realm = v;
         else if (k == "algorithm")
@@ -128,13 +126,13 @@ SIP_Authentication SIP_Message::getProxyAuthentication() {
     return result;
 }
 
-string SIP_Message::toStream() {
-    string result = rline + "\015\012";
+std::string SIP_Message::toStream() {
+    std::string result = rline + "\015\012";
 
-    for (vector<string>::const_iterator iter = via.begin(); iter != via.end(); ++iter)
+    for (std::vector<std::string>::const_iterator iter = via.begin(); iter != via.end(); ++iter)
         result += *iter + "\015\012";
 
-    for (vector<string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
+    for (std::vector<std::string>::const_iterator iter = lines.begin(); iter != lines.end(); ++iter)
         result += *iter + "\015\012";
 
     result += "\015\012";
@@ -146,10 +144,10 @@ string SIP_Message::toStream() {
 
 std::string SIP_Message::getSdpAddress() {
 
-    vector<string> l = split(body, '\n');
+    std::vector<std::string> l = split(body, '\n');
 
-    for (vector<string>::const_iterator iter = l.begin(); iter != l.end(); ++iter) {
-        string s = trim(*iter, '\015');
+    for (std::vector<std::string>::const_iterator iter = l.begin(); iter != l.end(); ++iter) {
+        std::string s = trim(*iter, '\015');
         if (getKey(s, '=') == "o")
             return split(s, ' ').back();
     }
@@ -160,9 +158,9 @@ std::string SIP_Message::getSdpAddress() {
 
 std::string SIP_Message::getSdpPort() {
 
-    vector<string> l = split(body, '\n');
+    std::vector<std::string> l = split(body, '\n');
 
-    for (vector<string>::const_iterator iter = l.begin(); iter != l.end(); ++iter)
+    for (std::vector<std::string>::const_iterator iter = l.begin(); iter != l.end(); ++iter)
         if (getKey(*iter, '=') == "m")
             return split(*iter, ' ').at(1);
 
@@ -172,15 +170,15 @@ std::string SIP_Message::getSdpPort() {
 
 std::ostream & operator<<(std::ostream & out, const SIP_Message & m) {
 
-    out << m.rline << endl;
+    out << m.rline << std::endl;
 
-    for (vector<string>::const_iterator iter = m.via.begin(); iter != m.via.end(); ++iter)
-        out << *iter << endl;
+    for (std::vector<std::string>::const_iterator iter = m.via.begin(); iter != m.via.end(); ++iter)
+        out << *iter << std::endl;
 
-    for (vector<string>::const_iterator iter = m.lines.begin(); iter != m.lines.end(); ++iter)
-        out << *iter << endl;
+    for (std::vector<std::string>::const_iterator iter = m.lines.begin(); iter != m.lines.end(); ++iter)
+        out << *iter << std::endl;
 
-    if (m.body.length() > 0) out << m.body << endl;
+    if (m.body.length() > 0) out << m.body << std::endl;
 
     return out;
 }
