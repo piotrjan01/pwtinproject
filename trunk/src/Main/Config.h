@@ -99,6 +99,11 @@ public:
 	string stegDataFile;
 
 	/**
+	 * A file for incoming steg data
+	 */
+	string outputStegDataFile;
+
+	/**
 	 * the size of RTP packet payload in bytes
 	 */
 	int RTPPayloadSize;

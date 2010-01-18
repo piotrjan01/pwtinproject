@@ -26,7 +26,7 @@ proxy-port=5060
 audio-data-file=../cnf/audiodata.dat
 
 #file where received audio data will be stored
-output-audio-data-file=outputaudiodata.dat
+output-audio-data-file=outputaudiodata-callee.dat
 
 #steganography packets interval: how many normal audio packets minimally have to be send
 #between each steganography sequence
@@ -44,4 +44,7 @@ steg-sequence=10-15:A 90:A 10-15:A 10-15:A 10-12:S 10:S
 
 #the path to file with secret data to be send using steganography
 steg-data-file=../cnf/stegdata.txt
+
+#path to the file where we will output captured steg data
+output-steg-data-file=capturedsteg-callee.txt
 
