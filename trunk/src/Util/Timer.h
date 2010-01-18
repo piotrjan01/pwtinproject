@@ -37,12 +37,6 @@ public:
 	/**
 	 * \~
 	 * \~polish
-	 * \~english
-	 * \~
-	 */
-	/**
-	 * \~
-	 * \~polish
 	 * Resetuje i startuje stoper.
 	 * \~english
 	 * Starts (or actually restarts) the timer.
