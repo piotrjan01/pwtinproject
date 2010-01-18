@@ -5,7 +5,7 @@
  * Interface of the subject (observed / observable).
  *
  * @date created 2010-01-17
- * @author Marek
+ * @author Marek Kurdej
  * @see Observer.h
  * @see http://en.wikipedia.org/wiki/Observer_pattern
  */

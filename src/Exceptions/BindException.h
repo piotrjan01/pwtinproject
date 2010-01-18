@@ -2,7 +2,7 @@
  * @file BindException.h
  *
  * @date created 2010-01-18
- * @author Marek
+ * @author Marek Kurdej
  */
 
 #ifndef BINDEXCEPTION_H_
@@ -19,7 +19,9 @@
 /**
  * \~
  * \~polish
+ * Wyjątek rzucany w razie niepowodzenia funkcji <code>bind</code>
  * \~english
+ * Exception thrown in case of failure of function <code>bind</code>
  * \~
  */
 class BindException: public std::exception {
