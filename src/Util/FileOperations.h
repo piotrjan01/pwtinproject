@@ -36,7 +36,7 @@ public:
 	/**
 	 * \~
 	 * \~polish
-	 * Dopisuej dane o określonym rozmiarze do pliku o nazwe <code>filename</code>.
+	 * Dopisuje dane o określonym rozmiarze do pliku o nazwe <code>filename</code>.
 	 * \~english
 	 * Appends data of given size to the file identified by <code>filename</code>.
 	 * \~
