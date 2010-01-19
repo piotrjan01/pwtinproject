@@ -38,6 +38,9 @@ StegLACK::StegLACK(Config* cfg) :
 	VAR_(3, seqFireInterval);
 }
 
+/**
+ * Wczytuje wszystkie dane steganograficzne do pamięci
+ */
 void StegLACK::readStegDataToMem() {
 	ifstream f(config->stegDataFile.c_str(), ios::in | ios::binary | ios::ate);
 	if (f.is_open()) {
@@ -54,6 +57,10 @@ void StegLACK::readStegDataToMem() {
 						+ config->stegDataFile);
 }
 
+/**
+ * Pobiera porcję danych steganograficznych do wysłania z wczytanych wcześniej
+ * danych (stegData)
+ */
 vector<char> StegLACK::getStegDataToSend() {
 	int size = config->RTPPayloadSize;
 	vector<char> ret;
@@ -79,6 +86,9 @@ StegLACK::~StegLACK() {
 
 }
 
+/**
+ * Pobiera następny pakiet do wysłania.
+ */
 RTPPacket& StegLACK::getNextPacket() {
 
 	vector<char> payloadData;
@@ -128,6 +138,7 @@ RTPPacket& StegLACK::getNextPacket() {
 	//return prepared packet
 	return templatePacket;
 }
+
 
 void StegLACK::saveIfStegPacket(RTPPacket &p) {
 	//we verify if it is flagged as steg packet:

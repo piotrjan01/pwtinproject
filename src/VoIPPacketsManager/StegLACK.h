@@ -116,7 +116,7 @@ public:
 	 */
 	vector<StegSeqElem> stegSeq;
 
-	long getRandNumber(long min, long max);
+
 
 	StegLACK(Config* cfg);
 	virtual ~StegLACK();
@@ -124,11 +124,20 @@ public:
 	virtual RTPPacket& getNextPacket();
 	virtual void putReceivedPacketData(RTPPacket& packet);
 
+
+
+private:
+	/**
+	 * Sprawdza czy pakiet jest oflagowany jako steganograficzny i jeśli tak
+	 * to go zapisuje do odpowiedniego pliku podanego w konfiguracji.
+	 */
+	void saveIfStegPacket(RTPPacket &p);
+
 	void readStegDataToMem();
 
-	vector<char> getStegDataToSend();
+	long getRandNumber(long min, long max);
 
-	void saveIfStegPacket(RTPPacket &p);
+	vector<char> getStegDataToSend();
 
 private:
 	RTPPacket templatePacket;
