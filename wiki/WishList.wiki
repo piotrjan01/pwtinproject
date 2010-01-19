@@ -1,0 +1,39 @@
+#summary One-sentence summary of this page.
+#labels Phase-Requirements
+
+== Introduction ==
+
+= TODO =
+=== Config ===
+ * command-line options with `getopt'
+ * debug level from 1) config OR 2) command-line
+ * local IP automatic resolving
+
+=== SIP ===
+ * implement other message types
+
+=== RTP ===
+==== OUTpackets ====
+ * set `Mark' flag in the first packet
+==== INpackets ====
+ * validate if RTP Header is well-formed
+ * order packets according to `sequenceNumber'
+
+=== RTCP ===
+ * implement
+
+----
+== Details ==
+
+Add your content here.  Format your content with:
+  * `*bold text*` *bold text*
+  * `_italic text_` _italic text_
+  * `*` with a preceding space -- bullet item
+  # `#` with a preceding space -- numbered item
+  * `{{{ verbatim code block }}}` {{{ verbatim code block }}}
+  * `----` horizontal rule
+  * `[http://domain/page label]` [http://domain/page label] 
+  * `http://domain/page` http://domain/page
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
+  * Tables...
