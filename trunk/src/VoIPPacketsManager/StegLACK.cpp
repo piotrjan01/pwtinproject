@@ -61,13 +61,11 @@ vector<char> StegLACK::getStegDataToSend() {
 	for (int i=0; i<STEG_DATA_FLAG_SIZE; i++) {
 		ret.push_back(flag[i]);
 	}
-	PRN_(1, "Preparing steg data to send:");
 	for (int i=STEG_DATA_FLAG_SIZE; i<size; i++) {
 		lastReadStegByte++;
 		if (lastReadStegByte<(int)stegData.size())
 			ret.push_back(stegData[lastReadStegByte]);
 		else ret.push_back(' ');
-		cout<<stegData[lastReadStegByte];
 	}
 	PRN_(1, "Done reading steg data");
 	if (lastReadStegByte>=(int)stegData.size()) {
@@ -146,8 +144,6 @@ void StegLACK::saveIfStegPacket(RTPPacket &p) {
 
 
 	PRN_(1, "steg packet! saving to file...");
-	for (int i=0; i<p.payloadSize; i++) cout<<p.payload[i];
-	cout<<endl;
 	FileOperations::writeToFile(config->outputStegDataFile,
 			(p.payload+STEG_DATA_FLAG_SIZE), p.payloadSize-STEG_DATA_FLAG_SIZE);
 
