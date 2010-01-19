@@ -142,7 +142,12 @@ void StegLACK::saveIfStegPacket(RTPPacket &p) {
 		}
 	}
 
+
+
+
 	PRN_(1, "steg packet! saving to file...");
+	for (int i=0; i<p.payloadSize; i++) cout<<p.payload[i];
+	cout<<endl;
 	FileOperations::writeToFile(config->outputStegDataFile,
 			(p.payload+STEG_DATA_FLAG_SIZE), p.payloadSize-STEG_DATA_FLAG_SIZE);
 

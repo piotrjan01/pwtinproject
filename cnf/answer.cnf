@@ -14,14 +14,10 @@ pass=
 do-steg=1
 
 #our local actual ip address
-local-ip=192.168.169.15
-
-#192.168.0.103
+local-ip=192.168.169.9
 
 #proxy ip address
 proxy-ip=192.168.169.2
-
-#192.168.0.101
 
 #proxy port
 proxy-port=5060
