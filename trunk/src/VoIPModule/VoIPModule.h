@@ -30,6 +30,24 @@
 
 using namespace std;
 
+/**
+ * \~
+ * \~polish
+ * Klasa pośrednicząca między pozostałymi modułami aplikacji VoIP.
+ *
+ * Nawiązuje połączenie korzystając z SIP i RTP, następnie pobiera pakiety
+ * od @ref VoIPPacketsManager i przekazuje do wysłania.
+ * W międzyczasie odbiera pakiety i przekazuje je do przetworzenia również do VoIPPacketsManager.
+ *
+ * \~english
+ * A controlling class that administers and mediates other modules of VoIP application.
+ *
+ * It makes a connection using SIP and RTP protocols, and then gets packets
+ * from @ref VoIPPacketsManager.
+ * In the meantime it receives packets and pushes them to the @ref VoIPPacketsManager.
+ *
+ * \~
+ */
 class VoIPModule : public Observer {
 public:
 	VoIPModule(Config* config);
