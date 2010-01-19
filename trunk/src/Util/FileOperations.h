@@ -47,6 +47,7 @@ public:
 		if (!fp)
 			Main::getInstance()->handleError("Couldn't open file to write: "
 					+ filename);
+		fseek(fp, 0L, SEEK_END);
 		fwrite(data, sizeof(char), dataSize, fp);
 		PRN_(1, "Wrote to file: "+filename);
 	}

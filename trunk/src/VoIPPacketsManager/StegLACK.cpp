@@ -61,12 +61,15 @@ vector<char> StegLACK::getStegDataToSend() {
 	for (int i=0; i<STEG_DATA_FLAG_SIZE; i++) {
 		ret.push_back(flag[i]);
 	}
+	PRN_(1, "Preparing steg data to send:");
 	for (int i=STEG_DATA_FLAG_SIZE; i<size; i++) {
 		lastReadStegByte++;
 		if (lastReadStegByte<(int)stegData.size())
 			ret.push_back(stegData[lastReadStegByte]);
 		else ret.push_back(' ');
+		cout<<stegData[lastReadStegByte];
 	}
+	PRN_(1, "Done reading steg data");
 	if (lastReadStegByte>=(int)stegData.size()) {
 		stegTransferDone = true;
 		PRN_(1, "All steg data sent. From now on, no steg sequences should appear.");
