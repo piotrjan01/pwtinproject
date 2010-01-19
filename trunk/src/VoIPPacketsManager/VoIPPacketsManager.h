@@ -54,12 +54,19 @@ public:
 	 */
 	virtual RTPPacket& getNextPacket() = 0;
 
+	/**
+	 * Obsługuje otrzymany pakiet. (np. zapisuje do pliku lub rozpoznaje
+	 * dane steg. w zależności od implementacji).
+	 */
 	virtual void putReceivedPacketData(RTPPacket& packet) = 0;
+
+protected:
 
 	virtual vector<char> getAudioDataToSend();
 
 	void readAudioDataFileToMem();
-protected:
+
+
 	RTPPacket templatePacket;
 };
 

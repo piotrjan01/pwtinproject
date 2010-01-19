@@ -39,6 +39,7 @@ public:
 	virtual RTPPacket& getNextPacket();
 	virtual void putReceivedPacketData(RTPPacket& packet);
 
+private:
 	/**
 	 * Counts the time that passed since last packet was read from the incoming queue
 	 */
