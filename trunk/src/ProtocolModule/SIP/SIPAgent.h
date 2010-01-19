@@ -1,6 +1,6 @@
-/*
- * SIPAgent.h
- * Agent SIP - glowna klasa
+/**
+ * @file SIPAgent.h
+ * Agent SIP - główna klasa
  */
 
 #ifndef SIPAGENT_H
@@ -112,18 +112,51 @@ private:
 
 public:
 
+    /**
+     * Konstruktor. Parametr to lokalny adres IP, który ma być wykorzystany.
+     */
     SIPAgent(std::string localaddr);
     ~SIPAgent();
 
+    /**
+     * Rejestruje użytkownika na serwerze SIP Registrar. Parametry to nazwa użytkownika, hasło,
+     * adres serwera proxy oraz port proxy.
+     * Funkcja blokuje do chwili zarejestrowania lub upłynięcia 30 sekund. Po udanej rejestracji
+     * zwraca true.
+     */
     bool Register(std::string user, std::string pass, std::string proxy, unsigned short proxyPort);
 
+    /**
+     * Wyrejestrowuje użytkownika z serwera SIP Registrar. Funkcja blokuje do chwili potwierdzenia.
+     * Błędy oraz timeout 30 sekund jest ignorowany
+     */
     void Unregister();
 
+    /**
+     * Oczekuje na przychodzące połączenie i odbiera je. Funkcja blokuje, jednak nie dłużej niż 120
+     * sekund. Jako parametr podany jest numer portu, na którym działa RTP. Funkcja zwraca strukturę
+     * CallInfo z informacjami o użytkowniku, z którym połączono - identyfikator, numer ip oraz port
+     * RTP. W przypadku błędu w strukturze CallInfo adres ma wartość "0.0.0.0".
+     */
     CallInfo Answer(unsigned short port);
+
+    /**
+     * Nawiązuje połączenie z użytkownikiem o wskazanym identyfikatorze. Drugi parametr to numer portu
+     * RTP. Funkcja blouje, jednak nie dłużej niż 30 sekund. Funkcja zwraca strukturę CallInfo z
+     * informacjami o użytkowniku, z którym połączono - identyfikator, numer ip oraz port RTP.
+     * W przypadku błędu w strukturze CallInfo adres ma wartość "0.0.0.0".
+     */
     CallInfo Call(std::string id, unsigned short port);
 
+    /**
+     * Rozłącza nawiązane połączone.
+     */
     void Disconnect();
 
+    /**
+     * Sprawdza, czy nadal trwa połączenie z drugim użytkownikiem. Zwraca false, gdy połączenie zostało
+     * rozłączone (przez którąś ze stron).
+     */
     bool connected();
 
 };
