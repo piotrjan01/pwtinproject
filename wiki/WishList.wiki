@@ -1,12 +1,20 @@
-#summary One-sentence summary of this page.
+#summary List of needed features/upgrades/fixes.
 #labels Phase-Requirements
 
-== Introduction ==
+<wiki:comment>
+#sidebar WishListTOC
+wiki.l11n
+</wiki:comment>
 
+<wiki:toc max_depth="3">
+
+----
 = TODO =
 == Config ==
  * command-line options with `getopt'
- * debug level from 1) config OR 2) command-line
+ * debug level from
+   # config
+   # command-line
  * local IP automatic resolving
 
 ----
@@ -32,19 +40,3 @@ Design header for steg. data, that will meet following needs:
  * send ACK with sequence number
  * receive ACK and eventually retransmit
  * sort data using sequence number (similar need as in RTP)
-
-----
-== Details ==
-
-Add your content here.  Format your content with:
-  * `*bold text*` *bold text*
-  * `_italic text_` _italic text_
-  * `*` with a preceding space -- bullet item
-  # `#` with a preceding space -- numbered item
-  * `{{{ verbatim code block }}}` {{{ verbatim code block }}}
-  * `----` horizontal rule
-  * `[http://domain/page label]` [http://domain/page label] 
-  * `http://domain/page` http://domain/page
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
-  * Tables...
