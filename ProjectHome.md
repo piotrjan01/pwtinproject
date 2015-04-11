@@ -1,0 +1,1 @@
+This project will be used in experiment testing the new steganography method 'LACK' proposed in one of papers written at WUT.
